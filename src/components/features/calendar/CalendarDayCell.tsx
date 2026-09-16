@@ -9,6 +9,7 @@ interface CalendarDayCellProps {
   isCurrentMonth: boolean;
   isToday: boolean;
   activities: Activity[];
+  onActivityClick?: (activityId: string) => void;
 }
 
 export function CalendarDayCell({
@@ -17,6 +18,7 @@ export function CalendarDayCell({
   isCurrentMonth,
   isToday,
   activities,
+  onActivityClick,
 }: CalendarDayCellProps) {
   return (
     <div
@@ -30,7 +32,11 @@ export function CalendarDayCell({
       <div className="mb-1 text-sm font-medium">{format(date, 'd')}</div>
       <div className="flex flex-col gap-1">
         {activities.map((activity) => (
-          <ActivityEntryChip key={activity.id} activity={activity} />
+          <ActivityEntryChip
+            key={activity.id}
+            activity={activity}
+            onClick={() => onActivityClick?.(activity.id)}
+          />
         ))}
       </div>
     </div>

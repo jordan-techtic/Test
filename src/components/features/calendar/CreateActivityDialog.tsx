@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -147,6 +149,9 @@ export function CreateActivityDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create Activity</DialogTitle>
+          <DialogDescription>
+            Schedule a new marketing activity on the calendar.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -166,12 +171,12 @@ export function CreateActivityDialog({
 
           <div className="space-y-2">
             <Label htmlFor="activity-date">Activity date</Label>
-            <Input
+            <DatePicker
               id="activity-date"
-              type="date"
               value={form.activity_date}
-              onChange={(e) => setForm((prev) => ({ ...prev, activity_date: e.target.value }))}
+              onChange={(value) => setForm((prev) => ({ ...prev, activity_date: value }))}
               aria-invalid={Boolean(fieldErrors.activity_date)}
+              aria-label="Activity date"
             />
             {fieldErrors.activity_date && (
               <p className="text-sm text-destructive" role="alert">

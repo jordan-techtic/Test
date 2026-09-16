@@ -1,6 +1,7 @@
 import { CalendarDays, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useAppLayout } from '@/stores/AppLayoutProvider';
 
@@ -19,18 +20,34 @@ export function Sidebar() {
     >
       <div className="flex items-center gap-2 border-b border-border p-4">
         {!sidebarCollapsed && (
-          <img src="/brand-logo.png" alt="Marketing Content Calendar" className="h-8 w-auto" />
+          <img
+            src="/brand-logo.svg"
+            alt="Marketing Content Calendar"
+            data-brand-logo=""
+            className="h-8 w-auto"
+          />
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="ml-auto shrink-0"
-          onClick={toggleSidebar}
-          aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="ml-auto shrink-0"
+              onClick={toggleSidebar}
+              aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {sidebarCollapsed ? (
+                <PanelLeftOpen className="h-4 w-4" />
+              ) : (
+                <PanelLeftClose className="h-4 w-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          </TooltipContent>
+        </Tooltip>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-2">
         {navItems.map(({ to, label, icon: Icon }) => (
@@ -39,11 +56,12 @@ export function Sidebar() {
             to={to}
             end
             className={({ isActive }) => {
-              const calendarActive =
-                isActive || location.pathname === '/calendar';
+              const calendarActive = isActive || location.pathname === '/calendar';
               return cn(
-                'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted',
-                calendarActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
+                'flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-muted',
+                calendarActive
+                  ? 'rounded-full bg-primary text-primary-foreground hover:bg-primary/90'
+                  : 'rounded-full text-foreground',
                 sidebarCollapsed && 'justify-center px-2',
               );
             }}

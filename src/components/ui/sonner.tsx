@@ -1,12 +1,41 @@
-import { Toaster as Sonner, toast, type ToasterProps } from 'sonner';
+import type { CSSProperties } from 'react';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  Loader2,
+  OctagonX,
+} from 'lucide-react';
+import {
+  Toaster as SonnerToaster,
+  toast as sonnerToast,
+  type ExternalToast,
+  type ToasterProps,
+} from 'sonner';
 
-export { toast };
+export const toast = sonnerToast;
+export type { ExternalToast, ToasterProps };
 
-export function Toaster(props: ToasterProps) {
+function Toaster({ theme = 'light', ...props }: ToasterProps) {
   return (
-    <Sonner
-      theme="light"
+    <SonnerToaster
+      theme={theme}
       className="toaster group"
+      icons={{
+        success: <CheckCircle2 className="size-4" />,
+        info: <Info className="size-4" />,
+        warning: <AlertTriangle className="size-4" />,
+        error: <OctagonX className="size-4" />,
+        loading: <Loader2 className="size-4 animate-spin" />,
+      }}
+      style={
+        {
+          '--normal-bg': 'var(--color-card)',
+          '--normal-text': 'var(--color-foreground)',
+          '--normal-border': 'var(--color-border)',
+          '--border-radius': 'var(--radius-md)',
+        } as CSSProperties
+      }
       toastOptions={{
         classNames: {
           toast:
@@ -14,9 +43,15 @@ export function Toaster(props: ToasterProps) {
           description: 'group-[.toast]:text-muted-foreground',
           actionButton: 'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
           cancelButton: 'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
+          success: 'group-[.toast]:border-success',
+          error: 'group-[.toast]:border-destructive',
+          info: 'group-[.toast]:border-border',
+          warning: 'group-[.toast]:border-warning',
         },
       }}
       {...props}
     />
   );
 }
+
+export { Toaster };

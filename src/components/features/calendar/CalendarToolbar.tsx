@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Select,
   SelectContent,
@@ -45,24 +46,34 @@ export function CalendarToolbar({
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={onPreviousMonth}
-          aria-label="Previous month"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={onNextMonth}
-          aria-label="Next month"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={onPreviousMonth}
+              aria-label="Previous month"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Previous month</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={onNextMonth}
+              aria-label="Next month"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Next month</TooltipContent>
+        </Tooltip>
 
         <Select value={String(year)} onValueChange={(value) => onYearChange(Number(value))}>
           <SelectTrigger className="w-[100px]" aria-label="Select year">
@@ -95,9 +106,14 @@ export function CalendarToolbar({
           </SelectContent>
         </Select>
 
-        <Button type="button" variant="outline" onClick={onToday} aria-label="Go to today">
-          Today
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button type="button" variant="outline" onClick={onToday} aria-label="Go to today">
+              Today
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Go to today</TooltipContent>
+        </Tooltip>
       </div>
 
       <Button type="button" onClick={onCreateActivity}>

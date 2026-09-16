@@ -8,12 +8,14 @@ interface CalendarMonthSectionProps {
   month: CalendarMonth;
   todayKey: string;
   activitiesByDate: Map<string, Activity[]>;
+  onActivityClick?: (activityId: string) => void;
 }
 
 export function CalendarMonthSection({
   month,
   todayKey,
   activitiesByDate,
+  onActivityClick,
 }: CalendarMonthSectionProps) {
   return (
     <section className="mb-8">
@@ -32,6 +34,7 @@ export function CalendarMonthSection({
             week={week}
             todayKey={todayKey}
             activitiesByDate={activitiesByDate}
+            onActivityClick={onActivityClick}
           />
         ))}
       </div>

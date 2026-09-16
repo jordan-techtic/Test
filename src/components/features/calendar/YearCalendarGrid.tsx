@@ -5,12 +5,26 @@ import { CalendarMonthSection } from '@/components/features/calendar/CalendarMon
 
 interface YearCalendarGridProps {
   year: number;
+  month: number | null;
   todayKey: string;
   activitiesByDate: Map<string, Activity[]>;
+  onActivityClick?: (activityId: string) => void;
 }
 
-export function YearCalendarGrid({ year, todayKey, activitiesByDate }: YearCalendarGridProps) {
-  const months = useMemo(() => buildYearWeeks(year), [year]);
+export function YearCalendarGrid({
+  year,
+  month,
+  todayKey,
+  activitiesByDate,
+  onActivityClick,
+}: YearCalendarGridProps) {
+  const months = useMemo(() => {
+    const allMonths = buildYearWeeks(year);
+    if (month === null) {
+      return allMonths;
+    }
+    return allMonths.filter((monthSection) => monthSection.monthIndex === month - 1);
+  }, [year, month]);
 
   return (
     <div className="min-w-[760px] overflow-x-auto">
@@ -20,6 +34,7 @@ export function YearCalendarGrid({ year, todayKey, activitiesByDate }: YearCalen
           month={month}
           todayKey={todayKey}
           activitiesByDate={activitiesByDate}
+          onActivityClick={onActivityClick}
         />
       ))}
     </div>

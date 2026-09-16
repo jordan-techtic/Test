@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import { CalendarEmptyState } from '@/components/features/calendar/CalendarEmptyState';
 import { CalendarErrorState } from '@/components/features/calendar/CalendarErrorState';
 import { CalendarLoadingState } from '@/components/features/calendar/CalendarLoadingState';
 import { CalendarToolbar } from '@/components/features/calendar/CalendarToolbar';
 import { CreateActivityDialog } from '@/components/features/calendar/CreateActivityDialog';
+import { ViewActivityDialog } from '@/components/features/calendar/ViewActivityDialog';
 import { YearCalendarGrid } from '@/components/features/calendar/YearCalendarGrid';
 import { useMarketingCalendar } from '@/hooks/useMarketingCalendar';
 import { getApiErrorMessage } from '@/lib/api/errors';
 
 export function AnnualMarketingCalendarPage() {
+  const [viewActivityId, setViewActivityId] = useState<string | null>(null);
+
   const {
     year,
     setYear,
@@ -49,7 +53,13 @@ export function AnnualMarketingCalendarPage() {
         />
       ) : (
         <>
-          <YearCalendarGrid year={year} todayKey={today} activitiesByDate={activitiesByDate} />
+          <YearCalendarGrid
+            year={year}
+            month={month}
+            todayKey={today}
+            activitiesByDate={activitiesByDate}
+            onActivityClick={setViewActivityId}
+          />
           {!hasActivities && <CalendarEmptyState />}
         </>
       )}
@@ -59,6 +69,16 @@ export function AnnualMarketingCalendarPage() {
         onOpenChange={setCreateDialogOpen}
         activityTypes={activityTypes}
         createMutation={createMutation}
+      />
+
+      <ViewActivityDialog
+        activityId={viewActivityId}
+        open={viewActivityId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setViewActivityId(null);
+          }
+        }}
       />
     </div>
   );

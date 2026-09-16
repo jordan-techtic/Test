@@ -70,6 +70,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           autoComplete="username"
           value={emailOrUsername}
           onChange={(e) => setEmailOrUsername(e.target.value)}
+          className="border-[#e5e7eb] bg-[#f3f4f6]"
           aria-invalid={Boolean(fieldErrors.email_or_username)}
         />
         {fieldErrors.email_or_username && (
@@ -89,7 +90,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="pr-10"
+            className="border-[#e5e7eb] bg-[#f3f4f6] pr-10"
             aria-invalid={Boolean(fieldErrors.password)}
           />
           <button

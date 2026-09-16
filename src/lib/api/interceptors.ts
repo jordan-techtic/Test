@@ -26,9 +26,7 @@ export function setupApiInterceptors(onUnauthorized: () => void): void {
     (response) => response,
     (error: AxiosError) => {
       const status = error.response?.status;
-      const skipRedirect = (
-        error.config as InternalAxiosRequestConfig & { skipAuthRedirect?: boolean }
-      )?.skipAuthRedirect;
+      const skipRedirect = error.config?.skipAuthRedirect;
 
       if (status === 401 && !skipRedirect && !isRedirectingToLogin) {
         isRedirectingToLogin = true;

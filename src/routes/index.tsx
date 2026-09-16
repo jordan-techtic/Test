@@ -5,7 +5,6 @@ import { AppShell } from '@/components/layout/AppShell';
 import { AnnualMarketingCalendarPage } from '@/pages/AnnualMarketingCalendarPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { PlaceholderPage } from '@/pages/PlaceholderPage';
 import { ServerErrorPage } from '@/pages/ServerErrorPage';
 
 export const router = createBrowserRouter([
@@ -29,10 +28,6 @@ export const router = createBrowserRouter([
               {
                 path: '/calendar',
                 element: <AnnualMarketingCalendarPage />,
-              },
-              {
-                path: '/protected',
-                element: <PlaceholderPage />,
               },
             ],
           },
