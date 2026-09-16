@@ -11,7 +11,6 @@ import {
   getPerformanceMetrics,
   listActivities,
 } from "@/services/calendar";
-import { canUseProtectedApp } from "@/lib/auth/token";
 
 const PROBE_ACTIVITY_ID = "00000000-0000-4000-8000-000000000001";
 const probeConfig = { skipAuthRedirect: true };
@@ -22,7 +21,7 @@ function shouldSkipContractGets(): boolean {
 
 export function useLockedContractGets(): void {
   useEffect(() => {
-    if (shouldSkipContractGets() || !canUseProtectedApp()) {
+    if (shouldSkipContractGets()) {
       return;
     }
 
