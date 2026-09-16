@@ -65,6 +65,14 @@ describe("auth interceptors", () => {
     expect(emitUnauthorizedMock).not.toHaveBeenCalled();
   });
 
+  it("does not emit unauthorized for guest 401 without a bearer token", async () => {
+    window.localStorage.clear();
+    emitUnauthorizedMock.mockClear();
+    const client = createClient(401, "/api/v1/marketing-team-member/calendar");
+    await expect(client.get("/api/v1/marketing-team-member/calendar")).rejects.toBeDefined();
+    expect(emitUnauthorizedMock).not.toHaveBeenCalled();
+  });
+
   it("aborts protected requests after session rejection", async () => {
     rejectSession();
     const adapter = jest.fn();

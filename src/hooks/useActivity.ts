@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getActivity } from "@/lib/api/marketing";
+import { getActivity, getCampaignCode } from "@/lib/api/marketing";
 import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import type { ActivityOut } from "@/types/api";
 
@@ -44,6 +44,11 @@ export function useActivity(id: string | null, enabled: boolean): UseActivityRes
           setIsLoading(false);
         }
       });
+    void getCampaignCode(id, controller.signal).catch((err: unknown) => {
+      if (cancelled || isCanceledError(err)) {
+        return;
+      }
+    });
     return () => {
       cancelled = true;
       controller.abort();

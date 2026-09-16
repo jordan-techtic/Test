@@ -26,6 +26,7 @@ function appendListParam(params: URLSearchParams, key: string, values: string[] 
 
 export async function getCalendar(
   query: CalendarQuery = {},
+  signal?: AbortSignal,
 ): Promise<SuccessEnvelope<CalendarData>> {
   const params = new URLSearchParams();
   if (query.year) {
@@ -39,16 +40,20 @@ export async function getCalendar(
   try {
     const response = await api.get<SuccessEnvelope<CalendarData>>(
       "/api/v1/marketing-team-member/calendar",
-      { params },
+      { params, signal },
     );
     return response.data;
   } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
     throw toApiError(error);
   }
 }
 
 export async function listActivities(
   query: ActivityListQuery = {},
+  signal?: AbortSignal,
 ): Promise<SuccessEnvelope<ActivityListData>> {
   const params = new URLSearchParams();
   if (query.search) {
@@ -86,10 +91,13 @@ export async function listActivities(
   try {
     const response = await api.get<SuccessEnvelope<ActivityListData>>(
       "/api/v1/marketing-team-member/activities",
-      { params },
+      { params, signal },
     );
     return response.data;
   } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
     throw toApiError(error);
   }
 }
@@ -168,6 +176,7 @@ export async function rescheduleActivity(
 
 export async function getAuditLog(
   query: AuditLogQuery = {},
+  signal?: AbortSignal,
 ): Promise<SuccessEnvelope<AuditLogListData>> {
   const params = new URLSearchParams();
   if (query.activity_id) {
@@ -185,10 +194,71 @@ export async function getAuditLog(
   try {
     const response = await api.get<SuccessEnvelope<AuditLogListData>>(
       "/api/v1/marketing-team-member/audit-log",
-      { params },
+      { params, signal },
     );
     return response.data;
   } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
     throw toApiError(error);
   }
+}
+
+async function getEnvelope<T>(
+  path: string,
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<T>> {
+  try {
+    const response = await api.get<SuccessEnvelope<T>>(path, { signal });
+    return response.data;
+  } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
+    throw toApiError(error);
+  }
+}
+
+export function getKlaviyoPerformance(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/klaviyo/performance", signal);
+}
+
+export function getKlaviyoPerformanceNotifications(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope(
+    "/api/v1/marketing-team-member/klaviyo/performance/notifications",
+    signal,
+  );
+}
+
+export function getPerformanceMetrics(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/performance-metrics", signal);
+}
+
+export function getHistoricalManagement(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/historical-management", signal);
+}
+
+export function getPerformanceData(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-content-calendar/performance-data", signal);
+}
+
+export function getCampaignCode(
+  activityId: string,
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope(
+    `/api/v1/marketing-team-member/campaign-code/${activityId}`,
+    signal,
+  );
 }

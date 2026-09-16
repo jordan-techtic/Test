@@ -12,6 +12,19 @@ export function isPublicAuthUrl(url: string | undefined): boolean {
   );
 }
 
+function requestSentAuthorization(error: AxiosError): boolean {
+  const headers = error.config?.headers;
+  if (!headers) {
+    return false;
+  }
+  const value =
+    typeof headers.get === "function"
+      ? headers.get("Authorization") || headers.get("authorization")
+      : (headers as { Authorization?: unknown; authorization?: unknown }).Authorization ||
+        (headers as { authorization?: unknown }).authorization;
+  return Boolean(value);
+}
+
 export function setupInterceptors(client: AxiosInstance): void {
   client.interceptors.request.use((config) => {
     if (isPublicAuthUrl(config.url)) {
@@ -35,7 +48,12 @@ export function setupInterceptors(client: AxiosInstance): void {
       if (isAxiosError(error)) {
         const status = error.response?.status;
         const url = error.config?.url ?? error.response?.config?.url;
-        if ((status === 401 && !isPublicAuthUrl(url)) || status === 403) {
+        const hadBearer = requestSentAuthorization(error);
+        if (
+          hadBearer &&
+          !isPublicAuthUrl(url) &&
+          (status === 401 || status === 403)
+        ) {
           emitUnauthorized();
         }
       }
