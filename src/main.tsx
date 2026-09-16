@@ -1,0 +1,30 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { router } from "@/routes";
+import { AppProvider } from "@/stores/AppContext";
+import { applyTheme } from "@/theme/tokens";
+import "./index.css";
+
+applyTheme();
+
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <ErrorBoundary>
+      <AppProvider>
+        <TooltipProvider>
+          <Toaster />
+          <RouterProvider router={router} />
+        </TooltipProvider>
+      </AppProvider>
+    </ErrorBoundary>
+  </StrictMode>,
+);

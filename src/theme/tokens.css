@@ -1,0 +1,40 @@
+/* Generated from src/theme/tokens.ts — edit tokens.ts only. */
+:root {
+  --background: #F7F8FA;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+  --primary: #003078;
+  --primary-foreground: #FFFFFF;
+  --secondary: #8C8C8C;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+  --accent: #909090;
+  --accent-foreground: #111827;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #003078;
+  --success: #16A34A;
+  --warning: #D97706;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111827;
+  --sidebar-accent: #E8EEF6;
+  --sidebar-accent-foreground: #003078;
+  --sidebar-border: #E5E7EB;
+  --scrollbar-thumb: #6B7280;
+  --scrollbar-track: #F7F8FA;
+  --radius: 8px;
+  --theme-radius-sm: 4px;
+  --theme-radius-md: 8px;
+  --theme-radius-lg: 12px;
+  --theme-font-family: Inter;
+  --font-size-base: 16px;
+  --heading-size: 28px;
+  --heading-line-height: 36px;
+  --body-line-height: 24px;
+}
