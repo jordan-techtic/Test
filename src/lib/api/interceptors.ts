@@ -50,7 +50,7 @@ export function setupInterceptors(client: AxiosInstance): void {
           config && "url" in config && typeof config.url === "string"
             ? config.url
             : undefined;
-        if (!isPublicAuthUrl(url) && !isSessionRejected()) {
+        if (!isPublicAuthUrl(url) && !isSessionRejected() && getAccessToken()) {
           emitUnauthorized();
           if (window.location.pathname !== "/") {
             window.location.replace("/");

@@ -29,6 +29,7 @@ const toastVariants = cva(
         default: "border bg-background text-foreground",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
+        success: "border-success bg-background text-foreground",
       },
     },
     defaultVariants: {
@@ -81,6 +82,7 @@ const ToastClose = React.forwardRef<
     {...props}
   >
     <X className="size-4" />
+    <span className="sr-only">Dismiss</span>
   </ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;
@@ -111,6 +113,156 @@ ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
+type ToastVariant = NonNullable<VariantProps<typeof toastVariants>["variant"]>;
+
+type ToastRecord = {
+  id: string;
+  title?: string;
+  description?: string;
+  variant?: ToastVariant;
+  duration?: number;
+  open: boolean;
+};
+
+const DEFAULT_DURATION = 4000;
+const REMOVE_DELAY = 200;
+let toastCount = 0;
+let records: ToastRecord[] = [];
+const listeners = new Set<() => void>();
+const timeouts = new Map<string, number>();
+
+function notifyListeners(): void {
+  listeners.forEach((listener) => listener());
+}
+
+function clearToastTimeout(id: string): void {
+  const handle = timeouts.get(id);
+  if (handle !== undefined) {
+    window.clearTimeout(handle);
+    timeouts.delete(id);
+  }
+}
+
+function clearAllToastTimeouts(): void {
+  timeouts.forEach((handle) => window.clearTimeout(handle));
+  timeouts.clear();
+}
+
+function removeToast(id: string): void {
+  clearToastTimeout(id);
+  records = records.filter((item) => item.id !== id);
+  notifyListeners();
+}
+
+function scheduleRemove(id: string): void {
+  clearToastTimeout(id);
+  const handle = window.setTimeout(() => removeToast(id), REMOVE_DELAY);
+  timeouts.set(id, handle);
+}
+
+function dismissToast(id: string): void {
+  const current = records.find((item) => item.id === id);
+  if (!current) {
+    return;
+  }
+  clearToastTimeout(id);
+  if (current.open) {
+    records = records.map((item) => (item.id === id ? { ...item, open: false } : item));
+    notifyListeners();
+  }
+  scheduleRemove(id);
+}
+
+type ToastInput = {
+  title?: string;
+  description?: string;
+  variant?: ToastVariant;
+  duration?: number;
+};
+
+function showToast(input: ToastInput | string): { id: string; dismiss: () => void } {
+  const payload: ToastInput = typeof input === "string" ? { description: input } : input;
+  const id = String(++toastCount);
+  const duration = payload.duration ?? DEFAULT_DURATION;
+  records = [
+    ...records,
+    {
+      id,
+      title: payload.title,
+      description: payload.description,
+      variant: payload.variant ?? "default",
+      duration,
+      open: true,
+    },
+  ];
+  notifyListeners();
+  if (duration > 0) {
+    const handle = window.setTimeout(() => dismissToast(id), duration);
+    timeouts.set(id, handle);
+  }
+  return { id, dismiss: () => dismissToast(id) };
+}
+
+const toast = Object.assign(showToast, {
+  success: (description: string, duration = DEFAULT_DURATION) =>
+    showToast({ description, variant: "success", duration }),
+  error: (description: string, duration = DEFAULT_DURATION) =>
+    showToast({ description, variant: "destructive", duration }),
+  info: (description: string, duration = DEFAULT_DURATION) =>
+    showToast({ description, variant: "default", duration }),
+  dismiss: (id?: string) => {
+    if (id) {
+      dismissToast(id);
+      return;
+    }
+    records.map((item) => item.id).forEach((toastId) => dismissToast(toastId));
+  },
+});
+
+function Toaster() {
+  const [toasts, setToasts] = React.useState<ToastRecord[]>(records);
+
+  React.useEffect(() => {
+    const listener = () => setToasts([...records]);
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+      clearAllToastTimeouts();
+      records = [];
+    };
+  }, []);
+
+  return (
+    <ToastProvider swipeDirection="right">
+      {toasts.map((item) => (
+        <Toast
+          key={item.id}
+          open={item.open}
+          variant={item.variant}
+          duration={item.duration}
+          onOpenChange={(open) => {
+            if (!open) {
+              dismissToast(item.id);
+            }
+          }}
+        >
+          <div className="grid gap-1">
+            {item.title ? <ToastTitle>{item.title}</ToastTitle> : null}
+            {item.description ? (
+              <ToastDescription
+                role={item.variant === "destructive" ? "alert" : "status"}
+              >
+                {item.description}
+              </ToastDescription>
+            ) : null}
+          </div>
+          <ToastClose />
+        </Toast>
+      ))}
+      <ToastViewport />
+    </ToastProvider>
+  );
+}
 
 export {
   type ToastProps,
@@ -122,4 +274,6 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  Toaster,
+  toast,
 };

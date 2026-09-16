@@ -1,7 +1,7 @@
 import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 const Command = React.forwardRef<
@@ -19,20 +19,25 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-function CommandDialog({
+const CommandDialog = ({
   children,
   ...props
-}: React.ComponentProps<typeof Dialog> & { children: React.ReactNode }) {
-  return (
-    <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0">
+}: React.ComponentProps<typeof DialogPrimitive.Root>) => (
+  <DialogPrimitive.Root {...props}>
+    <DialogPrimitive.Portal>
+      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+      <DialogPrimitive.Content className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md border bg-background p-0 shadow-lg">
+        <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
+        <DialogPrimitive.Description className="sr-only">
+          Search and run a command.
+        </DialogPrimitive.Description>
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-input]]:h-12">
           {children}
         </Command>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Portal>
+  </DialogPrimitive.Root>
+);
 
 const CommandInput = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Input>,
