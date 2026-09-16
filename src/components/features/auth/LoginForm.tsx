@@ -57,6 +57,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
         <Input
           id="email_or_username"
           name="email_or_username"
+          type="email"
           autoComplete="username"
           value={emailOrUsername}
           onChange={(event) => setEmailOrUsername(event.target.value)}
