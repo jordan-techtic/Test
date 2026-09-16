@@ -34,6 +34,8 @@ describe("toast primitive", () => {
     expect(typeof sonnerToast).toBe("function");
     expect(typeof sonnerToast.success).toBe("function");
     expect(typeof sonnerToast.error).toBe("function");
+    expect(typeof sonnerToast.info).toBe("function");
+    expect(typeof sonnerToast.dismiss).toBe("function");
     expect(SonnerToaster).toBeDefined();
   });
 });

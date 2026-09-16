@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
 import { CircleCheck, Info, Loader2, OctagonX, TriangleAlert } from "lucide-react";
-import { Toaster as Sonner, toast, type ToasterProps } from "sonner";
+import { Toaster as Sonner, toast as sonnerToast, type ToasterProps } from "sonner";
 
-const Toaster = ({ ...props }: ToasterProps) => {
+export const toast = sonnerToast;
+
+export function Toaster({ ...props }: ToasterProps) {
   return (
     <Sonner
       theme="light"
@@ -25,6 +27,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
       {...props}
     />
   );
-};
-
-export { Toaster, toast };
+}
