@@ -7,10 +7,12 @@ import { Toaster as RadixToaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { router } from "@/routes";
 import { AppProvider } from "@/stores/AppContext";
+import { prefetchLockedContractGets } from "@/hooks/useLockedContractGets";
 import { applyTheme } from "@/theme/tokens";
 import "./index.css";
 
 applyTheme();
+prefetchLockedContractGets();
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {

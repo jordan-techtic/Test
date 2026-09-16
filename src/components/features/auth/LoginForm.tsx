@@ -54,7 +54,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             <FormItem>
               <FormLabel>Email or username</FormLabel>
               <FormControl>
-                <Input autoComplete="username" {...field} />
+                <Input type="email" autoComplete="username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

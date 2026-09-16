@@ -4,13 +4,13 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "node ./node_modules/vite/bin/vite.js",
-    "build": "node ./node_modules/typescript/bin/tsc -b && node ./node_modules/vite/bin/vite.js build",
-    "preview": "node ./node_modules/vite/bin/vite.js preview",
-    "lint": "node ./node_modules/eslint/bin/eslint.js .",
+    "dev": "node scripts/run-tool.cjs vite",
+    "build": "node scripts/run-tool.cjs tsc -b && node scripts/run-tool.cjs vite build",
+    "preview": "node scripts/run-tool.cjs vite preview",
+    "lint": "node scripts/run-tool.cjs eslint .",
     "format": "node ./node_modules/prettier/bin/prettier.cjs --write .",
     "test": "node ./node_modules/jest/bin/jest.js",
-    "typecheck": "node ./node_modules/typescript/bin/tsc -b --noEmit",
+    "typecheck": "node scripts/run-tool.cjs tsc -b --noEmit",
     "postinstall": "node -e \"const fs=require('fs'); const bins=['typescript/bin/tsc','eslint/bin/eslint.js','vite/bin/vite.js']; for (const bin of bins) { if (!fs.existsSync('node_modules/'+bin)) { console.error('Missing '+bin+'. Re-run npm install.'); process.exit(1);} }\""
   },
   "dependencies": {
