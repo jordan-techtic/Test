@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { getCalendarErrorMessage, useCalendar } from '@/hooks/useCalendar'
+import { useMarketingData } from '@/hooks/useMarketingData'
 
 function parseTodayParts(today: string | undefined) {
   if (!today) {
@@ -32,6 +33,13 @@ export function CalendarPage() {
 
   const calendarQuery = useCalendar({ year, month })
   const calendarData = calendarQuery.data
+  const firstActivityId = calendarData?.activities[0]?.id ?? null
+
+  useMarketingData({
+    year,
+    activityId: selectedActivityId ?? firstActivityId,
+    enabled: calendarQuery.isSuccess,
+  })
 
   const handleToday = () => {
     const todayParts = parseTodayParts(calendarData?.today)

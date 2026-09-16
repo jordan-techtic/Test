@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from 'axios'
+
 import { api } from '@/lib/api/client'
 import type {
   ActivityCreateRequest,
@@ -16,6 +18,7 @@ export interface CalendarQueryParams {
 
 export async function getCalendar(
   params: CalendarQueryParams,
+  config?: AxiosRequestConfig,
 ): Promise<CalendarResponse> {
   const queryParams: Record<string, number> = { year: params.year }
   if (params.month != null) {
@@ -24,7 +27,7 @@ export async function getCalendar(
 
   const response = await api.get<CalendarResponse>(
     '/api/v1/marketing-team-member/calendar',
-    { params: queryParams },
+    { ...config, params: queryParams },
   )
   return response.data
 }
@@ -39,9 +42,13 @@ export async function createActivity(
   return response.data
 }
 
-export async function getActivity(id: string): Promise<ActivityGetResponse> {
+export async function getActivity(
+  id: string,
+  config?: AxiosRequestConfig,
+): Promise<ActivityGetResponse> {
   const response = await api.get<ActivityGetResponse>(
     `/api/v1/marketing-team-member/activities/${id}`,
+    config,
   )
   return response.data
 }

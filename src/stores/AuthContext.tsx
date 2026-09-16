@@ -41,11 +41,21 @@ function readStoredUser(): AuthUser | null {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => {
-    if (!isSessionValidated()) {
+    const token = getAccessToken()
+    if (!token) {
       return null
     }
-    const token = getAccessToken()
-    return token ? readStoredUser() : null
+
+    const storedUser = readStoredUser()
+    if (!storedUser) {
+      return null
+    }
+
+    if (!isSessionValidated()) {
+      setSessionValidated()
+    }
+
+    return storedUser
   })
 
   const setSession = useCallback((accessToken: string, nextUser: AuthUser) => {

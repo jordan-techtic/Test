@@ -34,6 +34,7 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { getActivityErrorMessage, useActivity } from '@/hooks/useActivity'
+import { useCampaignCode } from '@/hooks/useMarketingData'
 import { useDeleteActivity } from '@/hooks/useDeleteActivity'
 import { useUpdateActivity } from '@/hooks/useUpdateActivity'
 import { getApiErrorMessage } from '@/lib/api/errors'
@@ -73,10 +74,12 @@ export function ActivityDetailDialog({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
 
   const activityQuery = useActivity(activityId, open)
+  const campaignCodeQuery = useCampaignCode(activityId, open)
   const updateMutation = useUpdateActivity({ year, month })
   const deleteMutation = useDeleteActivity({ year, month })
 
   const activity = activityQuery.data
+  const campaignCode = campaignCodeQuery.data?.campaign_code ?? activity?.campaign_code
 
   const selectedType = useMemo(
     () => activityTypes.find((type) => type.value === values.activity_type),
@@ -220,7 +223,7 @@ export function ActivityDetailDialog({
                 </div>
                 <div>
                   <dt className="font-medium text-muted-foreground">Campaign code</dt>
-                  <dd>{activity.campaign_code}</dd>
+                  <dd>{campaignCode ?? '—'}</dd>
                 </div>
                 {activity.details ? (
                   <div>

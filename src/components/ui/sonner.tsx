@@ -13,7 +13,6 @@ import {
   type ToasterProps,
 } from 'sonner'
 
-export { toast }
 export type { ExternalToast, ToasterProps }
 
 function Toaster({
@@ -72,4 +71,4 @@ function Toaster({
   )
 }
 
-export { Toaster }
+export { Toaster, toast }

@@ -119,3 +119,114 @@ export interface ActivityUpdateRequest {
 export type ActivityGetResponse = ApiSuccessEnvelope<ActivityOut>
 export type ActivityUpdateResponse = ApiSuccessEnvelope<ActivityOut>
 export type ActivityDeleteResponse = ApiSuccessEnvelope<Record<string, never>>
+
+export interface PaginatedListData<T> {
+  items: T[]
+  page: number
+  limit: number
+  total: number
+  description?: string
+}
+
+export type ActivityListResponse = ApiSuccessEnvelope<PaginatedListData<ActivityOut>>
+
+export interface AuditLogEntry {
+  id: string
+  activity_id: string | null
+  action: string
+  performed_by: string
+  performed_at: string
+  details: string | null
+}
+
+export type AuditLogListResponse = ApiSuccessEnvelope<PaginatedListData<AuditLogEntry>>
+
+export interface KlaviyoPerformanceItem {
+  campaign_code: string
+  activity_title: string
+  activity_date: string
+  open_rate: number | null
+  click_rate: number | null
+  revenue: number | null
+}
+
+export interface KlaviyoPerformanceData extends PaginatedListData<KlaviyoPerformanceItem> {
+  retrieval_status: string
+  message?: string
+}
+
+export type KlaviyoPerformanceResponse = ApiSuccessEnvelope<KlaviyoPerformanceData>
+
+export interface KlaviyoNotification {
+  id: string
+  message: string
+  created_at: string
+  read: boolean
+}
+
+export type KlaviyoNotificationsResponse = ApiSuccessEnvelope<{
+  items: KlaviyoNotification[]
+  description?: string
+}>
+
+export interface PerformanceMetricItem {
+  campaign_code: string
+  activity_title: string
+  activity_date: string
+  metric_type: string
+  value: number | null
+}
+
+export interface PerformanceMetricsData {
+  metrics: PerformanceMetricItem[]
+  page: number
+  limit: number
+  total: number
+  retrieval_status: string
+  description?: string
+  export_status?: string
+  error_message?: string | null
+}
+
+export type PerformanceMetricsResponse = ApiSuccessEnvelope<PerformanceMetricsData>
+
+export interface HistoricalCalendarSnapshot {
+  year: number
+  activities: ActivityOut[]
+}
+
+export interface HistoricalManagementData {
+  current_year: number
+  previous_year: number
+  view: string
+  current_calendar: HistoricalCalendarSnapshot
+  previous_calendar: HistoricalCalendarSnapshot
+  description?: string
+  organization: string
+  role: string
+}
+
+export type HistoricalManagementResponse = ApiSuccessEnvelope<HistoricalManagementData>
+
+export interface PerformanceDataItem {
+  campaign_code: string
+  activity_title: string
+  activity_date: string
+  metric_value: number | null
+}
+
+export interface PerformanceDataList extends PaginatedListData<PerformanceDataItem> {
+  retrieval_status: string
+}
+
+export type PerformanceDataResponse = ApiSuccessEnvelope<PerformanceDataList>
+
+export interface CampaignCodeData {
+  activity_id: string | null
+  campaign_code: string
+  code: string
+  activity_details: ActivityOut | null
+  description?: string
+}
+
+export type CampaignCodeResponse = ApiSuccessEnvelope<CampaignCodeData>
