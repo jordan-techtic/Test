@@ -46,6 +46,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
     enabled,
     retry: false,
     refetchOnWindowFocus: false,
+    throwOnError: false,
   });
 
   const activitiesListQuery = useQuery({
@@ -54,6 +55,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
     enabled,
     retry: false,
     refetchOnWindowFocus: false,
+    throwOnError: false,
   });
 
   const firstActivityId = useMemo(() => {
@@ -74,6 +76,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
     enabled: enabled && Boolean(firstActivityId),
     retry: false,
     refetchOnWindowFocus: false,
+    throwOnError: false,
   });
 
   useQuery({
@@ -82,6 +85,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
     enabled: enabled && Boolean(firstActivityId),
     retry: false,
     refetchOnWindowFocus: false,
+    throwOnError: false,
   });
 
   return useQueries({
@@ -92,6 +96,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
       {
         queryKey: ['marketing', 'klaviyo-performance-notifications'],
@@ -99,6 +104,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
       {
         queryKey: ['marketing', 'audit-log'],
@@ -106,6 +112,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
       {
         queryKey: ['marketing', 'performance-metrics'],
@@ -113,6 +120,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
       {
         queryKey: ['marketing', 'historical-management'],
@@ -120,6 +128,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
       {
         queryKey: ['marketing', 'performance-data'],
@@ -127,6 +136,7 @@ export function useMarketingResourcesPrefetch(enabled = true) {
         enabled,
         retry: false,
         refetchOnWindowFocus: false,
+        throwOnError: false,
       },
     ],
   });
