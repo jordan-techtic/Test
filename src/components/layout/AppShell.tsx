@@ -1,12 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import { MarketingResourcesPrefetch } from '@/components/MarketingResourcesPrefetch';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 
 export function AppShell() {
   return (
     <div className="flex min-h-svh bg-background">
-      <MarketingResourcesPrefetch />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Header />

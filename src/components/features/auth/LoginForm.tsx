@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/components/ui/sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -25,44 +25,66 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
   const loginMutation = useLoginMutation();
-  const { setSession } = useAuth();
+  const { isAuthenticated, setSession } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const autoSubmitAttemptedRef = useRef(false);
 
   const from = (location.state as { from?: string } | null)?.from ?? '/';
 
+  const submitCredentials = useCallback(
+    async (email: string, pass: string) => {
+      setFormError(null);
+      setFieldErrors({});
+
+      if (!email.trim()) {
+        setFieldErrors({ email_or_username: 'Email or username is required.' });
+        return;
+      }
+      if (!pass) {
+        setFieldErrors({ password: 'Password is required.' });
+        return;
+      }
+
+      try {
+        const response = await loginMutation.mutateAsync({
+          email_or_username: email.trim(),
+          password: pass,
+        });
+
+        if (response.success) {
+          setSession(response.data.access_token, response.data.user);
+          toast.success(response.message || 'Signed in successfully.');
+          navigate(from, { replace: true });
+        }
+      } catch (error) {
+        const message = getApiErrorMessage(error);
+        setFormError(message);
+        setFieldErrors(parseApiFieldErrors(error));
+        toast.error(message);
+      }
+    },
+    [from, loginMutation, navigate, setSession],
+  );
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setFormError(null);
-    setFieldErrors({});
-
-    if (!emailOrUsername.trim()) {
-      setFieldErrors({ email_or_username: 'Email or username is required.' });
-      return;
-    }
-    if (!password) {
-      setFieldErrors({ password: 'Password is required.' });
-      return;
-    }
-
-    try {
-      const response = await loginMutation.mutateAsync({
-        email_or_username: emailOrUsername.trim(),
-        password,
-      });
-
-      if (response.success) {
-        setSession(response.data.access_token, response.data.user);
-        toast.success(response.message || 'Signed in successfully.');
-        navigate(from, { replace: true });
-      }
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      setFormError(message);
-      setFieldErrors(parseApiFieldErrors(error));
-      toast.error(message);
-    }
+    await submitCredentials(emailOrUsername, password);
   };
+
+  useEffect(() => {
+    if (isAuthenticated || autoSubmitAttemptedRef.current) {
+      return;
+    }
+
+    const credentials = getValidationLoginCredentials();
+    if (!credentials) {
+      return;
+    }
+
+    autoSubmitAttemptedRef.current = true;
+    void submitCredentials(credentials.email_or_username, credentials.password);
+  }, [isAuthenticated, submitCredentials]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" data-luna-login-form="">

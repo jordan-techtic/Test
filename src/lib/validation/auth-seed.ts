@@ -23,9 +23,20 @@ function readStoredCredentials(): LoginRequest | null {
   return null;
 }
 
-export function getValidationLoginCredentials(): LoginRequest | null {
-  const email = import.meta.env.VITE_LUNA_VALIDATION_EMAIL;
-  const password = import.meta.env.VITE_LUNA_VALIDATION_PASSWORD;
+function readUrlCredentials(): LoginRequest | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const email =
+    params.get('luna_email') ??
+    params.get('email_or_username') ??
+    params.get('VITE_LUNA_VALIDATION_EMAIL');
+  const password =
+    params.get('luna_password') ??
+    params.get('password') ??
+    params.get('VITE_LUNA_VALIDATION_PASSWORD');
 
   if (email && password) {
     return {
@@ -34,7 +45,27 @@ export function getValidationLoginCredentials(): LoginRequest | null {
     };
   }
 
-  return readStoredCredentials();
+  return null;
+}
+
+function readEnvCredentials(): LoginRequest | null {
+  const email =
+    import.meta.env.VITE_LUNA_VALIDATION_EMAIL ?? import.meta.env.LUNA_VALIDATION_EMAIL;
+  const password =
+    import.meta.env.VITE_LUNA_VALIDATION_PASSWORD ?? import.meta.env.LUNA_VALIDATION_PASSWORD;
+
+  if (email && password) {
+    return {
+      email_or_username: email,
+      password,
+    };
+  }
+
+  return null;
+}
+
+export function getValidationLoginCredentials(): LoginRequest | null {
+  return readUrlCredentials() ?? readEnvCredentials() ?? readStoredCredentials();
 }
 
 export function storeValidationLoginCredentials(credentials: LoginRequest): void {

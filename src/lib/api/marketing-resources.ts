@@ -49,3 +49,10 @@ export async function getPerformanceData() {
   );
   return response.data;
 }
+
+export async function getCampaignCode(activityId: string) {
+  const response = await apiClient.get<ApiSuccessResponse<Record<string, unknown>>>(
+    `/api/v1/marketing-team-member/campaign-code/${activityId}`,
+  );
+  return response.data;
+}

@@ -20,13 +20,22 @@ export function Sidebar() {
     >
       <div className="flex items-center gap-2 border-b border-border p-4">
         {!sidebarCollapsed && (
-          <img
-            id="brand-logo"
-            src="/brand-logo.png"
-            alt="Marketing Content Calendar"
-            className="brand-logo h-8 w-auto"
+          <figure
+            className="brand-logo flex items-center"
+            data-testid="brand-logo"
             data-brand-logo="true"
-          />
+            aria-label="Brand logo"
+          >
+            <img
+              id="brand-logo"
+              src="/brand-logo.png"
+              alt="Marketing Content Calendar"
+              className="brand-logo h-8 w-auto"
+              data-brand-logo="true"
+              width={32}
+              height={32}
+            />
+          </figure>
         )}
         <Tooltip>
           <TooltipTrigger asChild>

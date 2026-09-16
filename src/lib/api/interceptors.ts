@@ -29,6 +29,11 @@ export function setupApiInterceptors(onUnauthorized: () => void): void {
       const skipRedirect = error.config?.skipAuthRedirect;
 
       if (status === 401 && !skipRedirect && !isRedirectingToLogin) {
+        const hadToken = Boolean(error.config?.headers?.Authorization);
+        if (!hadToken) {
+          return Promise.reject(error);
+        }
+
         isRedirectingToLogin = true;
         clearSession();
         onUnauthorizedCallback?.();

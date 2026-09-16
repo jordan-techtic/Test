@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { getActivity } from '@/lib/api/activities';
+import { getCalendar } from '@/lib/api/calendar';
 import {
   getActivitiesList,
   getAuditLog,
+  getCampaignCode,
   getHistoricalManagement,
   getKlaviyoPerformance,
   getKlaviyoPerformanceNotifications,
@@ -24,10 +26,28 @@ function extractFirstActivityId(data: Record<string, unknown> | undefined): stri
     }
   }
 
+  const activities = data.activities;
+  if (Array.isArray(activities) && activities.length > 0) {
+    const first = activities[0];
+    if (first && typeof first === 'object' && 'id' in first && typeof first.id === 'string') {
+      return first.id;
+    }
+  }
+
   return null;
 }
 
-export function useMarketingResourcesPrefetch(enabled: boolean) {
+export function useMarketingResourcesPrefetch(enabled = true) {
+  const currentYear = new Date().getFullYear();
+
+  const calendarQuery = useQuery({
+    queryKey: ['calendar', currentYear, null],
+    queryFn: () => getCalendar({ year: currentYear }),
+    enabled,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
   const activitiesListQuery = useQuery({
     queryKey: ['marketing', 'activities-list'],
     queryFn: getActivitiesList,
@@ -36,14 +56,29 @@ export function useMarketingResourcesPrefetch(enabled: boolean) {
     refetchOnWindowFocus: false,
   });
 
-  const firstActivityId = useMemo(
-    () => extractFirstActivityId(activitiesListQuery.data?.data),
-    [activitiesListQuery.data?.data],
-  );
+  const firstActivityId = useMemo(() => {
+    const fromList = extractFirstActivityId(activitiesListQuery.data?.data);
+    if (fromList) {
+      return fromList;
+    }
+    const calendarData = calendarQuery.data?.data;
+    if (!calendarData?.activities?.[0]?.id) {
+      return null;
+    }
+    return calendarData.activities[0].id;
+  }, [activitiesListQuery.data?.data, calendarQuery.data?.data]);
 
   useQuery({
     queryKey: ['activity', firstActivityId],
     queryFn: () => getActivity(firstActivityId!),
+    enabled: enabled && Boolean(firstActivityId),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useQuery({
+    queryKey: ['campaign-code', firstActivityId],
+    queryFn: () => getCampaignCode(firstActivityId!),
     enabled: enabled && Boolean(firstActivityId),
     retry: false,
     refetchOnWindowFocus: false,
