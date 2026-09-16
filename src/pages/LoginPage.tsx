@@ -27,10 +27,11 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <img
-            src="/brand-logo.svg"
+            id="brand-logo"
+            src="/brand-logo.png"
             alt="Marketing Content Calendar"
-            data-brand-logo=""
-            className="mb-2 h-12 w-auto"
+            className="brand-logo mb-2 h-12 w-auto"
+            data-brand-logo="true"
           />
           <h1 className="text-2xl font-semibold leading-none tracking-tight">Sign in</h1>
           <CardDescription>Sign in to manage the marketing content calendar.</CardDescription>

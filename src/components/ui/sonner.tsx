@@ -8,13 +8,10 @@ import {
 } from 'lucide-react';
 import {
   Toaster as SonnerToaster,
-  toast as sonnerToast,
+  toast,
   type ExternalToast,
   type ToasterProps,
 } from 'sonner';
-
-export const toast = sonnerToast;
-export type { ExternalToast, ToasterProps };
 
 function Toaster({ theme = 'light', ...props }: ToasterProps) {
   return (
@@ -54,4 +51,5 @@ function Toaster({ theme = 'light', ...props }: ToasterProps) {
   );
 }
 
-export { Toaster };
+export { Toaster, toast };
+export type { ExternalToast, ToasterProps };

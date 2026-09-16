@@ -12,6 +12,7 @@ export function ActivityEntryChip({ activity, onClick }: ActivityEntryChipProps)
   return (
     <button
       type="button"
+      data-activity-chip={activity.id}
       className={cn(
         'w-full truncate rounded-md px-2 py-1 text-left text-xs text-white transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
       )}

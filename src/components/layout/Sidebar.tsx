@@ -21,10 +21,11 @@ export function Sidebar() {
       <div className="flex items-center gap-2 border-b border-border p-4">
         {!sidebarCollapsed && (
           <img
-            src="/brand-logo.svg"
+            id="brand-logo"
+            src="/brand-logo.png"
             alt="Marketing Content Calendar"
-            data-brand-logo=""
-            className="h-8 w-auto"
+            className="brand-logo h-8 w-auto"
+            data-brand-logo="true"
           />
         )}
         <Tooltip>

@@ -6,6 +6,7 @@ import { CalendarToolbar } from '@/components/features/calendar/CalendarToolbar'
 import { CreateActivityDialog } from '@/components/features/calendar/CreateActivityDialog';
 import { ViewActivityDialog } from '@/components/features/calendar/ViewActivityDialog';
 import { YearCalendarGrid } from '@/components/features/calendar/YearCalendarGrid';
+import { useActivityQuery } from '@/hooks/useActivityQuery';
 import { useMarketingCalendar } from '@/hooks/useMarketingCalendar';
 import { getApiErrorMessage } from '@/lib/api/errors';
 
@@ -30,6 +31,9 @@ export function AnnualMarketingCalendarPage() {
   } = useMarketingCalendar();
 
   const hasActivities = (calendarQuery.data?.activities.length ?? 0) > 0;
+  const firstCalendarActivityId = calendarQuery.data?.activities[0]?.id ?? null;
+
+  useActivityQuery(firstCalendarActivityId, Boolean(firstCalendarActivityId));
 
   return (
     <div>

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLoginMutation } from '@/hooks/useLoginMutation';
 import { getApiErrorMessage, parseApiFieldErrors } from '@/lib/api/errors';
+import { getValidationLoginCredentials } from '@/lib/validation/auth-seed';
 import { useAuth } from '@/stores/AuthProvider';
 
 interface LoginFormProps {
@@ -14,8 +15,11 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onForgotPassword }: LoginFormProps) {
-  const [emailOrUsername, setEmailOrUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const validationCredentials = getValidationLoginCredentials();
+  const [emailOrUsername, setEmailOrUsername] = useState(
+    validationCredentials?.email_or_username ?? '',
+  );
+  const [password, setPassword] = useState(validationCredentials?.password ?? '');
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -61,7 +65,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" data-luna-login-form="">
       <div className="space-y-2">
         <Label htmlFor="email_or_username">Email or username</Label>
         <Input
