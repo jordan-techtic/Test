@@ -3,6 +3,9 @@ import { setupInterceptors } from "@/lib/api/interceptors";
 import { activityPath, apiPaths, campaignCodePath } from "@/types/api";
 
 function resolveApiBaseURL(raw: string | undefined): string {
+  if (import.meta.env.DEV) {
+    return "";
+  }
   const fallback = "http://174.138.72.184:8989/api";
   const trimmed = (raw || fallback).replace(/\/$/, "");
   if (trimmed.endsWith("/api")) {

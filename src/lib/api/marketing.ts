@@ -261,8 +261,6 @@ export function getPerformanceData(signal?: AbortSignal): Promise<SuccessEnvelop
   return getEnvelope("/api/v1/marketing-content-calendar/performance-data", signal);
 }
 
-const FALLBACK_ACTIVITY_ID = "00000000-0000-4000-8000-000000000001";
-
 export function requestOpenContractReads(
   signal?: AbortSignal,
 ): Promise<PromiseSettledResult<unknown>[]> {
@@ -275,7 +273,5 @@ export function requestOpenContractReads(
     getPerformanceMetrics(signal),
     getHistoricalManagement(signal),
     getPerformanceData(signal),
-    getActivity(FALLBACK_ACTIVITY_ID, signal),
-    getCampaignCode(FALLBACK_ACTIVITY_ID, signal),
   ]);
 }

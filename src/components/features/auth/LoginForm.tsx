@@ -39,7 +39,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email_or_username"
@@ -47,7 +47,12 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             <FormItem>
               <FormLabel>Email or username</FormLabel>
               <FormControl>
-                <Input autoComplete="username" placeholder="you@example.com" {...field} />
+                <Input
+                  type="email"
+                  autoComplete="username"
+                  placeholder="you@example.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
