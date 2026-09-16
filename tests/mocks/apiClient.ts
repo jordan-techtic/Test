@@ -8,6 +8,6 @@ export const api = {
 };
 
 export const apiPaths = {
-  login: "/v1/marketing-team-member/login",
-  forgotPassword: "/v1/marketing-team-member/forgot-password",
+  login: "/api/v1/marketing-team-member/login",
+  forgotPassword: "/api/v1/marketing-team-member/forgot-password",
 } as const;
