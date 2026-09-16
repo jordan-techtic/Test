@@ -12,42 +12,39 @@ const DEFAULT_DURATION_MS = 4000;
 
 type ToastMessage = React.ReactNode;
 
-function showToast(message: ToastMessage, data?: ExternalToast) {
-  return sonnerToast(message, { duration: DEFAULT_DURATION_MS, ...data });
-}
+type AppToast = ((message: ToastMessage, data?: ExternalToast) => string | number) & {
+  success: (message: ToastMessage, data?: ExternalToast) => string | number;
+  error: (message: ToastMessage, data?: ExternalToast) => string | number;
+  warning: (message: ToastMessage, data?: ExternalToast) => string | number;
+  info: (message: ToastMessage, data?: ExternalToast) => string | number;
+  message: (message: ToastMessage, data?: ExternalToast) => string | number;
+  loading: (message: ToastMessage, data?: ExternalToast) => string | number;
+  dismiss: typeof sonnerToast.dismiss;
+  promise: typeof sonnerToast.promise;
+};
 
-function success(message: ToastMessage, data?: ExternalToast) {
-  return sonnerToast.success(message, { duration: DEFAULT_DURATION_MS, ...data });
-}
+export const toast: AppToast = Object.assign(
+  (message: ToastMessage, data?: ExternalToast) =>
+    sonnerToast(message, { duration: DEFAULT_DURATION_MS, ...data }),
+  {
+    success: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.success(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    error: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.error(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    warning: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.warning(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    info: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.info(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    message: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.message(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    loading: (message: ToastMessage, data?: ExternalToast) =>
+      sonnerToast.loading(message, { duration: DEFAULT_DURATION_MS, ...data }),
+    dismiss: sonnerToast.dismiss,
+    promise: sonnerToast.promise,
+  },
+);
 
-function error(message: ToastMessage, data?: ExternalToast) {
-  return sonnerToast.error(message, { duration: DEFAULT_DURATION_MS, ...data });
-}
-
-function warning(message: ToastMessage, data?: ExternalToast) {
-  return sonnerToast.warning(message, { duration: DEFAULT_DURATION_MS, ...data });
-}
-
-function info(message: ToastMessage, data?: ExternalToast) {
-  return sonnerToast.info(message, { duration: DEFAULT_DURATION_MS, ...data });
-}
-
-function message(value: ToastMessage, data?: ExternalToast) {
-  return sonnerToast.message(value, { duration: DEFAULT_DURATION_MS, ...data });
-}
-
-const toast = Object.assign(showToast, {
-  success,
-  error,
-  warning,
-  info,
-  message,
-  dismiss: sonnerToast.dismiss,
-  promise: sonnerToast.promise,
-  loading: sonnerToast.loading,
-});
-
-function Toaster({ className, ...props }: ToasterProps) {
+export function Toaster({ className, ...props }: ToasterProps) {
   return (
     <SonnerToaster
       theme="light"
@@ -98,5 +95,3 @@ function Toaster({ className, ...props }: ToasterProps) {
     />
   );
 }
-
-export { toast, Toaster };

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { toast } from "@/components/ui/sonner";
 import { getApiErrorMessage, getErrorCode, getFieldErrors } from "@/lib/api/errors";
 import { invalidateCalendar } from "@/hooks/useCalendar";
-import { createActivity, deleteActivity, getActivity, updateActivity } from "@/services/calendar";
+import { createActivity, deleteActivity, getActivity, getCampaignCode, updateActivity } from "@/services/calendar";
 import type { ActivityCreateRequest, ActivityOut, ActivityUpdateRequest } from "@/types/api";
 
 export function useActivityMutations() {
@@ -34,7 +34,10 @@ export function useActivityMutations() {
   const load = useCallback(async (id: string): Promise<ActivityOut | null> => {
     setIsLoadingDetail(true);
     try {
-      const response = await getActivity(id);
+      const [response] = await Promise.all([
+        getActivity(id),
+        getCampaignCode(id).catch(() => null),
+      ]);
       return response.data;
     } catch (err) {
       toast.error(getApiErrorMessage(err));

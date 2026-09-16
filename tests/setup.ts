@@ -1,5 +1,9 @@
 import "@testing-library/jest-dom";
 
+jest.mock("@/hooks/useLockedContractGets", () => ({
+  useLockedContractGets: () => undefined,
+}));
+
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
