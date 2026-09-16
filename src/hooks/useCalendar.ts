@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getCalendar } from "@/lib/api/marketing";
-import { getApiErrorMessage } from "@/lib/api/errors";
+import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { parseStringList } from "@/lib/query-keys";
 import { useAppContext } from "@/stores/AppContext";
 import type { CalendarData, CalendarQuery } from "@/types/api";
@@ -36,6 +36,9 @@ export function useCalendar(query: CalendarQuery): UseCalendarResult {
       });
       setData(result.data);
     } catch (err) {
+      if (isCanceledError(err)) {
+        return;
+      }
       setData(null);
       setError(getApiErrorMessage(err));
     } finally {

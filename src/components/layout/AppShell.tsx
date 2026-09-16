@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
@@ -15,6 +15,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent side="left" className="w-[240px] p-0">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <SheetDescription className="sr-only">Primary navigation</SheetDescription>
           <Sidebar onNavigate={() => setNavOpen(false)} />
         </SheetContent>
       </Sheet>

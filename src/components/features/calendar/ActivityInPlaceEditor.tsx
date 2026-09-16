@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useUpdateActivity } from "@/hooks/useUpdateActivity";
-import { ApiError, getApiErrorMessage } from "@/lib/api/errors";
+import { ApiError, getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import type { ActivityOut } from "@/types/api";
 
 interface ActivityInPlaceEditorProps {
@@ -65,6 +65,9 @@ export function ActivityInPlaceEditor({
       });
       onOpenChange(false);
     } catch (err) {
+      if (isCanceledError(err)) {
+        return;
+      }
       if (err instanceof ApiError) {
         const fieldMessage = err.details.find((detail) => detail.message)?.message;
         setError(fieldMessage || getApiErrorMessage(err));

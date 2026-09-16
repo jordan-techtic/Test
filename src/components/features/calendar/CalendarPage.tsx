@@ -166,7 +166,7 @@ export function CalendarPage() {
           onCategoriesChange={(values) => updateQuery({ categories: values })}
           onTypesChange={(values) => updateQuery({ activityTypes: values })}
           onClear={() => updateQuery({ categories: [], activityTypes: [] })}
-          isLoading={isLoading && !data}
+          isLoading={isLoading}
         />
       </div>
       {isLoading && !data ? (

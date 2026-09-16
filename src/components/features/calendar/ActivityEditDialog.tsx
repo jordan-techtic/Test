@@ -32,13 +32,17 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useActivity } from "@/hooks/useActivity";
 import { useDeleteActivity } from "@/hooks/useDeleteActivity";
 import { useUpdateActivity } from "@/hooks/useUpdateActivity";
-import { getActivity } from "@/lib/api/marketing";
-import { getApiErrorMessage } from "@/lib/api/errors";
 import { applyApiFieldErrors } from "@/lib/form-errors";
-import { activityFormSchema, refineActivityForm, type ActivityFormValues } from "@/lib/validation";
-import type { ActivityOut, ActivityTypeOption } from "@/types/api";
+import {
+  ACTIVITY_FORM_FIELDS,
+  activityFormSchema,
+  refineActivityForm,
+  type ActivityFormValues,
+} from "@/lib/validation";
+import type { ActivityTypeOption } from "@/types/api";
 
 interface ActivityEditDialogProps {
   activityId: string | null;
@@ -57,9 +61,7 @@ export function ActivityEditDialog({
 }: ActivityEditDialogProps) {
   const { submit: update, isLoading: isSaving } = useUpdateActivity();
   const { submit: remove, isLoading: isDeleting } = useDeleteActivity();
-  const [record, setRecord] = useState<ActivityOut | null>(null);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: record, isLoading, error: loadError } = useActivity(activityId, open);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const form = useForm<ActivityFormValues>({
     resolver: zodResolver(activityFormSchema),
@@ -71,42 +73,20 @@ export function ActivityEditDialog({
       additional_info: "",
     },
   });
+  const { reset } = form;
 
   useEffect(() => {
-    if (!open || !activityId) {
+    if (!open || !record) {
       return;
     }
-    let cancelled = false;
-    setIsLoading(true);
-    setLoadError(null);
-    void getActivity(activityId)
-      .then((result) => {
-        if (cancelled) {
-          return;
-        }
-        setRecord(result.data);
-        form.reset({
-          title: result.data.title,
-          activity_date: result.data.date,
-          activity_type: result.data.activity_type || result.data.type,
-          details: result.data.details || result.data.notes || "",
-          additional_info: result.data.additional_info || "",
-        });
-      })
-      .catch((error: unknown) => {
-        if (!cancelled) {
-          setLoadError(getApiErrorMessage(error));
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [open, activityId, form]);
+    reset({
+      title: record.title,
+      activity_date: record.date,
+      activity_type: record.activity_type || record.type,
+      details: record.details || record.notes || "",
+      additional_info: record.additional_info || "",
+    });
+  }, [open, activityId, today, record, reset]);
 
   async function onSubmit(values: ActivityFormValues) {
     if (!activityId || !record) {
@@ -114,8 +94,11 @@ export function ActivityEditDialog({
     }
     const extra = refineActivityForm(values, { types, today });
     if (Object.keys(extra).length > 0) {
-      for (const [name, message] of Object.entries(extra)) {
-        form.setError(name as keyof ActivityFormValues, { type: "manual", message });
+      for (const name of ACTIVITY_FORM_FIELDS) {
+        const message = extra[name];
+        if (message) {
+          form.setError(name, { type: "manual", message });
+        }
       }
       return;
     }
@@ -132,7 +115,7 @@ export function ActivityEditDialog({
       });
       onOpenChange(false);
     } catch (error) {
-      applyApiFieldErrors(error, form.setError);
+      applyApiFieldErrors(error, form.setError, ACTIVITY_FORM_FIELDS);
     }
   }
 

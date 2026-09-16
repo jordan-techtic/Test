@@ -29,51 +29,6 @@ const CATEGORY_OPTIONS = [
   { value: "focuses", label: "Focuses" },
 ];
 
-const TYPE_FALLBACK: ActivityTypeOption[] = [
-  {
-    value: "email_send",
-    label: "Email Send",
-    category: "promotions",
-    color: "#E85D04",
-    fields: [],
-  },
-  {
-    value: "sms_send",
-    label: "SMS Send",
-    category: "promotions",
-    color: "#E85D04",
-    fields: [],
-  },
-  {
-    value: "blog_post",
-    label: "Blog Post",
-    category: "content",
-    color: "#E85D04",
-    fields: [],
-  },
-  {
-    value: "social_post",
-    label: "Social Post",
-    category: "content",
-    color: "#E85D04",
-    fields: [],
-  },
-  {
-    value: "product_focus",
-    label: "Product Focus",
-    category: "focuses",
-    color: "#E85D04",
-    fields: [],
-  },
-  {
-    value: "seasonal_focus",
-    label: "Seasonal Focus",
-    category: "focuses",
-    color: "#E85D04",
-    fields: [],
-  },
-];
-
 export function ActivityFilters({
   types,
   categories,
@@ -94,7 +49,6 @@ export function ActivityFilters({
   }
 
   const hasFilters = categories.length > 0 || activityTypes.length > 0;
-  const typeOptions = types.length > 0 ? types : TYPE_FALLBACK;
 
   return (
     <div className="flex flex-wrap items-end gap-3">
@@ -131,7 +85,7 @@ export function ActivityFilters({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
             <DropdownMenuLabel>Activity type</DropdownMenuLabel>
-            {typeOptions.map((type) => (
+            {types.map((type) => (
               <DropdownMenuCheckboxItem
                 key={type.value}
                 checked={activityTypes.includes(type.value)}

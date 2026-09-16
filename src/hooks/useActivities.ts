@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { listActivities } from "@/lib/api/marketing";
-import { getApiErrorMessage } from "@/lib/api/errors";
+import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { parseStringList } from "@/lib/query-keys";
 import { useAppContext } from "@/stores/AppContext";
 import type { ActivityListData, ActivityListQuery } from "@/types/api";
@@ -38,6 +38,9 @@ export function useActivities(query: ActivityListQuery): UseActivitiesResult {
       });
       setData(result.data);
     } catch (err) {
+      if (isCanceledError(err)) {
+        return;
+      }
       setData(null);
       setError(getApiErrorMessage(err));
     } finally {

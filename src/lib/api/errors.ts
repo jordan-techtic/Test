@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 import type { ErrorDetail, ErrorEnvelope } from "@/types/api";
 
 export class ApiError extends Error {
@@ -23,7 +23,20 @@ function isErrorEnvelope(value: unknown): value is ErrorEnvelope {
   return record.success === false && typeof record.message === "string";
 }
 
+export function isCanceledError(error: unknown): boolean {
+  if (error instanceof ApiError) {
+    return error.code === "CANCELED" || error.message === "Session ended.";
+  }
+  if (isAxiosError(error)) {
+    return error.code === AxiosError.ERR_CANCELED || error.message === "Session ended.";
+  }
+  return error instanceof Error && error.message === "Session ended.";
+}
+
 export function getApiErrorMessage(error: unknown): string {
+  if (isCanceledError(error)) {
+    return "";
+  }
   if (error instanceof ApiError) {
     if (error.code === "INVALID_CREDENTIALS") {
       return error.message || "Invalid email or username or password.";
@@ -64,6 +77,9 @@ export function getApiErrorMessage(error: unknown): string {
 export function toApiError(error: unknown): ApiError {
   if (error instanceof ApiError) {
     return error;
+  }
+  if (isCanceledError(error)) {
+    return new ApiError("Session ended.", null, "CANCELED", []);
   }
   if (isAxiosError(error)) {
     const status = error.response?.status ?? null;

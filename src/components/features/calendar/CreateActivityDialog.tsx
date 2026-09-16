@@ -31,7 +31,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateActivity } from "@/hooks/useCreateActivity";
 import { applyApiFieldErrors } from "@/lib/form-errors";
-import { activityFormSchema, refineActivityForm, type ActivityFormValues } from "@/lib/validation";
+import {
+  ACTIVITY_FORM_FIELDS,
+  activityFormSchema,
+  refineActivityForm,
+  type ActivityFormValues,
+} from "@/lib/validation";
 import type { ActivityTypeOption } from "@/types/api";
 
 interface CreateActivityDialogProps {
@@ -74,8 +79,11 @@ export function CreateActivityDialog({
   async function onSubmit(values: ActivityFormValues) {
     const extra = refineActivityForm(values, { types, today });
     if (Object.keys(extra).length > 0) {
-      for (const [name, message] of Object.entries(extra)) {
-        form.setError(name as keyof ActivityFormValues, { type: "manual", message });
+      for (const name of ACTIVITY_FORM_FIELDS) {
+        const message = extra[name];
+        if (message) {
+          form.setError(name, { type: "manual", message });
+        }
       }
       return;
     }
@@ -98,7 +106,7 @@ export function CreateActivityDialog({
       });
       onOpenChange(false);
     } catch (error) {
-      applyApiFieldErrors(error, form.setError);
+      applyApiFieldErrors(error, form.setError, ACTIVITY_FORM_FIELDS);
     }
   }
 

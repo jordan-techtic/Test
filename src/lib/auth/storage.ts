@@ -22,10 +22,32 @@ export function getStoredUser(): AuthUser | null {
     return null;
   }
   try {
-    return JSON.parse(raw) as AuthUser;
+    const parsed: unknown = JSON.parse(raw);
+    return parseAuthUser(parsed);
   } catch {
     return null;
   }
+}
+
+function parseAuthUser(value: unknown): AuthUser | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  if (
+    typeof record.id !== "string" ||
+    typeof record.email !== "string" ||
+    typeof record.username !== "string" ||
+    typeof record.role !== "string"
+  ) {
+    return null;
+  }
+  return {
+    id: record.id,
+    email: record.email,
+    username: record.username,
+    role: record.role,
+  };
 }
 
 export function isSessionRejected(): boolean {

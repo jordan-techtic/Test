@@ -22,18 +22,37 @@ function formatTimestamp(value: string | null): string {
   }
 }
 
-function formatChangeValue(value: unknown): string {
+function isScalar(value: unknown): value is string | number | boolean {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+}
+
+function formatScalar(value: unknown): string {
   if (value === null || value === undefined) {
     return "—";
   }
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+  if (isScalar(value)) {
     return String(value);
   }
-  try {
-    return JSON.stringify(value);
-  } catch {
+  return "—";
+}
+
+function formatChangeValue(value: unknown): string | null {
+  if (value === null || value === undefined) {
     return "—";
   }
+  if (isScalar(value)) {
+    return String(value);
+  }
+  if (typeof value !== "object") {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  const before = record.before ?? record.from ?? record.old ?? record.previous;
+  const after = record.after ?? record.to ?? record.new ?? record.current;
+  if (before !== undefined || after !== undefined) {
+    return `${formatScalar(before)} → ${formatScalar(after)}`;
+  }
+  return "Updated";
 }
 
 function pageNumbers(current: number, totalPages: number): number[] {
@@ -82,12 +101,18 @@ export function AuditLogPanel() {
                     ) : null}
                     {item.changes && Object.keys(item.changes).length > 0 ? (
                       <dl className="mt-2 space-y-1">
-                        {Object.entries(item.changes).map(([field, value]) => (
-                          <div key={field} className="flex gap-2 text-xs">
-                            <dt className="font-medium text-foreground">{field}</dt>
-                            <dd className="text-muted-foreground">{formatChangeValue(value)}</dd>
-                          </div>
-                        ))}
+                        {Object.entries(item.changes).map(([field, value]) => {
+                          const formatted = formatChangeValue(value);
+                          if (formatted === null) {
+                            return null;
+                          }
+                          return (
+                            <div key={field} className="flex gap-2 text-xs">
+                              <dt className="font-medium text-foreground">{field}</dt>
+                              <dd className="text-muted-foreground">{formatted}</dd>
+                            </div>
+                          );
+                        })}
                       </dl>
                     ) : null}
                     {item.created_at ? (

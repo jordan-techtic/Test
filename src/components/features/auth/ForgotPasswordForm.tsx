@@ -31,7 +31,7 @@ export function ForgotPasswordForm({ onClose }: ForgotPasswordFormProps) {
       form.reset();
       onClose();
     } catch (error) {
-      applyApiFieldErrors(error, form.setError);
+      applyApiFieldErrors(error, form.setError, ["email"]);
     }
   }
 

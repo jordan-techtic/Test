@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/toast";
 import { login } from "@/lib/api/auth";
-import { getApiErrorMessage } from "@/lib/api/errors";
+import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginRequest } from "@/types/api";
 
@@ -23,7 +23,9 @@ export function useLogin() {
       toast.success(result.message || "Login successful.");
       navigate("/calendar", { replace: true });
     } catch (error) {
-      toast.error(getApiErrorMessage(error));
+      if (!isCanceledError(error)) {
+        toast.error(getApiErrorMessage(error));
+      }
       throw error;
     } finally {
       setIsLoading(false);

@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 import type { AxiosInstance } from "axios";
 import { emitUnauthorized, getAccessToken, isSessionRejected } from "@/lib/auth/storage";
 
@@ -18,7 +18,9 @@ export function setupInterceptors(client: AxiosInstance): void {
       return config;
     }
     if (isSessionRejected()) {
-      return config;
+      return Promise.reject(
+        new AxiosError("Session ended.", AxiosError.ERR_CANCELED, config),
+      );
     }
     const token = getAccessToken();
     if (token) {

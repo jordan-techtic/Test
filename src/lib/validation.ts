@@ -40,6 +40,14 @@ export const activityFormSchema = z.object({
 
 export type ActivityFormValues = z.infer<typeof activityFormSchema>;
 
+export const ACTIVITY_FORM_FIELDS: ReadonlyArray<keyof ActivityFormValues> = [
+  "title",
+  "activity_date",
+  "activity_type",
+  "details",
+  "additional_info",
+];
+
 export function refineActivityForm(
   values: ActivityFormValues,
   options: { types: ActivityTypeOption[]; today: string },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { deleteActivity } from "@/lib/api/marketing";
-import { getApiErrorMessage } from "@/lib/api/errors";
+import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { useAppContext } from "@/stores/AppContext";
 
 export function useDeleteActivity() {
@@ -15,7 +15,9 @@ export function useDeleteActivity() {
       toast.success(result.message || "Activity deleted successfully.");
       invalidateWorkspace();
     } catch (error) {
-      toast.error(getApiErrorMessage(error));
+      if (!isCanceledError(error)) {
+        toast.error(getApiErrorMessage(error));
+      }
       throw error;
     } finally {
       setIsLoading(false);

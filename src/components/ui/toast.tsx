@@ -142,4 +142,5 @@ export {
   ToastAction,
 };
 
-export { toast, useToast } from "@/components/ui/use-toast";
+export { toast } from "@/components/ui/sonner";
+export { useToast } from "@/components/ui/use-toast";

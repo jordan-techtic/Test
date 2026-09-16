@@ -64,4 +64,14 @@ describe("auth interceptors", () => {
     ).rejects.toBeDefined();
     expect(emitUnauthorizedMock).not.toHaveBeenCalled();
   });
+
+  it("aborts protected requests after session rejection", async () => {
+    rejectSession();
+    const adapter = jest.fn();
+    const client = axios.create();
+    setupInterceptors(client);
+    client.defaults.adapter = adapter;
+    await expect(client.get("/api/v1/marketing-team-member/calendar")).rejects.toBeDefined();
+    expect(adapter).not.toHaveBeenCalled();
+  });
 });

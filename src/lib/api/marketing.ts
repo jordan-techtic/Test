@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/client";
-import { toApiError } from "@/lib/api/errors";
+import { isCanceledError, toApiError } from "@/lib/api/errors";
 import type {
   ActivityCreateData,
   ActivityCreateRequest,
@@ -108,13 +108,20 @@ export async function createActivity(
   }
 }
 
-export async function getActivity(id: string): Promise<SuccessEnvelope<ActivityOut>> {
+export async function getActivity(
+  id: string,
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<ActivityOut>> {
   try {
     const response = await api.get<SuccessEnvelope<ActivityOut>>(
       `/api/v1/marketing-team-member/activities/${id}`,
+      { signal },
     );
     return response.data;
   } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
     throw toApiError(error);
   }
 }

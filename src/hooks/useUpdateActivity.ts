@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { updateActivity } from "@/lib/api/marketing";
-import { ApiError, getApiErrorMessage } from "@/lib/api/errors";
+import { ApiError, getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { useAppContext } from "@/stores/AppContext";
 import type { ActivityUpdateRequest } from "@/types/api";
 
@@ -21,7 +21,9 @@ export function useUpdateActivity() {
         invalidateWorkspace();
         throw error;
       }
-      toast.error(getApiErrorMessage(error));
+      if (!isCanceledError(error)) {
+        toast.error(getApiErrorMessage(error));
+      }
       throw error;
     } finally {
       setIsLoading(false);

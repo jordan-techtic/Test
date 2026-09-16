@@ -33,7 +33,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
     try {
       await submit(values);
     } catch (error) {
-      applyApiFieldErrors(error, form.setError);
+      applyApiFieldErrors(error, form.setError, ["email_or_username", "password"]);
     }
   }
 

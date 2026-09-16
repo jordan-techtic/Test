@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { createActivity } from "@/lib/api/marketing";
-import { ApiError, getApiErrorMessage } from "@/lib/api/errors";
+import { getApiErrorMessage, isCanceledError } from "@/lib/api/errors";
 import { useAppContext } from "@/stores/AppContext";
 import type { ActivityCreateRequest } from "@/types/api";
 
@@ -16,9 +16,8 @@ export function useCreateActivity() {
       toast.success(result.message || "Activity created successfully.");
       invalidateWorkspace();
     } catch (error) {
-      toast.error(getApiErrorMessage(error));
-      if (error instanceof ApiError) {
-        throw error;
+      if (!isCanceledError(error)) {
+        toast.error(getApiErrorMessage(error));
       }
       throw error;
     } finally {
