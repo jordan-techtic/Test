@@ -78,18 +78,25 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting} aria-busy={isSubmitting}>
+        <Button
+          type="submit"
+          className="h-11 w-full"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+          aria-label="Log in"
+        >
           {isSubmitting ? <Spinner /> : null}
           {isSubmitting ? "Signing in…" : "Log in"}
         </Button>
         <div className="text-center">
-          <button
+          <Button
             type="button"
-            className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            variant="link"
+            className="h-11 px-2"
             onClick={onForgotPassword}
           >
             Forgot password?
-          </button>
+          </Button>
         </div>
       </form>
     </Form>

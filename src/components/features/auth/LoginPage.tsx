@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ForgotPasswordForm } from "@/components/features/auth/ForgotPasswordForm";
 import { LoginForm } from "@/components/features/auth/LoginForm";
 
@@ -16,19 +17,6 @@ export function LoginPage() {
     document.title = "Sign in · Marketing Content Calendar";
   }, []);
 
-  useEffect(() => {
-    if (!showRecovery) {
-      return;
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setShowRecovery(false);
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [showRecovery]);
-
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
       <Card className="w-full max-w-[28rem]">
@@ -38,19 +26,26 @@ export function LoginPage() {
             alt="Marketing Content Calendar"
             className="mb-2 h-10 w-auto"
           />
-          <CardTitle>Sign in</CardTitle>
+          <h1 className="text-[28px] font-semibold leading-9 tracking-tight">Sign in</h1>
           <CardDescription>
             Use your registered email or username to access the marketing calendar.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {showRecovery ? (
-            <ForgotPasswordForm onCancel={() => setShowRecovery(false)} />
-          ) : (
-            <LoginForm onForgotPassword={() => setShowRecovery(true)} />
-          )}
+          <LoginForm onForgotPassword={() => setShowRecovery(true)} />
         </CardContent>
       </Card>
+      <Dialog open={showRecovery} onOpenChange={setShowRecovery}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset password</DialogTitle>
+            <DialogDescription>
+              If the email is registered, you will receive instructions.
+            </DialogDescription>
+          </DialogHeader>
+          <ForgotPasswordForm onCancel={() => setShowRecovery(false)} />
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

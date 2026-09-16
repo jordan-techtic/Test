@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 import { forgotPassword as forgotPasswordRequest } from "@/lib/api/auth";
 import { getApiErrorMessage, getFieldErrors } from "@/lib/api/errors";
 import type { ForgotPasswordRequest } from "@/types/api";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 import { login as loginRequest } from "@/lib/api/auth";
 import { getApiErrorMessage, getFieldErrors } from "@/lib/api/errors";
 import { useAppContext } from "@/stores/AppContext";

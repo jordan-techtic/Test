@@ -44,7 +44,6 @@ export function ForgotPasswordForm({ onCancel }: ForgotPasswordFormProps) {
         })}
         noValidate
       >
-        <h2 className="text-lg font-semibold">Reset password</h2>
         <FormField
           control={form.control}
           name="email"
@@ -68,10 +67,22 @@ export function ForgotPasswordForm({ onCancel }: ForgotPasswordFormProps) {
           )}
         />
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+          <Button
+            type="submit"
+            className="h-11"
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+            aria-label="Send recovery email"
+          >
             {isSubmitting ? <Spinner /> : null}
             {isSubmitting ? "Sending…" : "Send recovery email"}
           </Button>
