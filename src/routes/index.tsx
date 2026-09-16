@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { GuestRoute } from '@/components/GuestRoute'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { RootRedirect } from '@/components/RootRedirect'
 import { AppShell } from '@/components/layout/AppShell'
 import { CalendarPage } from '@/pages/CalendarPage'
 import { LoginPage } from '@/pages/LoginPage'
@@ -19,6 +18,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: '/',
     element: (
       <ProtectedRoute>
         <AppShell />
@@ -26,14 +26,14 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/calendar',
+        index: true,
+        element: <CalendarPage />,
+      },
+      {
+        path: 'calendar',
         element: <CalendarPage />,
       },
     ],
-  },
-  {
-    path: '/',
-    element: <RootRedirect />,
   },
   {
     path: '/404',

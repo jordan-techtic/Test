@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
 
-const navItems = [{ to: '/calendar', label: 'Calendar', end: true }]
+const navItems = [{ to: '/', label: 'Calendar', end: true }]
 
 export function Sidebar() {
   return (

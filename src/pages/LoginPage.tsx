@@ -16,7 +16,7 @@ export function LoginPage() {
   const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   if (isAuthenticated) {
-    return <Navigate to="/calendar" replace />
+    return <Navigate to="/" replace />
   }
 
   return (

@@ -15,7 +15,7 @@ export function useLogin() {
     onSuccess: (response) => {
       setSession(response.data.access_token, response.data.user)
       toast.success(response.message || 'Signed in successfully.')
-      navigate('/calendar', { replace: true })
+      navigate('/', { replace: true })
     },
   })
 }

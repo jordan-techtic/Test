@@ -10,7 +10,7 @@ export function GuestRoute({ children }: GuestRouteProps) {
   const { isAuthenticated } = useAuth()
 
   if (isAuthenticated) {
-    return <Navigate to="/calendar" replace />
+    return <Navigate to="/" replace />
   }
 
   return children
