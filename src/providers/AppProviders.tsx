@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { MarketingResourcesPrefetch } from '@/components/MarketingResourcesPrefetch';
 import { ValidationAuthBootstrap } from '@/components/ValidationAuthBootstrap';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -25,7 +24,6 @@ export function AppProviders() {
       <AppLayoutProvider>
         <AuthProvider>
           <ValidationAuthBootstrap />
-          <MarketingResourcesPrefetch />
           <AppProvider>
             <TooltipProvider>
               <ErrorBoundary>
