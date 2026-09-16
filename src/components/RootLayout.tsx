@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { MarketingResourcesPrefetch } from '@/components/MarketingResourcesPrefetch';
 import { setupApiInterceptors } from '@/lib/api/interceptors';
 import { useAuth } from '@/stores/AuthProvider';
 
@@ -14,5 +15,10 @@ export function RootLayout() {
     });
   }, [logout, navigate]);
 
-  return <Outlet />;
+  return (
+    <>
+      <MarketingResourcesPrefetch />
+      <Outlet />
+    </>
+  );
 }
