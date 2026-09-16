@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { MarketingDataLoader } from '@/components/MarketingDataLoader'
+import { ValidationAuthBootstrap } from '@/components/ValidationAuthBootstrap'
 import { Toaster } from '@/components/ui/sonner'
 import { router } from '@/routes'
 import { AppProvider } from '@/stores/AppContext'
@@ -23,7 +23,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <AuthProvider>
-            <MarketingDataLoader />
+            <ValidationAuthBootstrap />
             <RouterProvider router={router} />
             <Toaster />
           </AuthProvider>
