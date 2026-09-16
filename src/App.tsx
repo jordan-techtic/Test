@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
-import { ApiContractBootstrap } from '@/components/ApiContractBootstrap'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Toaster } from '@/components/ui/sonner'
 import { router } from '@/routes'
@@ -23,7 +22,6 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <AuthProvider>
-            <ApiContractBootstrap />
             <RouterProvider router={router} />
             <Toaster />
           </AuthProvider>

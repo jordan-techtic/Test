@@ -12,8 +12,6 @@ import {
   listActivities,
 } from '@/lib/api/marketing'
 
-const PLACEHOLDER_ACTIVITY_ID = '00000000-0000-0000-0000-000000000001'
-
 interface MarketingDataOptions {
   year: number
   activityId?: string | null
@@ -25,7 +23,7 @@ export function useMarketingData({
   activityId,
   enabled = true,
 }: MarketingDataOptions) {
-  const resolvedActivityId = activityId ?? PLACEHOLDER_ACTIVITY_ID
+  const hasActivityId = Boolean(activityId)
 
   const activitiesQuery = useQuery({
     queryKey: ['activities', year],
@@ -70,15 +68,15 @@ export function useMarketingData({
   })
 
   const activityDetailQuery = useQuery({
-    queryKey: ['activity', resolvedActivityId],
-    queryFn: () => getActivity(resolvedActivityId),
-    enabled,
+    queryKey: ['activity', activityId],
+    queryFn: () => getActivity(activityId!),
+    enabled: enabled && hasActivityId,
   })
 
   const campaignCodeQuery = useQuery({
-    queryKey: ['campaign-code', resolvedActivityId],
-    queryFn: () => getCampaignCode(resolvedActivityId),
-    enabled,
+    queryKey: ['campaign-code', activityId],
+    queryFn: () => getCampaignCode(activityId!),
+    enabled: enabled && hasActivityId,
   })
 
   return {
