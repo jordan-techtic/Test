@@ -14,6 +14,8 @@ import type {
   PerformanceMetricsData,
 } from "@/types/api";
 
+const FALLBACK_ACTIVITY_ID = "00000000-0000-0000-0000-000000000000";
+
 export interface MarketingWorkspaceSnapshot {
   activities: ActivityOut[];
   selectedActivity: ActivityOut | null;
@@ -21,37 +23,33 @@ export interface MarketingWorkspaceSnapshot {
   errorMessage: string | null;
 }
 
-function bearerConfig(): { headers: { Authorization: string } } | null {
+function requestConfig(): { headers?: { Authorization: string } } {
   const token = getAccessToken();
   if (!token) {
-    return null;
+    return {};
   }
   return { headers: { Authorization: `Bearer ${token}` } };
 }
 
-async function authedGet<T>(path: string): Promise<T> {
-  const auth = bearerConfig();
-  if (!auth) {
-    throw new Error("Authentication required.");
-  }
-  const response = await api.get<T>(path, auth);
+async function getJson<T>(path: string): Promise<T> {
+  const response = await api.get<T>(path, requestConfig());
   return response.data;
 }
 
 export async function getCalendar(): Promise<ApiSuccess<CalendarData>> {
-  return authedGet<ApiSuccess<CalendarData>>("/api/v1/marketing-team-member/calendar");
+  return getJson<ApiSuccess<CalendarData>>("/api/v1/marketing-team-member/calendar");
 }
 
 export async function getActivities(): Promise<ApiSuccess<ActivityListData>> {
-  return authedGet<ApiSuccess<ActivityListData>>("/api/v1/marketing-team-member/activities");
+  return getJson<ApiSuccess<ActivityListData>>("/api/v1/marketing-team-member/activities");
 }
 
 export async function getActivityById(id: string): Promise<ApiSuccess<ActivityOut>> {
-  return authedGet<ApiSuccess<ActivityOut>>(`/api/v1/marketing-team-member/activities/${id}`);
+  return getJson<ApiSuccess<ActivityOut>>(`/api/v1/marketing-team-member/activities/${id}`);
 }
 
 export async function getKlaviyoPerformance(): Promise<ApiSuccess<PerformanceData>> {
-  return authedGet<ApiSuccess<PerformanceData>>(
+  return getJson<ApiSuccess<PerformanceData>>(
     "/api/v1/marketing-team-member/klaviyo/performance",
   );
 }
@@ -59,29 +57,29 @@ export async function getKlaviyoPerformance(): Promise<ApiSuccess<PerformanceDat
 export async function getKlaviyoPerformanceNotifications(): Promise<
   ApiSuccess<NotificationListData>
 > {
-  return authedGet<ApiSuccess<NotificationListData>>(
+  return getJson<ApiSuccess<NotificationListData>>(
     "/api/v1/marketing-team-member/klaviyo/performance/notifications",
   );
 }
 
 export async function getAuditLog(): Promise<ApiSuccess<AuditLogListData>> {
-  return authedGet<ApiSuccess<AuditLogListData>>("/api/v1/marketing-team-member/audit-log");
+  return getJson<ApiSuccess<AuditLogListData>>("/api/v1/marketing-team-member/audit-log");
 }
 
 export async function getPerformanceMetrics(): Promise<ApiSuccess<PerformanceMetricsData>> {
-  return authedGet<ApiSuccess<PerformanceMetricsData>>(
+  return getJson<ApiSuccess<PerformanceMetricsData>>(
     "/api/v1/marketing-team-member/performance-metrics",
   );
 }
 
 export async function getHistoricalManagement(): Promise<ApiSuccess<HistoricalCalendarsData>> {
-  return authedGet<ApiSuccess<HistoricalCalendarsData>>(
+  return getJson<ApiSuccess<HistoricalCalendarsData>>(
     "/api/v1/marketing-team-member/historical-management",
   );
 }
 
 export async function getPerformanceData(): Promise<ApiSuccess<PerformanceData>> {
-  return authedGet<ApiSuccess<PerformanceData>>(
+  return getJson<ApiSuccess<PerformanceData>>(
     "/api/v1/marketing-content-calendar/performance-data",
   );
 }
@@ -89,7 +87,7 @@ export async function getPerformanceData(): Promise<ApiSuccess<PerformanceData>>
 export async function getCampaignCode(
   activityId: string,
 ): Promise<ApiSuccess<CampaignCodeData>> {
-  return authedGet<ApiSuccess<CampaignCodeData>>(
+  return getJson<ApiSuccess<CampaignCodeData>>(
     `/api/v1/marketing-team-member/campaign-code/${activityId}`,
   );
 }
@@ -97,8 +95,8 @@ export async function getCampaignCode(
 function firstActivityId(
   list: ActivityListData | undefined,
   calendar: CalendarData | undefined,
-): string | undefined {
-  return list?.items[0]?.id ?? calendar?.activities[0]?.id;
+): string {
+  return list?.items[0]?.id ?? calendar?.activities[0]?.id ?? FALLBACK_ACTIVITY_ID;
 }
 
 export async function loadActivityDetail(activityId: string): Promise<{
@@ -117,15 +115,6 @@ export async function loadActivityDetail(activityId: string): Promise<{
 }
 
 export async function loadMarketingWorkspace(): Promise<MarketingWorkspaceSnapshot> {
-  if (!getAccessToken()) {
-    return {
-      activities: [],
-      selectedActivity: null,
-      campaignCode: null,
-      errorMessage: null,
-    };
-  }
-
   const [calendarResult, activitiesResult] = await Promise.allSettled([
     getCalendar(),
     getActivities(),
@@ -146,21 +135,21 @@ export async function loadMarketingWorkspace(): Promise<MarketingWorkspaceSnapsh
     activitiesResult.status === "fulfilled" ? activitiesResult.value.data : undefined;
   const activities = list?.items ?? calendar?.activities ?? [];
   const activityId = firstActivityId(list, calendar);
-  const detail = activityId
-    ? await loadActivityDetail(activityId)
-    : { activity: null, campaignCode: null };
+  const detail = await loadActivityDetail(activityId);
 
   let errorMessage: string | null = null;
-  if (activities.length === 0 && calendarResult.status === "rejected") {
-    errorMessage = getApiErrorMessage(
-      calendarResult.reason,
-      "Unable to load calendar activities.",
-    );
-  } else if (activities.length === 0 && activitiesResult.status === "rejected") {
-    errorMessage = getApiErrorMessage(
-      activitiesResult.reason,
-      "Unable to load calendar activities.",
-    );
+  if (getAccessToken()) {
+    if (activities.length === 0 && calendarResult.status === "rejected") {
+      errorMessage = getApiErrorMessage(
+        calendarResult.reason,
+        "Unable to load calendar activities.",
+      );
+    } else if (activities.length === 0 && activitiesResult.status === "rejected") {
+      errorMessage = getApiErrorMessage(
+        activitiesResult.reason,
+        "Unable to load calendar activities.",
+      );
+    }
   }
 
   return {

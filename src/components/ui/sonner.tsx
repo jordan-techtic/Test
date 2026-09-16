@@ -5,20 +5,32 @@ import {
   type ToasterProps,
 } from "sonner";
 
-function showToast(message: string, data?: ExternalToast) {
-  return emitSonnerToast(message, data);
-}
+type SonnerToast = ((message: string, data?: ExternalToast) => string | number) & {
+  success: (message: string, data?: ExternalToast) => string | number;
+  error: (message: string, data?: ExternalToast) => string | number;
+  info: (message: string, data?: ExternalToast) => string | number;
+  warning: (message: string, data?: ExternalToast) => string | number;
+  message: (message: string, data?: ExternalToast) => string | number;
+  dismiss: (id?: string | number) => void;
+};
 
-const toast = Object.assign(showToast, {
-  success: (message: string, data?: ExternalToast) => emitSonnerToast.success(message, data),
-  error: (message: string, data?: ExternalToast) => emitSonnerToast.error(message, data),
-  info: (message: string, data?: ExternalToast) => emitSonnerToast.info(message, data),
-  warning: (message: string, data?: ExternalToast) => emitSonnerToast.warning(message, data),
-  dismiss: (id?: string | number) => emitSonnerToast.dismiss(id),
-  message: (message: string, data?: ExternalToast) => emitSonnerToast.message(message, data),
-});
+export const toast: SonnerToast = Object.assign(
+  function toast(message: string, data?: ExternalToast) {
+    return emitSonnerToast(message, data);
+  },
+  {
+    success: (message: string, data?: ExternalToast) => emitSonnerToast.success(message, data),
+    error: (message: string, data?: ExternalToast) => emitSonnerToast.error(message, data),
+    info: (message: string, data?: ExternalToast) => emitSonnerToast.info(message, data),
+    warning: (message: string, data?: ExternalToast) => emitSonnerToast.warning(message, data),
+    message: (message: string, data?: ExternalToast) => emitSonnerToast.message(message, data),
+    dismiss: (id?: string | number) => {
+      emitSonnerToast.dismiss(id);
+    },
+  },
+);
 
-function Toaster({ ...props }: ToasterProps) {
+export function Toaster({ ...props }: ToasterProps) {
   return (
     <Sonner
       theme="light"
@@ -43,5 +55,4 @@ function Toaster({ ...props }: ToasterProps) {
   );
 }
 
-export { Toaster, toast };
 export type { ToasterProps };
