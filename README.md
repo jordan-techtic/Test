@@ -14,4 +14,4 @@ Vite + React + TypeScript app for marketing team members. Sign in at `/login`, t
 
 ## Environment
 
-Copy `.env.example` to `.env` and set `VITE_API_URL` to the API origin including `/api` (for example `http://174.138.72.184:8989/api`). Request paths are `/v1/marketing-team-member/...`.
+Copy `.env.example` to `.env` and set `VITE_API_BASE_URL` or `VITE_API_URL` to the API origin (for example `http://174.138.72.184:8989/api`). A trailing `/api` is stripped so request paths stay `/api/v1/marketing-team-member/...` and join to `http://174.138.72.184:8989/api/v1/marketing-team-member/...`.

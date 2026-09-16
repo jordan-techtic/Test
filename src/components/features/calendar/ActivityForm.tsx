@@ -1,10 +1,12 @@
 import { format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useId } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +20,7 @@ interface ActivityFormProps {
 
 export function ActivityForm({ activityTypes, campaignCode }: ActivityFormProps) {
   const form = useFormContext<ActivityFormValues>();
+  const campaignCodeId = useId();
   const selectedType = form.watch("activity_type");
   const typeOption = activityTypes.find((item) => item.value === selectedType);
   const extraFields = typeOption?.fields ?? [];
@@ -130,8 +133,8 @@ export function ActivityForm({ activityTypes, campaignCode }: ActivityFormProps)
       />
       {campaignCode ? (
         <div className="space-y-2">
-          <p className="text-sm font-medium">Campaign code</p>
-          <Input value={campaignCode} readOnly aria-readonly />
+          <Label htmlFor={campaignCodeId}>Campaign code</Label>
+          <Input id={campaignCodeId} value={campaignCode} readOnly aria-readonly />
         </div>
       ) : null}
     </div>

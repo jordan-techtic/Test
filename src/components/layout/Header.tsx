@@ -10,17 +10,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MobileNav } from "@/components/layout/Sidebar";
 import { useAppContext } from "@/stores/AppContext";
+import { humanizeKey } from "@/lib/utils";
 
 export function Header() {
   const { user, signOut } = useAppContext();
   const navigate = useNavigate();
   const label = user?.username || user?.email || "Account";
+  const orgOrRole = user?.role ? humanizeKey(user.role) : null;
 
   return (
     <header className="flex h-14 items-center justify-between border-b bg-card px-4">
       <div className="flex items-center gap-2">
         <MobileNav />
-        <p className="text-sm font-medium text-muted-foreground">Marketing team</p>
+        {orgOrRole ? <p className="text-sm font-medium text-muted-foreground">{orgOrRole}</p> : null}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -1,5 +1,3 @@
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -7,6 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/shared/PasswordInput";
 import { useLogin } from "@/hooks/useLogin";
 
 const schema = z.object({
@@ -21,8 +20,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onForgotPassword }: LoginFormProps) {
-  const { submit, isPending, error, fieldErrors } = useLogin();
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const { submit, isPending, error } = useLogin();
   const form = useForm<LoginValues>({
     resolver: zodResolver(schema),
     defaultValues: { email_or_username: "", password: "" },
@@ -32,7 +30,16 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
     <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={form.handleSubmit((values) => submit(values))}
+        onSubmit={form.handleSubmit(async (values) => {
+          const result = await submit(values);
+          if (result && !result.ok) {
+            for (const [field, message] of Object.entries(result.fieldErrors)) {
+              if (field === "email_or_username" || field === "password") {
+                form.setError(field, { message });
+              }
+            }
+          }
+        })}
         noValidate
       >
         {error ? (
@@ -49,7 +56,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
               <FormControl>
                 <Input autoComplete="username" {...field} />
               </FormControl>
-              <FormMessage>{fieldErrors.email_or_username}</FormMessage>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -59,30 +66,10 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
-              <div className="relative">
-                <FormControl>
-                  <Input
-                    type={passwordVisible ? "text" : "password"}
-                    autoComplete="current-password"
-                    className="pr-10"
-                    {...field}
-                  />
-                </FormControl>
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={passwordVisible ? "Hide password" : "Show password"}
-                  aria-pressed={passwordVisible}
-                  onClick={() => setPasswordVisible((value) => !value)}
-                >
-                  {passwordVisible ? (
-                    <EyeOff className="size-4" aria-hidden />
-                  ) : (
-                    <Eye className="size-4" aria-hidden />
-                  )}
-                </button>
-              </div>
-              <FormMessage>{fieldErrors.password}</FormMessage>
+              <FormControl>
+                <PasswordInput autoComplete="current-password" {...field} />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

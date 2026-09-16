@@ -8,7 +8,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ActivityEntry } from "@/components/features/calendar/ActivityEntry";
 import { cn } from "@/lib/utils";
 import type { ActivityOut } from "@/types/api";
@@ -26,12 +26,12 @@ interface YearCalendarGridProps {
 function MonthGrid({
   monthDate,
   today,
-  activities,
+  activitiesByDate,
   onSelectActivity,
 }: {
   monthDate: Date;
   today: string;
-  activities: ActivityOut[];
+  activitiesByDate: Record<string, ActivityOut[]>;
   onSelectActivity: (id: string) => void;
 }) {
   const start = startOfWeek(startOfMonth(monthDate), { weekStartsOn: 1 });
@@ -56,7 +56,7 @@ function MonthGrid({
       <div className="mt-1 grid grid-cols-7 gap-1">
         {days.map((day) => {
           const key = format(day, "yyyy-MM-dd");
-          const dayActivities = activities.filter((activity) => activity.date === key);
+          const dayActivities = activitiesByDate[key] ?? [];
           const inMonth = isSameMonth(day, monthDate);
           return (
             <div
@@ -89,6 +89,15 @@ export function YearCalendarGrid({
   focusedMonth,
 }: YearCalendarGridProps) {
   const months = Array.from({ length: 12 }, (_, index) => new Date(year, index, 1));
+  const activitiesByDate = useMemo(() => {
+    const grouped: Record<string, ActivityOut[]> = {};
+    for (const activity of activities) {
+      const bucket = grouped[activity.date] ?? [];
+      bucket.push(activity);
+      grouped[activity.date] = bucket;
+    }
+    return grouped;
+  }, [activities]);
 
   useEffect(() => {
     const id = `month-${format(focusedMonth, "yyyy-MM")}`;
@@ -107,7 +116,7 @@ export function YearCalendarGrid({
           <MonthGrid
             monthDate={monthDate}
             today={today}
-            activities={activities}
+            activitiesByDate={activitiesByDate}
             onSelectActivity={onSelectActivity}
           />
         </div>

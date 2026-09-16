@@ -55,12 +55,6 @@ export function CreateActivityDialog({ open, onOpenChange, activityTypes }: Crea
           <form
             className="space-y-4"
             onSubmit={form.handleSubmit(async (values) => {
-              const selected = activityTypes.find((item) => item.value === values.activity_type);
-              const extra = selected?.fields.find((field) => field.required) ?? selected?.fields[0];
-              if (extra?.required && !values.additional_info?.trim()) {
-                form.setError("additional_info", { message: `${extra.label} is required.` });
-                return;
-              }
               const result = await create({
                 title: values.title,
                 activity_date: values.activity_date,

@@ -13,7 +13,10 @@ export function useLogin() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  async function submit(body: LoginRequest) {
+  async function submit(body: LoginRequest): Promise<{
+    ok: boolean;
+    fieldErrors: Record<string, string>;
+  }> {
     setIsPending(true);
     setError(null);
     setFieldErrors({});
@@ -22,6 +25,7 @@ export function useLogin() {
       setSession(response.data);
       toast.success(response.message || "Login successful.");
       navigate("/calendar", { replace: true });
+      return { ok: true, fieldErrors: {} };
     } catch (err) {
       const code = getErrorCode(err);
       const message =
@@ -30,9 +34,11 @@ export function useLogin() {
           : code === "RATE_LIMIT_EXCEEDED"
             ? "Too many attempts. Please try again later."
             : getApiErrorMessage(err);
+      const nextFieldErrors = getFieldErrors(err);
       setError(message);
-      setFieldErrors(getFieldErrors(err));
+      setFieldErrors(nextFieldErrors);
       toast.error(message);
+      return { ok: false, fieldErrors: nextFieldErrors };
     } finally {
       setIsPending(false);
     }

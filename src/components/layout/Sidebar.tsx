@@ -2,6 +2,7 @@ import { CalendarDays, Menu } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 const navItems = [{ to: "/calendar", label: "Calendar", icon: CalendarDays }];
@@ -16,7 +17,7 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-muted",
+              "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-muted",
               isActive && "bg-sidebar-accent text-sidebar-accent-foreground",
             )
           }
@@ -44,11 +45,24 @@ export function Sidebar() {
 export function MobileNav() {
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button type="button" variant="ghost" size="icon" className="md:hidden" aria-label="Open navigation">
-          <Menu className="size-4" />
-        </Button>
-      </SheetTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex md:hidden">
+            <SheetTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="min-h-11 min-w-11 size-11"
+                aria-label="Open navigation"
+              >
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>Open navigation</TooltipContent>
+      </Tooltip>
       <SheetContent side="left">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">

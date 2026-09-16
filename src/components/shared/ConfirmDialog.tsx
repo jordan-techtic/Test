@@ -21,6 +21,17 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
 }
 
+function loadingLabelFromConfirm(label: string): string {
+  const trimmed = label.trim();
+  if (/ing[.…]$/i.test(trimmed)) {
+    return trimmed;
+  }
+  if (trimmed.toLowerCase().endsWith("e")) {
+    return `${trimmed.slice(0, -1)}ing…`;
+  }
+  return `${trimmed}ing…`;
+}
+
 export function ConfirmDialog({
   open,
   onOpenChange,
@@ -48,7 +59,7 @@ export function ConfirmDialog({
             aria-busy={isLoading}
             onClick={onConfirm}
           >
-            {isLoading ? "Deleting…" : confirmLabel}
+            {isLoading ? loadingLabelFromConfirm(confirmLabel) : confirmLabel}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

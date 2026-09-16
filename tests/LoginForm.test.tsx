@@ -6,7 +6,7 @@ import { AppProvider } from "@/stores/AppContext";
 
 jest.mock("@/hooks/useLogin", () => ({
   useLogin: () => ({
-    submit: jest.fn(),
+    submit: jest.fn().mockResolvedValue({ ok: true, fieldErrors: {} }),
     isPending: false,
     error: null,
     fieldErrors: {},
