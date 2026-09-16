@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import type { AxiosRequestConfig } from 'axios'
 
-import { getActivity, getCalendar } from '@/lib/api/calendar'
+import { getActivity } from '@/lib/api/calendar'
 import {
   getAuditLog,
   getCampaignCode,
@@ -12,98 +11,75 @@ import {
   getPerformanceMetrics,
   listActivities,
 } from '@/lib/api/marketing'
-import { getAccessToken } from '@/lib/auth/storage'
 
 interface MarketingDataOptions {
   year: number
-  month?: number | null
   activityId?: string | null
   enabled?: boolean
 }
 
-function unauthenticatedConfig(): AxiosRequestConfig | undefined {
-  if (getAccessToken()) {
-    return undefined
-  }
-
-  return { skipAuthRedirect: true }
-}
-
 export function useMarketingData({
   year,
-  month = null,
   activityId,
   enabled = true,
 }: MarketingDataOptions) {
   const hasActivityId = Boolean(activityId)
-  const authConfig = unauthenticatedConfig()
-
-  const calendarQuery = useQuery({
-    queryKey: ['calendar', year, month ?? null],
-    queryFn: () => getCalendar({ year, month }, authConfig),
-    select: (response) => response.data,
-    enabled,
-  })
 
   const activitiesQuery = useQuery({
     queryKey: ['activities', year],
-    queryFn: () => listActivities({ year, page: 1, limit: 50 }, authConfig),
+    queryFn: () => listActivities({ year, page: 1, limit: 50 }),
     enabled,
   })
 
   const auditLogQuery = useQuery({
     queryKey: ['audit-log'],
-    queryFn: () => getAuditLog({ page: 1, limit: 50 }, authConfig),
+    queryFn: () => getAuditLog({ page: 1, limit: 50 }),
     enabled,
   })
 
   const klaviyoPerformanceQuery = useQuery({
     queryKey: ['klaviyo-performance', year],
-    queryFn: () =>
-      getKlaviyoPerformance({ year, page: 1, limit: 50 }, authConfig),
+    queryFn: () => getKlaviyoPerformance({ year, page: 1, limit: 50 }),
     enabled,
   })
 
   const klaviyoNotificationsQuery = useQuery({
     queryKey: ['klaviyo-notifications'],
-    queryFn: () => getKlaviyoNotifications({ limit: 20 }, authConfig),
+    queryFn: () => getKlaviyoNotifications({ limit: 20 }),
     enabled,
   })
 
   const performanceMetricsQuery = useQuery({
     queryKey: ['performance-metrics', year],
-    queryFn: () =>
-      getPerformanceMetrics({ year, page: 1, limit: 50 }, authConfig),
+    queryFn: () => getPerformanceMetrics({ year, page: 1, limit: 50 }),
     enabled,
   })
 
   const historicalManagementQuery = useQuery({
     queryKey: ['historical-management', year],
-    queryFn: () => getHistoricalManagement({ year }, authConfig),
+    queryFn: () => getHistoricalManagement({ year }),
     enabled,
   })
 
   const performanceDataQuery = useQuery({
     queryKey: ['performance-data', year],
-    queryFn: () =>
-      getPerformanceData({ year, page: 1, limit: 50 }, authConfig),
+    queryFn: () => getPerformanceData({ year, page: 1, limit: 50 }),
     enabled,
   })
 
   const activityDetailQuery = useQuery({
     queryKey: ['activity', activityId],
-    queryFn: () => getActivity(activityId!, authConfig),
+    queryFn: () => getActivity(activityId!),
     enabled: enabled && hasActivityId,
   })
 
   const campaignCodeQuery = useQuery({
     queryKey: ['campaign-code', activityId],
-    queryFn: () => getCampaignCode(activityId!, authConfig),
+    queryFn: () => getCampaignCode(activityId!),
     enabled: enabled && hasActivityId,
   })
 
   return {
-    calendarQuery,
     activitiesQuery,
     auditLogQuery,
     klaviyoPerformanceQuery,
@@ -117,11 +93,9 @@ export function useMarketingData({
 }
 
 export function useCampaignCode(activityId: string | null, enabled = true) {
-  const authConfig = unauthenticatedConfig()
-
   return useQuery({
     queryKey: ['campaign-code', activityId],
-    queryFn: () => getCampaignCode(activityId!, authConfig),
+    queryFn: () => getCampaignCode(activityId!),
     select: (response) => response.data,
     enabled: enabled && Boolean(activityId),
   })

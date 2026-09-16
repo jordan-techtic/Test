@@ -9,7 +9,7 @@ import { CreateActivityDialog } from '@/components/features/calendar/CreateActiv
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { getCalendarErrorMessage } from '@/hooks/useCalendar'
+import { getCalendarErrorMessage, useCalendar } from '@/hooks/useCalendar'
 import { useMarketingData } from '@/hooks/useMarketingData'
 
 function parseTodayParts(today: string | undefined) {
@@ -31,12 +31,15 @@ export function CalendarPage() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
 
-  const { calendarQuery } = useMarketingData({
-    year,
-    month,
-    activityId: selectedActivityId,
-  })
+  const calendarQuery = useCalendar({ year, month })
   const calendarData = calendarQuery.data
+  const firstActivityId = calendarData?.activities[0]?.id ?? null
+
+  useMarketingData({
+    year,
+    activityId: selectedActivityId ?? firstActivityId,
+    enabled: calendarQuery.isSuccess,
+  })
 
   const handleToday = () => {
     const todayParts = parseTodayParts(calendarData?.today)
