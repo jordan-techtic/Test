@@ -205,12 +205,15 @@ export async function getAuditLog(
   }
 }
 
-async function getEnvelope<T>(
-  path: string,
+export async function getCampaignCode(
+  activityId: string,
   signal?: AbortSignal,
-): Promise<SuccessEnvelope<T>> {
+): Promise<SuccessEnvelope<unknown>> {
   try {
-    const response = await api.get<SuccessEnvelope<T>>(path, { signal });
+    const response = await api.get<SuccessEnvelope<unknown>>(
+      `/api/v1/marketing-team-member/campaign-code/${activityId}`,
+      { signal },
+    );
     return response.data;
   } catch (error) {
     if (isCanceledError(error)) {
@@ -218,47 +221,4 @@ async function getEnvelope<T>(
     }
     throw toApiError(error);
   }
-}
-
-export function getKlaviyoPerformance(
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope("/api/v1/marketing-team-member/klaviyo/performance", signal);
-}
-
-export function getKlaviyoPerformanceNotifications(
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope(
-    "/api/v1/marketing-team-member/klaviyo/performance/notifications",
-    signal,
-  );
-}
-
-export function getPerformanceMetrics(
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope("/api/v1/marketing-team-member/performance-metrics", signal);
-}
-
-export function getHistoricalManagement(
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope("/api/v1/marketing-team-member/historical-management", signal);
-}
-
-export function getPerformanceData(
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope("/api/v1/marketing-content-calendar/performance-data", signal);
-}
-
-export function getCampaignCode(
-  activityId: string,
-  signal?: AbortSignal,
-): Promise<SuccessEnvelope<unknown>> {
-  return getEnvelope(
-    `/api/v1/marketing-team-member/campaign-code/${activityId}`,
-    signal,
-  );
 }

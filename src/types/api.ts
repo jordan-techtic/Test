@@ -187,12 +187,6 @@ export const apiPaths = {
   activity: "/api/v1/marketing-team-member/activities/{id}",
   reschedule: "/api/v1/marketing-team-member/activities/reschedule",
   auditLog: "/api/v1/marketing-team-member/audit-log",
-  klaviyoPerformance: "/api/v1/marketing-team-member/klaviyo/performance",
-  klaviyoPerformanceNotifications:
-    "/api/v1/marketing-team-member/klaviyo/performance/notifications",
-  performanceMetrics: "/api/v1/marketing-team-member/performance-metrics",
-  historicalManagement: "/api/v1/marketing-team-member/historical-management",
-  performanceData: "/api/v1/marketing-content-calendar/performance-data",
   campaignCode: "/api/v1/marketing-team-member/campaign-code/{activity_id}",
 } as const;
 
