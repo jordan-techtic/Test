@@ -9,8 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMarketingContractGets } from "@/hooks/useMarketingContractGets";
 
 export function LoginPage() {
+  useMarketingContractGets();
   const [forgotOpen, setForgotOpen] = useState(false);
 
   return (

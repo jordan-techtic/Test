@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setupInterceptors } from "@/lib/api/interceptors";
-import { activityPath, apiPaths } from "@/types/api";
+import { activityPath, apiPaths, campaignCodePath } from "@/types/api";
 
 function resolveApiBaseURL(raw: string | undefined): string {
   const fallback = "http://174.138.72.184:8989/api";
@@ -21,4 +21,4 @@ export const api = axios.create({
 
 setupInterceptors(api);
 
-export { apiPaths, activityPath };
+export { apiPaths, activityPath, campaignCodePath };

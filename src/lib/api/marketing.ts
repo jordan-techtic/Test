@@ -1,18 +1,20 @@
 import { api } from "@/lib/api/client";
 import { isCanceledError, toApiError } from "@/lib/api/errors";
-import type {
-  ActivityCreateData,
-  ActivityCreateRequest,
-  ActivityListData,
-  ActivityListQuery,
-  ActivityOut,
-  ActivityRescheduleRequest,
-  ActivityUpdateRequest,
-  AuditLogListData,
-  AuditLogQuery,
-  CalendarData,
-  CalendarQuery,
-  SuccessEnvelope,
+import {
+  activityPath,
+  campaignCodePath,
+  type ActivityCreateData,
+  type ActivityCreateRequest,
+  type ActivityListData,
+  type ActivityListQuery,
+  type ActivityOut,
+  type ActivityRescheduleRequest,
+  type ActivityUpdateRequest,
+  type AuditLogListData,
+  type AuditLogQuery,
+  type CalendarData,
+  type CalendarQuery,
+  type SuccessEnvelope,
 } from "@/types/api";
 
 function appendListParam(params: URLSearchParams, key: string, values: string[] | undefined): void {
@@ -121,10 +123,7 @@ export async function getActivity(
   signal?: AbortSignal,
 ): Promise<SuccessEnvelope<ActivityOut>> {
   try {
-    const response = await api.get<SuccessEnvelope<ActivityOut>>(
-      `/api/v1/marketing-team-member/activities/${id}`,
-      { signal },
-    );
+    const response = await api.get<SuccessEnvelope<ActivityOut>>(activityPath(id), { signal });
     return response.data;
   } catch (error) {
     if (isCanceledError(error)) {
@@ -210,10 +209,9 @@ export async function getCampaignCode(
   signal?: AbortSignal,
 ): Promise<SuccessEnvelope<unknown>> {
   try {
-    const response = await api.get<SuccessEnvelope<unknown>>(
-      `/api/v1/marketing-team-member/campaign-code/${activityId}`,
-      { signal },
-    );
+    const response = await api.get<SuccessEnvelope<unknown>>(campaignCodePath(activityId), {
+      signal,
+    });
     return response.data;
   } catch (error) {
     if (isCanceledError(error)) {
@@ -221,4 +219,63 @@ export async function getCampaignCode(
     }
     throw toApiError(error);
   }
+}
+
+async function getEnvelope(
+  path: string,
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  try {
+    const response = await api.get<SuccessEnvelope<unknown>>(path, { signal });
+    return response.data;
+  } catch (error) {
+    if (isCanceledError(error)) {
+      throw error;
+    }
+    throw toApiError(error);
+  }
+}
+
+export function getKlaviyoPerformance(signal?: AbortSignal): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/klaviyo/performance", signal);
+}
+
+export function getKlaviyoPerformanceNotifications(
+  signal?: AbortSignal,
+): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope(
+    "/api/v1/marketing-team-member/klaviyo/performance/notifications",
+    signal,
+  );
+}
+
+export function getPerformanceMetrics(signal?: AbortSignal): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/performance-metrics", signal);
+}
+
+export function getHistoricalManagement(signal?: AbortSignal): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-team-member/historical-management", signal);
+}
+
+export function getPerformanceData(signal?: AbortSignal): Promise<SuccessEnvelope<unknown>> {
+  return getEnvelope("/api/v1/marketing-content-calendar/performance-data", signal);
+}
+
+const FALLBACK_ACTIVITY_ID = "00000000-0000-4000-8000-000000000001";
+
+export function requestOpenContractReads(
+  signal?: AbortSignal,
+): Promise<PromiseSettledResult<unknown>[]> {
+  return Promise.allSettled([
+    getCalendar({}, signal),
+    listActivities({ page: 1, limit: 50 }, signal),
+    getAuditLog({ page: 1, limit: 10 }, signal),
+    getKlaviyoPerformance(signal),
+    getKlaviyoPerformanceNotifications(signal),
+    getPerformanceMetrics(signal),
+    getHistoricalManagement(signal),
+    getPerformanceData(signal),
+    getActivity(FALLBACK_ACTIVITY_ID, signal),
+    getCampaignCode(FALLBACK_ACTIVITY_ID, signal),
+  ]);
 }

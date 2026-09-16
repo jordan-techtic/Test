@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 import { CircleCheck, Info, Loader2, OctagonX, TriangleAlert } from "lucide-react";
-import { Toaster as Sonner, toast as sonnerToast, type ToasterProps } from "sonner";
+import { Toaster as Sonner, type ToasterProps } from "sonner";
+
+export { toast } from "sonner";
 
 function Toaster({ ...props }: ToasterProps) {
   return (
@@ -27,24 +29,4 @@ function Toaster({ ...props }: ToasterProps) {
   );
 }
 
-const toast = Object.assign(
-  function toast(
-    message: Parameters<typeof sonnerToast>[0],
-    data?: Parameters<typeof sonnerToast>[1],
-  ) {
-    return sonnerToast(message, data);
-  },
-  {
-    success: sonnerToast.success.bind(sonnerToast),
-    error: sonnerToast.error.bind(sonnerToast),
-    info: sonnerToast.info.bind(sonnerToast),
-    warning: sonnerToast.warning.bind(sonnerToast),
-    message: sonnerToast.message.bind(sonnerToast),
-    loading: sonnerToast.loading.bind(sonnerToast),
-    dismiss: sonnerToast.dismiss.bind(sonnerToast),
-    promise: sonnerToast.promise.bind(sonnerToast),
-    custom: sonnerToast.custom.bind(sonnerToast),
-  },
-);
-
-export { Toaster, toast };
+export { Toaster };

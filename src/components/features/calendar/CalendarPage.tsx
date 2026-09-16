@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
 import { useActivities } from "@/hooks/useActivities";
 import { useCalendar } from "@/hooks/useCalendar";
+import { useMarketingContractGets } from "@/hooks/useMarketingContractGets";
 import { useRescheduleActivity } from "@/hooks/useRescheduleActivity";
 import { parseDateKey, utcToday } from "@/lib/dates";
 import type { ActivityOut } from "@/types/api";
@@ -36,6 +37,7 @@ function parseMonth(value: string | null, fallback: number): number {
 }
 
 export function CalendarPage() {
+  useMarketingContractGets();
   const fallbackToday = utcToday();
   const fallbackDate = parseDateKey(fallbackToday);
   const [searchParams, setSearchParams] = useSearchParams();
