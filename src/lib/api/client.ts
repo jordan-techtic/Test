@@ -11,6 +11,7 @@ const baseURL = resolveBackendOrigin(import.meta.env.VITE_API_BASE_URL);
 export const api = axios.create({
   baseURL,
   timeout: 15000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

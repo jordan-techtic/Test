@@ -4,6 +4,7 @@ import {
   loadMarketingWorkspace,
   type MarketingWorkspaceSnapshot,
 } from "@/lib/api/marketing";
+import { hasUsableSession } from "@/lib/auth/storage";
 import type { ActivityOut, CampaignCodeData } from "@/types/api";
 
 interface MarketingWorkspaceState {
@@ -45,6 +46,9 @@ export function useMarketingWorkspace() {
   const [state, setState] = useState<MarketingWorkspaceState>(initialState);
 
   useEffect(() => {
+    if (!hasUsableSession()) {
+      return;
+    }
     let cancelled = false;
     void loadMarketingWorkspace().then((snapshot) => {
       if (!cancelled) {
@@ -57,12 +61,18 @@ export function useMarketingWorkspace() {
   }, []);
 
   const reload = useCallback(async () => {
+    if (!hasUsableSession()) {
+      return;
+    }
     setState(initialState);
     const snapshot = await loadMarketingWorkspace();
     setState(snapshotToState(snapshot));
   }, []);
 
   const selectActivity = useCallback(async (activityId: string) => {
+    if (!hasUsableSession()) {
+      return;
+    }
     const detail = await loadActivityDetail(activityId);
     setState((current) => ({
       ...current,

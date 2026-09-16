@@ -7,8 +7,29 @@ const USER_KEY = "auth_user";
 export const SESSION_REJECTED_KEY = "auth_session_rejected";
 export const AUTH_UNAUTHORIZED_EVENT = "auth:unauthorized";
 
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined" || !document.cookie) {
+    return null;
+  }
+  const prefix = `${name}=`;
+  const found = document.cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(prefix));
+  if (!found) {
+    return null;
+  }
+  const value = decodeURIComponent(found.slice(prefix.length));
+  return value || null;
+}
+
 export function getAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY) ?? localStorage.getItem(LEGACY_TOKEN_KEY);
+  return (
+    localStorage.getItem(ACCESS_TOKEN_KEY) ??
+    localStorage.getItem(LEGACY_TOKEN_KEY) ??
+    readCookie(ACCESS_TOKEN_KEY) ??
+    readCookie(LEGACY_TOKEN_KEY)
+  );
 }
 
 export function getRefreshToken(): string | null {

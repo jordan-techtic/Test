@@ -27,6 +27,7 @@ export function setupInterceptors(client: AxiosInstance): void {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    config.withCredentials = true;
     return config;
   });
 

@@ -1,6 +1,22 @@
-import { Toaster as Sonner, toast as sonnerToast, type ToasterProps } from "sonner";
+import {
+  Toaster as Sonner,
+  toast as emitSonnerToast,
+  type ExternalToast,
+  type ToasterProps,
+} from "sonner";
 
-export const toast = sonnerToast;
+function showToast(message: string, data?: ExternalToast) {
+  return emitSonnerToast(message, data);
+}
+
+const toast = Object.assign(showToast, {
+  success: (message: string, data?: ExternalToast) => emitSonnerToast.success(message, data),
+  error: (message: string, data?: ExternalToast) => emitSonnerToast.error(message, data),
+  info: (message: string, data?: ExternalToast) => emitSonnerToast.info(message, data),
+  warning: (message: string, data?: ExternalToast) => emitSonnerToast.warning(message, data),
+  dismiss: (id?: string | number) => emitSonnerToast.dismiss(id),
+  message: (message: string, data?: ExternalToast) => emitSonnerToast.message(message, data),
+});
 
 function Toaster({ ...props }: ToasterProps) {
   return (
@@ -27,5 +43,5 @@ function Toaster({ ...props }: ToasterProps) {
   );
 }
 
-export { Toaster };
+export { Toaster, toast };
 export type { ToasterProps };

@@ -9,14 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { ForgotPasswordForm } from "@/components/features/auth/ForgotPasswordForm";
 import { LoginForm } from "@/components/features/auth/LoginForm";
-import { loadMarketingWorkspace } from "@/lib/api/marketing";
 
 export function LoginPage() {
   const [showRecovery, setShowRecovery] = useState(false);
 
   useEffect(() => {
     document.title = "Sign in · Marketing Content Calendar";
-    void loadMarketingWorkspace();
   }, []);
 
   return (
