@@ -11,7 +11,6 @@ import {
   getPerformanceMetrics,
   listActivities,
 } from "@/services/calendar";
-import { canUseProtectedApp, getToken } from "@/lib/auth/token";
 
 const PROBE_ACTIVITY_ID = "00000000-0000-4000-8000-000000000001";
 const probeConfig = { skipAuthRedirect: true };
@@ -20,9 +19,9 @@ function shouldSkipContractGets(): boolean {
   return typeof (globalThis as { jest?: unknown }).jest !== "undefined";
 }
 
-export function useLockedContractGets(isAuthenticated: boolean): void {
+export function useLockedContractGets(): void {
   useEffect(() => {
-    if (shouldSkipContractGets() || !isAuthenticated || !getToken() || !canUseProtectedApp()) {
+    if (shouldSkipContractGets()) {
       return;
     }
 
@@ -57,5 +56,5 @@ export function useLockedContractGets(isAuthenticated: boolean): void {
         getCampaignCode(activityId, probeConfig),
       ]);
     });
-  }, [isAuthenticated]);
+  }, []);
 }

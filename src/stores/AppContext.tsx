@@ -54,7 +54,7 @@ function readStoredUser(): AuthUser | null {
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => readStoredUser());
   const [isAuthenticated, setIsAuthenticated] = useState(() => canUseProtectedApp());
-  useLockedContractGets(isAuthenticated);
+  useLockedContractGets();
 
   useEffect(() => {
     const sync = () => {
