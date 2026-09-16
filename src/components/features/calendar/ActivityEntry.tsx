@@ -15,7 +15,7 @@ export function ActivityEntry({ activity, onSelect }: ActivityEntryProps) {
       type="button"
       onClick={() => onSelect?.(activity)}
       className={cn(
-        'w-full truncate rounded px-2 py-1 text-left text-xs font-medium transition',
+        'min-h-11 w-full truncate rounded px-2 py-2 text-left text-xs font-medium transition sm:min-h-0 sm:py-1',
         'hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
       )}
       style={{

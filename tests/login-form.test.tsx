@@ -33,7 +33,7 @@ describe('LoginForm', () => {
       screen.getByRole('button', { name: 'Show password' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Forgot Password?' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Forgot password?' })).toBeInTheDocument()
   })
 
   it('toggles password visibility independently', async () => {

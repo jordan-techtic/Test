@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
+import { ActivityDatePicker } from '@/components/features/calendar/ActivityDatePicker'
 import { ActivityTypeFields } from '@/components/features/calendar/ActivityTypeFields'
 import { Button } from '@/components/ui/button'
 import {
@@ -117,7 +118,7 @@ export function CreateActivityDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Add Activity</DialogTitle>
+          <DialogTitle>Create Activity</DialogTitle>
         </DialogHeader>
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
@@ -152,16 +153,11 @@ export function CreateActivityDialog({
 
           <div className="space-y-2">
             <Label htmlFor="activity_date">Date *</Label>
-            <Input
+            <ActivityDatePicker
               id="activity_date"
-              name="activity_date"
-              type="date"
               value={values.activity_date}
-              onChange={(event) =>
-                setValues((current) => ({
-                  ...current,
-                  activity_date: event.target.value,
-                }))
+              onChange={(activity_date) =>
+                setValues((current) => ({ ...current, activity_date }))
               }
               disabled={createMutation.isPending}
               aria-invalid={Boolean(fieldErrors.activity_date)}
@@ -256,7 +252,7 @@ export function CreateActivityDialog({
                   Creating…
                 </>
               ) : (
-                'Add Activity'
+                'Create Activity'
               )}
             </Button>
           </DialogFooter>

@@ -14,7 +14,7 @@ export function CalendarEmptyState({ description }: CalendarEmptyStateProps) {
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {description ||
-            'Use Add Activity in the toolbar to schedule your first marketing activity.'}
+            'Use Create Activity in the toolbar to schedule your first marketing activity.'}
         </p>
       </div>
     </div>

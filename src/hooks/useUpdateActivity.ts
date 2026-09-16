@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/components/ui/sonner'
 
 import { updateActivity } from '@/lib/api/calendar'
-import { getApiErrorMessage } from '@/lib/api/errors'
 import type { ActivityUpdateRequest } from '@/types/api'
 
 interface UseUpdateActivityOptions {
@@ -25,9 +24,6 @@ export function useUpdateActivity({ year, month }: UseUpdateActivityOptions) {
       queryClient.invalidateQueries({ queryKey: ['calendar', year, month] })
       queryClient.invalidateQueries({ queryKey: ['activity', variables.id] })
       toast.success(response.message || 'Activity updated successfully.')
-    },
-    onError: (error) => {
-      toast.error(getApiErrorMessage(error))
     },
   })
 }

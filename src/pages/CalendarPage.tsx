@@ -25,7 +25,7 @@ function parseTodayParts(today: string | undefined) {
 
 export function CalendarPage() {
   const [year, setYear] = useState(() => new Date().getFullYear())
-  const [month, setMonth] = useState<number | null>(() => new Date().getMonth() + 1)
+  const [month, setMonth] = useState<number | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
@@ -59,7 +59,7 @@ export function CalendarPage() {
           onToday={handleToday}
         />
         <Button type="button" onClick={() => setCreateOpen(true)}>
-          Add Activity
+          Create Activity
         </Button>
       </div>
 

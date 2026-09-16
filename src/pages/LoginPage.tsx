@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { useAuth } from '@/stores/AuthContext'
 
@@ -25,11 +24,13 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <img
-            src="/brand-logo.png"
+            src="/brand-logo.svg"
             alt="Marketing Content Calendar"
             className="mx-auto mb-4 h-10 w-auto"
           />
-          <CardTitle>Sign In</CardTitle>
+          <h1 className="text-lg font-semibold leading-none tracking-tight">
+            Sign In
+          </h1>
           <CardDescription>
             {showForgotPassword
               ? 'Recover access to your marketing calendar account.'

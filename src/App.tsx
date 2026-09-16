@@ -23,7 +23,7 @@ export default function App() {
         <AppProvider>
           <AuthProvider>
             <RouterProvider router={router} />
-            <Toaster richColors closeButton />
+            <Toaster />
           </AuthProvider>
         </AppProvider>
       </QueryClientProvider>

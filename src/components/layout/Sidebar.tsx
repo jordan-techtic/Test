@@ -9,7 +9,7 @@ export function Sidebar() {
     <aside className="flex w-64 shrink-0 flex-col border-r border-border bg-card">
       <div className="flex h-14 items-center border-b border-border px-4">
         <img
-          src="/brand-logo.png"
+          src="/brand-logo.svg"
           alt="Marketing Content Calendar"
           className="h-8 w-auto"
         />

@@ -8,6 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 interface CalendarNavigationProps {
   year: number
@@ -67,25 +73,36 @@ export function CalendarNavigation({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        aria-label="Previous month"
-        onClick={handlePreviousMonth}
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        aria-label="Next month"
-        onClick={handleNextMonth}
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
+    <TooltipProvider delayDuration={300}>
+      <div className="flex flex-wrap items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Previous month"
+              onClick={handlePreviousMonth}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Previous month</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Next month"
+              onClick={handleNextMonth}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Next month</TooltipContent>
+        </Tooltip>
 
       <Select
         value={String(year)}
@@ -121,9 +138,10 @@ export function CalendarNavigation({
         </SelectContent>
       </Select>
 
-      <Button type="button" variant="secondary" size="sm" onClick={onToday}>
-        Today
-      </Button>
-    </div>
+        <Button type="button" variant="secondary" size="sm" onClick={onToday}>
+          Today
+        </Button>
+      </div>
+    </TooltipProvider>
   )
 }

@@ -84,7 +84,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           className="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
           onClick={onForgotPassword}
         >
-          Forgot Password?
+          Forgot password?
         </button>
       </div>
 

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
+import { ActivityDatePicker } from '@/components/features/calendar/ActivityDatePicker'
 import { ActivityTypeFields } from '@/components/features/calendar/ActivityTypeFields'
 import {
   AlertDialog,
@@ -37,7 +38,7 @@ import { useDeleteActivity } from '@/hooks/useDeleteActivity'
 import { useUpdateActivity } from '@/hooks/useUpdateActivity'
 import { getApiErrorMessage } from '@/lib/api/errors'
 import {
-  validateCreateActivity,
+  validateUpdateActivity,
   type CreateActivityFormValues,
   type FieldErrors,
 } from '@/lib/calendar/validation'
@@ -125,7 +126,7 @@ export function ActivityDetailDialog({
     event.preventDefault()
     if (!activityId || !activity) return
 
-    const validationErrors = validateCreateActivity(values, activityTypes)
+    const validationErrors = validateUpdateActivity(values, activityTypes)
     setFieldErrors(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       return
@@ -209,6 +210,18 @@ export function ActivityDetailDialog({
                   <dt className="font-medium text-muted-foreground">Activity type</dt>
                   <dd>{activity.type}</dd>
                 </div>
+                <div>
+                  <dt className="font-medium text-muted-foreground">Category</dt>
+                  <dd>{activity.category}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-muted-foreground">Status</dt>
+                  <dd className="capitalize">{activity.status}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-muted-foreground">Campaign code</dt>
+                  <dd>{activity.campaign_code}</dd>
+                </div>
                 {activity.details ? (
                   <div>
                     <dt className="font-medium text-muted-foreground">Notes</dt>
@@ -273,17 +286,14 @@ export function ActivityDetailDialog({
 
               <div className="space-y-2">
                 <Label htmlFor="edit-activity_date">Date *</Label>
-                <Input
+                <ActivityDatePicker
                   id="edit-activity_date"
-                  type="date"
                   value={values.activity_date}
-                  onChange={(event) =>
-                    setValues((current) => ({
-                      ...current,
-                      activity_date: event.target.value,
-                    }))
+                  onChange={(activity_date) =>
+                    setValues((current) => ({ ...current, activity_date }))
                   }
                   disabled={isMutating}
+                  allowPastDates
                   aria-invalid={Boolean(fieldErrors.activity_date)}
                 />
                 {fieldErrors.activity_date ? (

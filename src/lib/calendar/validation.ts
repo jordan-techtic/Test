@@ -1,3 +1,4 @@
+import { getTodayLocalDateString } from '@/lib/calendar/dates'
 import type { ActivityTypeField, ActivityTypeOption } from '@/types/api'
 
 export interface CreateActivityFormValues {
@@ -12,14 +13,14 @@ export type FieldErrors = Partial<
   Record<keyof CreateActivityFormValues | 'form', string>
 >
 
-function getTodayUtcDateString(): string {
-  const now = new Date()
-  return now.toISOString().slice(0, 10)
+interface ValidateActivityOptions {
+  allowPastDates?: boolean
 }
 
-export function validateCreateActivity(
+function validateActivityFields(
   values: CreateActivityFormValues,
   activityTypes: ActivityTypeOption[],
+  options: ValidateActivityOptions = {},
 ): FieldErrors {
   const errors: FieldErrors = {}
 
@@ -31,7 +32,10 @@ export function validateCreateActivity(
 
   if (!values.activity_date) {
     errors.activity_date = 'Date is required.'
-  } else if (values.activity_date < getTodayUtcDateString()) {
+  } else if (
+    !options.allowPastDates &&
+    values.activity_date < getTodayLocalDateString()
+  ) {
     errors.activity_date = 'Date must be today or in the future.'
   }
 
@@ -57,4 +61,18 @@ export function validateCreateActivity(
   })
 
   return errors
+}
+
+export function validateCreateActivity(
+  values: CreateActivityFormValues,
+  activityTypes: ActivityTypeOption[],
+): FieldErrors {
+  return validateActivityFields(values, activityTypes)
+}
+
+export function validateUpdateActivity(
+  values: CreateActivityFormValues,
+  activityTypes: ActivityTypeOption[],
+): FieldErrors {
+  return validateActivityFields(values, activityTypes, { allowPastDates: true })
 }

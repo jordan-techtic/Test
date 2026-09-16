@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from '@/components/ui/sonner'
 
 import { login } from '@/lib/api/auth'
-import { getApiErrorMessage } from '@/lib/api/errors'
 import { useAuth } from '@/stores/AuthContext'
 import type { LoginRequest } from '@/types/api'
 
@@ -17,9 +16,6 @@ export function useLogin() {
       setSession(response.data.access_token, response.data.user)
       toast.success(response.message || 'Signed in successfully.')
       navigate('/calendar', { replace: true })
-    },
-    onError: (error) => {
-      toast.error(getApiErrorMessage(error))
     },
   })
 }

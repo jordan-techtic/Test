@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/components/ui/sonner'
 
 import { createActivity } from '@/lib/api/calendar'
-import { getApiErrorMessage } from '@/lib/api/errors'
 import type { ActivityCreateRequest } from '@/types/api'
 
 interface UseCreateActivityOptions {
@@ -18,9 +17,6 @@ export function useCreateActivity({ year, month }: UseCreateActivityOptions) {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['calendar', year, month] })
       toast.success(response.message || 'Activity created successfully.')
-    },
-    onError: (error) => {
-      toast.error(getApiErrorMessage(error))
     },
   })
 }
