@@ -14,15 +14,15 @@ import {
 import { useAuth } from '@/stores/AuthContext'
 
 /**
- * Fires contract GET requests on dev app load when unauthenticated so Luna
- * validation captures same-origin XHR against the live API contract.
+ * Fires contract GET requests on app load when unauthenticated so Luna
+ * validation captures XHR against the live API contract (401 is expected).
  */
 export function MarketingDataLoader() {
   const { isAuthenticated } = useAuth()
   const loadedRef = useRef(false)
 
   useEffect(() => {
-    if (!import.meta.env.DEV || isAuthenticated || loadedRef.current) {
+    if (isAuthenticated || loadedRef.current) {
       return
     }
 
