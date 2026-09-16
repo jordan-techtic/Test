@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ForgotPasswordForm } from "@/components/features/auth/ForgotPasswordForm";
 import { LoginForm } from "@/components/features/auth/LoginForm";
-import { useLoginContractReads } from "@/hooks/useLoginContractReads";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
@@ -13,7 +12,6 @@ import {
 
 export function LoginPage() {
   const [forgotOpen, setForgotOpen] = useState(false);
-  useLoginContractReads();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
