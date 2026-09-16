@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 
 jest.mock("@/hooks/useLockedContractGets", () => ({
   useLockedContractGets: () => undefined,
-  prefetchLockedContractGets: () => undefined,
 }));
 
 Object.defineProperty(window, "matchMedia", {

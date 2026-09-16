@@ -5,11 +5,9 @@ import { LoginPage } from "@/components/features/auth/LoginPage";
 import { AnnualCalendarPage } from "@/components/features/calendar/AnnualCalendarPage";
 import { NotFound } from "@/pages/NotFound";
 import { ServerError } from "@/pages/ServerError";
-import { useLockedContractGets } from "@/hooks/useLockedContractGets";
 import { canUseProtectedApp } from "@/lib/auth/token";
 
 function RootRedirect() {
-  useLockedContractGets();
   return <Navigate to={canUseProtectedApp() ? "/calendar" : "/login"} replace />;
 }
 

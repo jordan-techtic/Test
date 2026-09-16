@@ -1,8 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { useLockedContractGets } from "@/hooks/useLockedContractGets";
 
 export function AppShell() {
+  useLockedContractGets();
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />

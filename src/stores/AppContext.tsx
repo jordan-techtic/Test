@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { useLockedContractGets } from "@/hooks/useLockedContractGets";
 import {
   AUTH_EVENT,
   canUseProtectedApp,
@@ -54,7 +53,6 @@ function readStoredUser(): AuthUser | null {
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => readStoredUser());
   const [isAuthenticated, setIsAuthenticated] = useState(() => canUseProtectedApp());
-  useLockedContractGets();
 
   useEffect(() => {
     const sync = () => {
