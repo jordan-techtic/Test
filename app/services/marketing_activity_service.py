@@ -18,6 +18,7 @@ from app.schemas.marketing_activity import (
 from app.services.activity_validation_service import ActivityValidationService
 from app.services.campaign_code_service import CampaignCodeService
 from app.services.klaviyo_performance_service import KlaviyoPerformanceService
+from app.utils.frontend_context import build_frontend_context
 
 
 class MarketingActivityService:
@@ -99,6 +100,7 @@ class MarketingActivityService:
             success=True,
             message="Activity created successfully.",
             data=self._to_response(saved, False, user),
+            **build_frontend_context(user),
         )
 
     def get_activity(
@@ -118,6 +120,7 @@ class MarketingActivityService:
             success=True,
             message="Activity retrieved successfully.",
             data=self._to_response(activity, include_performance, user),
+            **build_frontend_context(user),
         )
 
     def update_activity(
@@ -176,9 +179,10 @@ class MarketingActivityService:
             success=True,
             message="Activity updated successfully.",
             data=self._to_response(saved, False, user),
+            **build_frontend_context(user),
         )
 
-    def delete_activity(self, activity_id: UUID) -> dict:
+    def delete_activity(self, activity_id: UUID, user: MarketingTeamMember) -> dict:
         """Delete a marketing activity."""
         activity = self.repository.get_by_id(activity_id)
         if activity is None:
@@ -191,6 +195,7 @@ class MarketingActivityService:
             "success": True,
             "message": "Activity deleted successfully.",
             "data": None,
+            **build_frontend_context(user),
         }
 
     def list_calendar(
@@ -217,4 +222,5 @@ class MarketingActivityService:
             success=True,
             message="Calendar retrieved successfully.",
             data={"year": year, "month": month, "activities": items},
+            **build_frontend_context(user),
         )

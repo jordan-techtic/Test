@@ -234,5 +234,5 @@ async def delete_activity(
     activity_service: MarketingActivityService = Depends(get_marketing_activity_service),
 ) -> DeleteActivityResponse:
     """Delete a marketing activity."""
-    result = activity_service.delete_activity(activity_id)
+    result = activity_service.delete_activity(activity_id, current_user)
     return DeleteActivityResponse(**result)

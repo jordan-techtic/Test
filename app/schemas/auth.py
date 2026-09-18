@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.schemas.frontend_context import FrontendContextFields
+
 
 class LoginRequest(BaseModel):
     """Login credentials using email or username."""
@@ -28,9 +30,10 @@ class TokenData(BaseModel):
     access_token: str = Field(..., description="JWT access token.")
     refresh_token: str = Field(..., description="JWT refresh token.")
     token_type: str = Field(default="bearer", description="Token type.")
+    expires_in: int = Field(..., description="Access token lifetime in seconds.")
 
 
-class LoginResponse(BaseModel):
+class LoginResponse(FrontendContextFields):
     """Successful login response envelope."""
 
     success: bool = Field(default=True)
@@ -48,7 +51,7 @@ class ForgotPasswordRequest(BaseModel):
     )
 
 
-class ForgotPasswordResponse(BaseModel):
+class ForgotPasswordResponse(FrontendContextFields):
     """Forgot password initiation response."""
 
     success: bool = Field(default=True)

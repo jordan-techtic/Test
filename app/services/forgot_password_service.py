@@ -14,6 +14,7 @@ from app.repositories.password_reset_token_repository import (
 )
 from app.schemas.auth import ForgotPasswordResponse
 from app.services.klaviyo_email_service import KlaviyoEmailService
+from app.utils.frontend_context import build_frontend_context
 
 GENERIC_MESSAGE = (
     "If an account exists for this email, password reset instructions have been sent."
@@ -53,4 +54,8 @@ class ForgotPasswordService:
             self.token_repository.create_token(reset_token)
             self.klaviyo_service.send_password_reset_email(user.email, raw_token)
 
-        return ForgotPasswordResponse(success=True, message=GENERIC_MESSAGE)
+        return ForgotPasswordResponse(
+            success=True,
+            message=GENERIC_MESSAGE,
+            **build_frontend_context(role="anonymous"),
+        )

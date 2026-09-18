@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel, Field
 
+from app.schemas.frontend_context import FrontendContextFields
+
 
 class HealthData(BaseModel):
     """Health check payload."""
@@ -13,7 +15,7 @@ class HealthData(BaseModel):
     )
 
 
-class HealthResponse(BaseModel):
+class HealthResponse(FrontendContextFields):
     """Health check success response envelope."""
 
     success: bool = Field(default=True, description="Always true for a healthy service.")

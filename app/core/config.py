@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     app_name: str = Field(default="Marketing Content Calendar API", alias="APP_NAME")
     app_version: str = Field(default="1.0.0", alias="APP_VERSION")
     debug: bool = Field(default=False, alias="DEBUG")
+    organization: str = Field(default="Marketing", alias="ORGANIZATION")
 
     database_url: str = Field(..., alias="DATABASE_URL")
 

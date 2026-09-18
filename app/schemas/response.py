@@ -4,6 +4,9 @@ from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.core.config import get_settings
+from app.schemas.frontend_context import FrontendContextFields
+
 T = TypeVar("T")
 
 
@@ -17,7 +20,7 @@ class ErrorDetail(BaseModel):
     )
 
 
-class ErrorResponse(BaseModel):
+class ErrorResponse(FrontendContextFields):
     """Standard error response envelope."""
 
     success: bool = Field(default=False, description="Always false for error responses.")
@@ -51,11 +54,15 @@ def error_response(
     message: str,
     code: str,
     details: Any | None = None,
+    role: str = "anonymous",
 ) -> dict[str, Any]:
     """Build a standard error response dictionary."""
+    settings = get_settings()
     return {
         "success": False,
         "message": message,
+        "role": role,
+        "organization": settings.organization,
         "error": {
             "code": code,
             "details": details,

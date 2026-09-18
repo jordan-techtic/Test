@@ -3,6 +3,7 @@
 from fastapi import APIRouter, status
 
 from app.schemas.health import HealthData, HealthResponse
+from app.utils.frontend_context import build_frontend_context
 
 router = APIRouter()
 
@@ -24,6 +25,8 @@ router = APIRouter()
                     "example": {
                         "success": True,
                         "message": "Service is healthy.",
+                        "role": "system",
+                        "organization": "Marketing",
                         "data": {"status": "OK"},
                     }
                 }
@@ -53,4 +56,5 @@ async def health_check() -> HealthResponse:
         success=True,
         message="Service is healthy.",
         data=HealthData(status="OK"),
+        **build_frontend_context(role="system"),
     )

@@ -1,7 +1,9 @@
 """Authentication business logic."""
 
+from app.core.config import get_settings
 from app.core.security import create_access_token, create_refresh_token
 from app.exceptions.http_exceptions import ForbiddenError, UnauthorizedError
+from app.utils.frontend_context import build_frontend_context
 from app.repositories.marketing_team_member_repository import (
     MarketingTeamMemberRepository,
 )
@@ -35,6 +37,7 @@ class AuthService:
                 code="NOT_AUTHORIZED",
             )
         subject = str(user.id)
+        settings = get_settings()
         return LoginResponse(
             success=True,
             message="Login successful.",
@@ -42,5 +45,7 @@ class AuthService:
                 access_token=create_access_token(subject),
                 refresh_token=create_refresh_token(subject),
                 token_type="bearer",
+                expires_in=settings.access_token_expire_minutes * 60,
             ),
+            **build_frontend_context(user),
         )

@@ -8,6 +8,8 @@ def test_health_response_model() -> None:
     response = HealthResponse(
         success=True,
         message="Service is healthy.",
+        role="system",
+        organization="Marketing",
         data=HealthData(status="OK"),
     )
     assert response.success is True

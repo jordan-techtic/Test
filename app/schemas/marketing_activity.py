@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.core.constants import (
     ACTIVITY_TYPES,
 )
+from app.schemas.frontend_context import FrontendContextFields
 
 
 class PerformanceMetrics(BaseModel):
@@ -166,7 +167,7 @@ class ActivityResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class ActivityListResponse(BaseModel):
+class ActivityListResponse(FrontendContextFields):
     """Activity mutation or retrieval success envelope."""
 
     success: bool = Field(default=True, description="Always true on success.")
@@ -189,7 +190,7 @@ class CalendarActivityData(BaseModel):
     )
 
 
-class CalendarResponse(BaseModel):
+class CalendarResponse(FrontendContextFields):
     """Annual calendar success envelope."""
 
     success: bool = Field(default=True, description="Always true on success.")
@@ -197,7 +198,7 @@ class CalendarResponse(BaseModel):
     data: CalendarActivityData = Field(..., description="Calendar year data.")
 
 
-class DeleteActivityResponse(BaseModel):
+class DeleteActivityResponse(FrontendContextFields):
     """Delete activity success envelope."""
 
     success: bool = Field(default=True)
