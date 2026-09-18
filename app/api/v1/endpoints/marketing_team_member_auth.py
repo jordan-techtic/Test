@@ -10,7 +10,6 @@ from app.schemas.auth import (
     LoginResponse,
 )
 from app.schemas.openapi import AUTH_ERROR_RESPONSES, VALIDATION_ERROR_RESPONSE
-from app.schemas.response import ErrorResponse
 from app.services.auth_service import AuthService
 from app.services.forgot_password_service import ForgotPasswordService
 

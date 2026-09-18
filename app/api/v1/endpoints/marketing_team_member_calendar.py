@@ -194,8 +194,8 @@ async def get_activity(
     },
 )
 async def update_activity(
-    activity_id: UUID = Path(..., description="Marketing activity UUID."),
     body: ActivityUpdate,
+    activity_id: UUID,
     current_user: MarketingTeamMember = Depends(get_current_user),
     activity_service: MarketingActivityService = Depends(get_marketing_activity_service),
 ) -> ActivityListResponse:
