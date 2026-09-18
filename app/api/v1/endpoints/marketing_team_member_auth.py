@@ -9,6 +9,8 @@ from app.schemas.auth import (
     LoginRequest,
     LoginResponse,
 )
+from app.schemas.openapi import AUTH_ERROR_RESPONSES, VALIDATION_ERROR_RESPONSE
+from app.schemas.response import ErrorResponse
 from app.services.auth_service import AuthService
 from app.services.forgot_password_service import ForgotPasswordService
 
@@ -19,12 +21,32 @@ router = APIRouter(prefix="/marketing-team-member", tags=["marketing-team-member
     "/login",
     response_model=LoginResponse,
     status_code=status.HTTP_200_OK,
+    operation_id="marketingTeamMemberLogin",
     summary="Marketing team member login",
-    description="Authenticate with registered email or username and password.",
+    description=(
+        "Authenticate a marketing team member using a registered email address or username "
+        "and password. Returns a JWT access/refresh token pair on success. "
+        "Inactive or unauthorized accounts receive 403. Invalid credentials receive 401 "
+        "without revealing whether the identifier exists."
+    ),
     responses={
-        401: {"description": "Invalid credentials."},
-        403: {"description": "Account inactive or unauthorized."},
-        422: {"description": "Validation error."},
+        200: {
+            "description": "Login successful.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "success": True,
+                        "message": "Login successful.",
+                        "data": {
+                            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                            "token_type": "bearer",
+                        },
+                    }
+                }
+            },
+        },
+        **AUTH_ERROR_RESPONSES,
     },
 )
 async def login(
@@ -39,10 +61,31 @@ async def login(
     "/forgot-password",
     response_model=ForgotPasswordResponse,
     status_code=status.HTTP_200_OK,
+    operation_id="marketingTeamMemberForgotPassword",
     summary="Initiate password recovery",
-    description="Send password reset instructions for a registered email address.",
+    description=(
+        "Start the password recovery flow for a registered email address. "
+        "Always returns a generic success message to avoid revealing whether the email "
+        "is registered. When the account exists and is active, a reset email is sent "
+        "via Klaviyo with a time-limited token."
+    ),
     responses={
-        422: {"description": "Validation error."},
+        200: {
+            "description": "Password reset initiation accepted.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "success": True,
+                        "message": (
+                            "If an account exists for this email, password reset "
+                            "instructions have been sent."
+                        ),
+                    }
+                }
+            },
+        },
+        422: VALIDATION_ERROR_RESPONSE,
+        500: AUTH_ERROR_RESPONSES[500],
     },
 )
 async def forgot_password(
