@@ -72,6 +72,8 @@ class ActivityResponse(BaseModel):
     campaign_code: str
     category: str
     color: str
+    dynamic_fields: Optional[dict[str, Any]] = None
+    version: int
     performance: Optional[PerformanceMetrics] = None
 
     model_config = {"from_attributes": True}

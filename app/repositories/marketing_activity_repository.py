@@ -4,8 +4,10 @@ from datetime import date
 from typing import Optional
 from uuid import UUID
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.exceptions.http_exceptions import ConflictError
 from app.models.marketing_activity import MarketingActivity
 
 
@@ -18,10 +20,17 @@ class MarketingActivityRepository:
 
     def create(self, activity: MarketingActivity) -> MarketingActivity:
         """Persist a new marketing activity."""
-        self.db.add(activity)
-        self.db.commit()
-        self.db.refresh(activity)
-        return activity
+        try:
+            self.db.add(activity)
+            self.db.commit()
+            self.db.refresh(activity)
+            return activity
+        except IntegrityError as exc:
+            self.db.rollback()
+            raise ConflictError(
+                message="An activity with conflicting data already exists.",
+                code="ACTIVITY_CONFLICT",
+            ) from exc
 
     def get_by_id(self, activity_id: UUID) -> Optional[MarketingActivity]:
         """Return activity by primary key."""
@@ -29,9 +38,16 @@ class MarketingActivityRepository:
 
     def update(self, activity: MarketingActivity) -> MarketingActivity:
         """Persist activity updates."""
-        self.db.commit()
-        self.db.refresh(activity)
-        return activity
+        try:
+            self.db.commit()
+            self.db.refresh(activity)
+            return activity
+        except IntegrityError as exc:
+            self.db.rollback()
+            raise ConflictError(
+                message="An activity with conflicting data already exists.",
+                code="ACTIVITY_CONFLICT",
+            ) from exc
 
     def delete(self, activity: MarketingActivity) -> None:
         """Delete an activity."""

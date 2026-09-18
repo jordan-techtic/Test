@@ -60,6 +60,8 @@ class MarketingActivityService:
             campaign_code=activity.campaign_code,
             category=activity.category,
             color=meta["color"],
+            dynamic_fields=activity.dynamic_fields or {},
+            version=activity.version,
             performance=performance,
         )
 
@@ -90,6 +92,7 @@ class MarketingActivityService:
             description=payload.description,
             status=payload.status,
             campaign_code=campaign_code,
+            dynamic_fields=payload.dynamic_fields or {},
             created_by=user.id,
         )
         saved = self.repository.create(activity)
@@ -139,6 +142,7 @@ class MarketingActivityService:
 
         new_date = payload.date or activity.activity_date
         new_type = payload.type or activity.activity_type
+        type_or_date_changed = payload.date is not None or payload.type is not None
 
         if payload.title is not None:
             self.validation_service.validate_title(payload.title)
@@ -156,12 +160,16 @@ class MarketingActivityService:
             activity.status = payload.status
         if payload.dynamic_fields is not None:
             self.validation_service.validate_dynamic_fields(new_type, payload.dynamic_fields)
+            activity.dynamic_fields = payload.dynamic_fields
 
         if self.repository.exists_date_type(new_date, new_type, exclude_id=activity.id):
             raise ConflictError(
                 message="An activity of this type already exists on the selected date.",
                 code="ACTIVITY_TYPE_DATE_CONFLICT",
             )
+
+        if type_or_date_changed:
+            activity.campaign_code = self.campaign_code_service.generate(new_type, new_date)
 
         activity.version += 1
         saved = self.repository.update(activity)
