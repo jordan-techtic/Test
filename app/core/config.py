@@ -1,10 +1,10 @@
 """Application configuration loaded from environment variables."""
 
 from functools import lru_cache
-from typing import List
+from typing import Annotated, List
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
         alias="PASSWORD_RESET_TOKEN_EXPIRE_MINUTES",
     )
 
-    cors_origins: List[str] = Field(
+    cors_origins: Annotated[List[str], NoDecode] = Field(
         default=["http://localhost:3000"],
         alias="CORS_ORIGINS",
     )
