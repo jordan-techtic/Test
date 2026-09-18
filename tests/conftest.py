@@ -1,8 +1,8 @@
 """Shared pytest fixtures for integration tests."""
 
 import os
+from collections.abc import Generator
 from datetime import timedelta
-from typing import Generator
 
 import pytest
 from fastapi.testclient import TestClient
@@ -27,13 +27,13 @@ os.environ.setdefault("KLAVIYO_API_BASE_URL", "https://a.klaviyo.com/api")
 os.environ.setdefault("CORS_ORIGINS", "http://localhost:3000")
 os.environ.setdefault("LOG_LEVEL", "ERROR")
 
-from app.core.config import get_settings  # noqa: E402
-from app.core.security import create_access_token  # noqa: E402
-from app.db.session import SessionLocal, engine  # noqa: E402
-from app.main import create_app  # noqa: E402
-from app.models.marketing_team_member import MarketingTeamMember  # noqa: E402
-from app.schemas.marketing_activity import PerformanceMetrics  # noqa: E402
-from app.services.password_service import hash_password  # noqa: E402
+from app.core.config import get_settings
+from app.core.security import create_access_token
+from app.db.session import SessionLocal, engine
+from app.main import create_app
+from app.models.marketing_team_member import MarketingTeamMember
+from app.schemas.marketing_activity import PerformanceMetrics
+from app.services.password_service import hash_password
 
 TABLES_TO_TRUNCATE = (
     "password_reset_tokens",

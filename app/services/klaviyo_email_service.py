@@ -1,6 +1,5 @@
 """Klaviyo email adapter for transactional messages."""
 
-from typing import Optional
 
 import httpx
 from loguru import logger
@@ -11,7 +10,7 @@ from app.core.config import Settings
 class KlaviyoEmailService:
     """Send transactional emails via Klaviyo HTTP API."""
 
-    def __init__(self, settings: Settings, client: Optional[httpx.Client] = None) -> None:
+    def __init__(self, settings: Settings, client: httpx.Client | None = None) -> None:
         """Initialize Klaviyo email service."""
         self.settings = settings
         self._client = client

@@ -1,7 +1,7 @@
 """JWT token creation and validation utilities."""
 
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 from jose import JWTError, jwt
 
@@ -14,8 +14,8 @@ class InvalidTokenError(Exception):
 
 def create_access_token(
     subject: str,
-    extra: Optional[Dict[str, Any]] = None,
-    expires_delta: Optional[timedelta] = None,
+    extra: dict[str, Any] | None = None,
+    expires_delta: timedelta | None = None,
 ) -> str:
     """Create a signed JWT access token for the given subject."""
     settings = get_settings()
@@ -24,7 +24,7 @@ def create_access_token(
         if expires_delta is not None
         else timedelta(minutes=settings.access_token_expire_minutes)
     )
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": subject,
         "type": "access",
         "exp": expire,
@@ -40,7 +40,7 @@ def create_access_token(
 
 def create_refresh_token(
     subject: str,
-    expires_delta: Optional[timedelta] = None,
+    expires_delta: timedelta | None = None,
 ) -> str:
     """Create a signed JWT refresh token for the given subject."""
     settings = get_settings()
@@ -49,7 +49,7 @@ def create_refresh_token(
         if expires_delta is not None
         else timedelta(days=settings.refresh_token_expire_days)
     )
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": subject,
         "type": "refresh",
         "exp": expire,
@@ -61,7 +61,7 @@ def create_refresh_token(
     )
 
 
-def decode_token(token: str) -> Dict[str, Any]:
+def decode_token(token: str) -> dict[str, Any]:
     """Decode and validate a JWT token, returning its payload."""
     settings = get_settings()
     try:

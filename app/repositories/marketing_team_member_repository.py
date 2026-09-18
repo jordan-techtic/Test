@@ -1,6 +1,5 @@
 """Marketing team member data access."""
 
-from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import or_
@@ -16,11 +15,11 @@ class MarketingTeamMemberRepository:
         """Initialize repository with database session."""
         self.db = db
 
-    def get_by_id(self, user_id: UUID) -> Optional[MarketingTeamMember]:
+    def get_by_id(self, user_id: UUID) -> MarketingTeamMember | None:
         """Return user by primary key."""
         return self.db.get(MarketingTeamMember, user_id)
 
-    def get_by_email(self, email: str) -> Optional[MarketingTeamMember]:
+    def get_by_email(self, email: str) -> MarketingTeamMember | None:
         """Return user by email address."""
         return (
             self.db.query(MarketingTeamMember)
@@ -28,7 +27,7 @@ class MarketingTeamMemberRepository:
             .first()
         )
 
-    def get_by_username(self, username: str) -> Optional[MarketingTeamMember]:
+    def get_by_username(self, username: str) -> MarketingTeamMember | None:
         """Return user by username."""
         return (
             self.db.query(MarketingTeamMember)
@@ -36,7 +35,7 @@ class MarketingTeamMemberRepository:
             .first()
         )
 
-    def get_by_email_or_username(self, identifier: str) -> Optional[MarketingTeamMember]:
+    def get_by_email_or_username(self, identifier: str) -> MarketingTeamMember | None:
         """Return user matching email or username."""
         normalized = identifier.lower()
         return (

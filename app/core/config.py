@@ -1,7 +1,7 @@
 """Application configuration loaded from environment variables."""
 
 from functools import lru_cache
-from typing import Annotated, List
+from typing import Annotated
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
         alias="PASSWORD_RESET_TOKEN_EXPIRE_MINUTES",
     )
 
-    cors_origins: Annotated[List[str], NoDecode] = Field(
+    cors_origins: Annotated[list[str], NoDecode] = Field(
         default=["http://localhost:3000"],
         alias="CORS_ORIGINS",
     )
@@ -58,7 +58,7 @@ class Settings(BaseSettings):
 
     @field_validator("cors_origins", mode="before")
     @classmethod
-    def parse_cors_origins(cls, value: object) -> List[str]:
+    def parse_cors_origins(cls, value: object) -> list[str]:
         """Parse comma-separated CORS origins from environment."""
         if isinstance(value, str):
             return [origin.strip() for origin in value.split(",") if origin.strip()]

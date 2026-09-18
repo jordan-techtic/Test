@@ -1,7 +1,6 @@
 """Marketing activity data access."""
 
 from datetime import date
-from typing import Optional
 from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
@@ -32,7 +31,7 @@ class MarketingActivityRepository:
                 code="ACTIVITY_CONFLICT",
             ) from exc
 
-    def get_by_id(self, activity_id: UUID) -> Optional[MarketingActivity]:
+    def get_by_id(self, activity_id: UUID) -> MarketingActivity | None:
         """Return activity by primary key."""
         return self.db.get(MarketingActivity, activity_id)
 
@@ -58,7 +57,7 @@ class MarketingActivityRepository:
         self,
         activity_date: date,
         activity_type: str,
-        exclude_id: Optional[UUID] = None,
+        exclude_id: UUID | None = None,
     ) -> bool:
         """Return True if an activity exists for date and type."""
         query = self.db.query(MarketingActivity).filter(
@@ -72,9 +71,9 @@ class MarketingActivityRepository:
     def list_by_year(
         self,
         year: int,
-        category: Optional[str] = None,
-        activity_type: Optional[str] = None,
-        month: Optional[int] = None,
+        category: str | None = None,
+        activity_type: str | None = None,
+        month: int | None = None,
     ) -> list[MarketingActivity]:
         """Return activities for a calendar year with optional filters."""
         if month:

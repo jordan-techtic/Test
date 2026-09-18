@@ -1,7 +1,6 @@
 """Password reset token data access."""
 
 from datetime import datetime, timezone
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -22,7 +21,7 @@ class PasswordResetTokenRepository:
         self.db.refresh(token)
         return token
 
-    def get_valid_token(self, token_hash: str) -> Optional[PasswordResetToken]:
+    def get_valid_token(self, token_hash: str) -> PasswordResetToken | None:
         """Return unused, unexpired token by hash."""
         now = datetime.now(timezone.utc)
         return (

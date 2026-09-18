@@ -1,6 +1,5 @@
 """FastAPI global exception handlers."""
 
-from typing import Any, List
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -12,9 +11,9 @@ from app.exceptions.http_exceptions import AppHTTPException
 from app.schemas.response import error_response
 
 
-def _format_validation_errors(exc: RequestValidationError) -> List[dict[str, str]]:
+def _format_validation_errors(exc: RequestValidationError) -> list[dict[str, str]]:
     """Convert FastAPI validation errors into field-level detail objects."""
-    formatted: List[dict[str, str]] = []
+    formatted: list[dict[str, str]] = []
     for error in exc.errors():
         location = error.get("loc", ())
         field = ".".join(str(part) for part in location if part != "body")

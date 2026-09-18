@@ -1,6 +1,5 @@
 """Marketing activity business logic."""
 
-from typing import Optional
 from uuid import UUID
 
 from app.core.constants import ACTIVITY_TYPES
@@ -44,7 +43,7 @@ class MarketingActivityService:
         user: MarketingTeamMember,
     ) -> ActivityResponse:
         """Map ORM activity to response schema."""
-        performance: Optional[PerformanceMetrics] = None
+        performance: PerformanceMetrics | None = None
         if include_performance and user.has_performance_access:
             performance = self.klaviyo_service.get_metrics_by_campaign_code(
                 activity.campaign_code
@@ -198,9 +197,9 @@ class MarketingActivityService:
         self,
         user: MarketingTeamMember,
         year: int,
-        month: Optional[int] = None,
-        category: Optional[str] = None,
-        activity_type: Optional[str] = None,
+        month: int | None = None,
+        category: str | None = None,
+        activity_type: str | None = None,
         include_performance: bool = False,
     ) -> CalendarResponse:
         """Return annual calendar activities for the requested period."""

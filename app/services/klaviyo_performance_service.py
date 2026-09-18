@@ -1,6 +1,5 @@
 """Klaviyo performance metrics adapter."""
 
-from typing import Optional
 
 import httpx
 from loguru import logger
@@ -12,7 +11,7 @@ from app.schemas.marketing_activity import PerformanceMetrics
 class KlaviyoPerformanceService:
     """Retrieve campaign performance metrics from Klaviyo."""
 
-    def __init__(self, settings: Settings, client: Optional[httpx.Client] = None) -> None:
+    def __init__(self, settings: Settings, client: httpx.Client | None = None) -> None:
         """Initialize Klaviyo performance service."""
         self.settings = settings
         self._client = client
@@ -20,7 +19,7 @@ class KlaviyoPerformanceService:
     def get_metrics_by_campaign_code(
         self,
         campaign_code: str,
-    ) -> Optional[PerformanceMetrics]:
+    ) -> PerformanceMetrics | None:
         """Fetch performance metrics for a campaign code."""
         if not self.settings.klaviyo_api_key:
             return None

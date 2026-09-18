@@ -2,7 +2,11 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, marketing_team_member_auth, marketing_team_member_calendar
+from app.api.v1.endpoints import (
+    health,
+    marketing_team_member_auth,
+    marketing_team_member_calendar,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])

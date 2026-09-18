@@ -1,21 +1,23 @@
 """Marketing activity and calendar schemas."""
 
 from datetime import date as date_type
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.core.constants import ACTIVITY_CATEGORIES, ACTIVITY_TYPES, DYNAMIC_FIELDS_BY_TYPE
+from app.core.constants import (
+    ACTIVITY_TYPES,
+)
 
 
 class PerformanceMetrics(BaseModel):
     """Klaviyo performance metrics for an activity."""
 
-    revenue: Optional[float] = Field(default=None, description="Campaign revenue in USD.", examples=[1250.50])
-    open_rate: Optional[float] = Field(default=None, description="Email open rate (0-1).", examples=[0.42])
-    click_rate: Optional[float] = Field(default=None, description="Email click rate (0-1).", examples=[0.18])
-    delivered_orders: Optional[int] = Field(default=None, description="Number of delivered orders.", examples=[37])
+    revenue: float | None = Field(default=None, description="Campaign revenue in USD.", examples=[1250.50])
+    open_rate: float | None = Field(default=None, description="Email open rate (0-1).", examples=[0.42])
+    click_rate: float | None = Field(default=None, description="Email click rate (0-1).", examples=[0.18])
+    delivered_orders: int | None = Field(default=None, description="Number of delivered orders.", examples=[37])
 
 
 class ActivityCreate(BaseModel):
@@ -42,7 +44,7 @@ class ActivityCreate(BaseModel):
         ),
         examples=["email_send"],
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         max_length=500,
         description="Optional long-form description (max 500 characters).",
@@ -54,7 +56,7 @@ class ActivityCreate(BaseModel):
         description="Activity visibility status.",
         examples=["active"],
     )
-    dynamic_fields: Optional[dict[str, Any]] = Field(
+    dynamic_fields: dict[str, Any] | None = Field(
         default=None,
         description=(
             "Type-specific required fields. "
@@ -91,29 +93,29 @@ class ActivityCreate(BaseModel):
 class ActivityUpdate(BaseModel):
     """Update marketing activity request."""
 
-    title: Optional[str] = Field(
+    title: str | None = Field(
         default=None,
         min_length=1,
         max_length=100,
         description="Updated display title.",
         examples=["Updated Spring Promo"],
     )
-    date: Optional[date_type] = Field(
+    date: date_type | None = Field(
         default=None,
         description="Updated scheduled date (today or future).",
         examples=["2026-04-20"],
     )
-    type: Optional[str] = Field(
+    type: str | None = Field(
         default=None,
         description="Updated activity type (must be a predefined type).",
         examples=["email_send"],
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         max_length=500,
         description="Updated description.",
     )
-    status: Optional[str] = Field(
+    status: str | None = Field(
         default=None,
         pattern="^(active|inactive)$",
         description="Updated status.",
@@ -124,7 +126,7 @@ class ActivityUpdate(BaseModel):
         description="Expected version from the last GET response; used for optimistic locking.",
         examples=[1],
     )
-    dynamic_fields: Optional[dict[str, Any]] = Field(
+    dynamic_fields: dict[str, Any] | None = Field(
         default=None,
         description="Updated type-specific fields (validated when provided).",
         examples=[{"subject_line": "Updated subject"}],
@@ -132,7 +134,7 @@ class ActivityUpdate(BaseModel):
 
     @field_validator("type")
     @classmethod
-    def validate_type(cls, value: Optional[str]) -> Optional[str]:
+    def validate_type(cls, value: str | None) -> str | None:
         """Ensure activity type is predefined when provided."""
         if value is not None and value not in ACTIVITY_TYPES:
             raise ValueError("Invalid activity type.")
@@ -146,17 +148,17 @@ class ActivityResponse(BaseModel):
     title: str = Field(..., description="Activity title.")
     date: date_type = Field(..., description="Scheduled date.")
     type: str = Field(..., description="Activity type key.")
-    description: Optional[str] = Field(default=None, description="Optional description.")
+    description: str | None = Field(default=None, description="Optional description.")
     status: str = Field(..., description="active or inactive.")
     campaign_code: str = Field(..., description="Generated campaign code (C{C}-MO{M}-Y{YY}-{TYPE}).")
     category: str = Field(..., description="Activity category: promotions, content, or focuses.")
     color: str = Field(..., description="Hex color for calendar display.", examples=["#4F46E5"])
-    dynamic_fields: Optional[dict[str, Any]] = Field(
+    dynamic_fields: dict[str, Any] | None = Field(
         default=None,
         description="Type-specific field values persisted for this activity.",
     )
     version: int = Field(..., description="Optimistic-locking version; required for PUT.")
-    performance: Optional[PerformanceMetrics] = Field(
+    performance: PerformanceMetrics | None = Field(
         default=None,
         description="Klaviyo metrics when include_performance=true and user has access.",
     )
@@ -176,7 +178,7 @@ class CalendarActivityData(BaseModel):
     """Single calendar year payload."""
 
     year: int = Field(..., description="Calendar year requested.", examples=[2026])
-    month: Optional[int] = Field(
+    month: int | None = Field(
         default=None,
         description="Optional month filter (1-12) when provided in query.",
         examples=[4],

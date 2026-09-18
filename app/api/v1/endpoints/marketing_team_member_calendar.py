@@ -1,6 +1,5 @@
 """Marketing team member calendar and activity endpoints."""
 
-from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, status
@@ -81,19 +80,19 @@ _CATEGORY_DESC = "Filter by category. Allowed: " + ", ".join(ACTIVITY_CATEGORIES
 )
 async def get_calendar(
     year: int = Query(..., ge=2000, le=2100, description="Calendar year.", examples=[2026]),
-    month: Optional[int] = Query(
+    month: int | None = Query(
         default=None,
         ge=1,
         le=12,
         description="Optional month filter (1-12) for month navigation.",
         examples=[4],
     ),
-    category: Optional[str] = Query(
+    category: str | None = Query(
         default=None,
         description=_CATEGORY_DESC,
         examples=["promotions"],
     ),
-    activity_type: Optional[str] = Query(
+    activity_type: str | None = Query(
         default=None,
         alias="type",
         description=_ACTIVITY_TYPE_DESC,

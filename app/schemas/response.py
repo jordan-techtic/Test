@@ -1,6 +1,6 @@
 """Standard API response envelope schemas."""
 
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,7 +11,7 @@ class ErrorDetail(BaseModel):
     """Machine-readable error payload."""
 
     code: str = Field(..., description="Stable machine-readable error code.")
-    details: Optional[Any] = Field(
+    details: Any | None = Field(
         default=None,
         description="Optional structured details such as field-level validation errors.",
     )
@@ -50,7 +50,7 @@ def success_response(
 def error_response(
     message: str,
     code: str,
-    details: Optional[Any] = None,
+    details: Any | None = None,
 ) -> dict[str, Any]:
     """Build a standard error response dictionary."""
     return {
