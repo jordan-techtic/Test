@@ -1,6 +1,6 @@
 """Marketing activity and calendar schemas."""
 
-from datetime import date
+from datetime import date as date_type
 from typing import Any, Optional
 from uuid import UUID
 
@@ -22,7 +22,7 @@ class ActivityCreate(BaseModel):
     """Create marketing activity request."""
 
     title: str = Field(..., min_length=1, max_length=100, examples=["Spring Promo"])
-    date: date = Field(..., description="Scheduled activity date (today or future).")
+    date: date_type = Field(..., description="Scheduled activity date (today or future).")
     type: str = Field(..., description="Predefined activity type.", examples=["email_send"])
     description: Optional[str] = Field(default=None, max_length=500)
     status: str = Field(default="active", pattern="^(active|inactive)$")
@@ -44,7 +44,7 @@ class ActivityUpdate(BaseModel):
     """Update marketing activity request."""
 
     title: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    date: Optional[date] = None
+    date: Optional[date_type] = None
     type: Optional[str] = None
     description: Optional[str] = Field(default=None, max_length=500)
     status: Optional[str] = Field(default=None, pattern="^(active|inactive)$")
@@ -65,7 +65,7 @@ class ActivityResponse(BaseModel):
 
     id: UUID
     title: str
-    date: date
+    date: date_type
     type: str
     description: Optional[str] = None
     status: str

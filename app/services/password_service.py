@@ -2,9 +2,7 @@
 
 import re
 
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
 PASSWORD_PATTERN = re.compile(
     r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$"
@@ -13,12 +11,16 @@ PASSWORD_PATTERN = re.compile(
 
 def hash_password(plain_password: str) -> str:
     """Hash a plain-text password."""
-    return pwd_context.hash(plain_password)
+    hashed = bcrypt.hashpw(plain_password.encode("utf-8"), bcrypt.gensalt())
+    return hashed.decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain-text password against a hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8"),
+    )
 
 
 def validate_password_strength(password: str) -> bool:
