@@ -36,6 +36,18 @@ class Settings(BaseSettings):
     auth_strategy: str = Field(default="jwt", alias="AUTH_STRATEGY")
 
     klaviyo_api_key: str = Field(default="", alias="KLAVIYO_API_KEY")
+    klaviyo_api_base_url: str = Field(
+        default="https://a.klaviyo.com/api",
+        alias="KLAVIYO_API_BASE_URL",
+    )
+    frontend_reset_password_url: str = Field(
+        default="http://localhost:3000/reset-password",
+        alias="FRONTEND_RESET_PASSWORD_URL",
+    )
+    password_reset_token_expire_minutes: int = Field(
+        default=60,
+        alias="PASSWORD_RESET_TOKEN_EXPIRE_MINUTES",
+    )
 
     cors_origins: List[str] = Field(
         default=["http://localhost:3000"],

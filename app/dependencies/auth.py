@@ -1,10 +1,18 @@
 """Authentication dependencies for JWT-protected routes."""
 
+from uuid import UUID
+
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
 
 from app.core.security import InvalidTokenError, decode_token
-from app.exceptions.http_exceptions import UnauthorizedError
+from app.dependencies.database import get_db
+from app.exceptions.http_exceptions import ForbiddenError, UnauthorizedError
+from app.models.marketing_team_member import MarketingTeamMember
+from app.repositories.marketing_team_member_repository import (
+    MarketingTeamMemberRepository,
+)
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/v1/marketing-team-member/login",
@@ -12,14 +20,11 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-async def get_current_user_token(
+async def get_current_user(
     token: str | None = Depends(oauth2_scheme),
-) -> dict:
-    """
-    Validate the bearer access token and return its decoded payload.
-
-    This is a skeleton dependency for future authenticated routes.
-    """
+    db: Session = Depends(get_db),
+) -> MarketingTeamMember:
+    """Validate JWT and return the authenticated marketing team member."""
     if token is None:
         raise UnauthorizedError(
             message="Authentication credentials were not provided.",
@@ -37,4 +42,22 @@ async def get_current_user_token(
             message="Invalid token type.",
             code="INVALID_TOKEN_TYPE",
         )
-    return payload
+
+    user_id = payload.get("sub")
+    if not user_id:
+        raise UnauthorizedError(message="Invalid token subject.", code="INVALID_TOKEN")
+
+    user = MarketingTeamMemberRepository(db).get_by_id(UUID(str(user_id)))
+    if user is None:
+        raise UnauthorizedError(message="User not found.", code="USER_NOT_FOUND")
+    if not user.is_active:
+        raise ForbiddenError(
+            message="Your account is inactive.",
+            code="ACCOUNT_INACTIVE",
+        )
+    if not user.is_authorized:
+        raise ForbiddenError(
+            message="You are not authorized to access this application.",
+            code="NOT_AUTHORIZED",
+        )
+    return user

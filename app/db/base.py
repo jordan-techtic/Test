@@ -9,5 +9,8 @@ class Base(DeclarativeBase):
     pass
 
 
-# Import models here as they are added so Alembic autogenerate discovers them.
-# Example: from app.models.user import User  # noqa: F401
+from app.models import (  # noqa: E402, F401
+    MarketingActivity,
+    MarketingTeamMember,
+    PasswordResetToken,
+)
