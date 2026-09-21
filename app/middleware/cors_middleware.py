@@ -1,0 +1,18 @@
+"""CORS middleware configuration."""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.core.config import get_settings
+
+
+def configure_cors(app: FastAPI) -> None:
+    """Register CORS middleware with environment-driven allowed origins."""
+    settings = get_settings()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
