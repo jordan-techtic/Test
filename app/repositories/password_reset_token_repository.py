@@ -1,6 +1,6 @@
 """Password reset token data access."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -23,7 +23,7 @@ class PasswordResetTokenRepository:
 
     def get_valid_token(self, token_hash: str) -> PasswordResetToken | None:
         """Return unused, unexpired token by hash."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return (
             self.db.query(PasswordResetToken)
             .filter(
@@ -36,5 +36,5 @@ class PasswordResetTokenRepository:
 
     def mark_used(self, token: PasswordResetToken) -> None:
         """Mark token as used."""
-        token.used_at = datetime.now(timezone.utc)
+        token.used_at = datetime.now(UTC)
         self.db.commit()

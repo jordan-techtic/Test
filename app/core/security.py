@@ -1,6 +1,6 @@
 """JWT token creation and validation utilities."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from jose import JWTError, jwt
@@ -19,7 +19,7 @@ def create_access_token(
 ) -> str:
     """Create a signed JWT access token for the given subject."""
     settings = get_settings()
-    expire = datetime.now(timezone.utc) + (
+    expire = datetime.now(UTC) + (
         expires_delta
         if expires_delta is not None
         else timedelta(minutes=settings.access_token_expire_minutes)
@@ -44,7 +44,7 @@ def create_refresh_token(
 ) -> str:
     """Create a signed JWT refresh token for the given subject."""
     settings = get_settings()
-    expire = datetime.now(timezone.utc) + (
+    expire = datetime.now(UTC) + (
         expires_delta
         if expires_delta is not None
         else timedelta(days=settings.refresh_token_expire_days)

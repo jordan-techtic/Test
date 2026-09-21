@@ -2,11 +2,9 @@
 
 from pathlib import Path
 
-import pytest
 from fastapi.testclient import TestClient
 
 from app.core.config import get_settings
-
 
 REQUIRED_PATHS = (
     "app/main.py",
@@ -91,8 +89,8 @@ def test_cmc8_redoc_accessible(client: TestClient) -> None:
 
 def test_cmc8_sample_unit_tests_importable() -> None:
     """CMC-8: Sample unit tests are present and importable."""
+    import tests.unit.test_response
     import tests.unit.test_security  # noqa: F401
-    import tests.unit.test_response  # noqa: F401
 
 
 def test_cmc8_auth_middleware_registered(client: TestClient) -> None:

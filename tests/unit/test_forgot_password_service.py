@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from app.core.config import Settings
 from app.models.marketing_team_member import MarketingTeamMember
-from app.services.forgot_password_service import ForgotPasswordService, GENERIC_MESSAGE
+from app.services.forgot_password_service import GENERIC_MESSAGE, ForgotPasswordService
 from app.services.password_service import hash_password
 
 

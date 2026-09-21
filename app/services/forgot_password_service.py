@@ -2,7 +2,7 @@
 
 import hashlib
 import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from app.core.config import Settings
 from app.models.password_reset_token import PasswordResetToken
@@ -43,7 +43,7 @@ class ForgotPasswordService:
         if user is not None and user.is_active and user.is_authorized:
             raw_token = secrets.token_urlsafe(32)
             token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
-            expires_at = datetime.now(timezone.utc) + timedelta(
+            expires_at = datetime.now(UTC) + timedelta(
                 minutes=self.settings.password_reset_token_expire_minutes
             )
             reset_token = PasswordResetToken(
