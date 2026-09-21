@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/*
+  Visual alias layer
+  Sofia tokens in src/theme/tokens.ts are the source of truth. Theme GlobalStyle
+  injects them on :root as --color-*, --padding-*, --gap-*, --radius-*, --font-*,
+  --fs-*, --fw-*, --lh-*. Hex does not live here.
+
+  @theme inline registers Tailwind/shadcn utilities against those vars.
+  Shadcn `primary` maps to Sofia accent because Sofia primary is transparent.
+*/
+
 @theme {
   --font-almarai: 'Almarai', sans-serif;
   --font-eb-garamond: 'EB Garamond', serif;
@@ -7,54 +17,34 @@
   --font-fellix: 'Fellix', 'Almarai', sans-serif;
   --font-sans: 'Almarai', sans-serif;
 
-  --color-accent: #c8a47e;
-  --color-background: #000000;
-  --color-border: #e0e0e0;
-  --color-13: #919eab;
-  --color-14: #0b0b0b;
-  --color-15: #959595;
-  --color-16: #ffffff19;
-  --color-17: #1877f2;
-  --color-18: #c8a47e33;
-  --color-19: #14100d;
-  --color-20: #0072ce;
-  --color-21: #d9d9d9;
-  --color-22: #22c55e;
-  --color-23: #494949;
-  --color-24: #020102;
-  --color-25: #0e0d0d;
-  --color-26: #333333;
-  --color-27: #f332f6;
-  --color-28: #2f271f;
-  --color-29: #0b0b0b00;
-  --color-30: #62503d00;
-  --color-31: #c8a47e7f;
-  --color-32: #0f0f0f;
-  --color-33: #7200ff;
+  --radius-sm: var(--radius-3);
+  --radius-md: var(--radius-10);
+  --radius-lg: var(--radius-16);
+  --radius-xl: var(--radius-20);
+  --radius-pill: var(--radius-1000);
+}
 
-  --color-foreground: #e0e0e0;
-  --color-card: #14100d;
-  --color-card-foreground: #e0e0e0;
-  --color-popover: #0f0f0f;
-  --color-popover-foreground: #e0e0e0;
-  --color-primary: #c8a47e;
-  --color-primary-foreground: #0b0b0b;
-  --color-secondary: #14100d;
-  --color-secondary-foreground: #e0e0e0;
-  --color-muted: #0e0d0d;
-  --color-muted-foreground: #959595;
-  --color-accent-foreground: #0b0b0b;
-  --color-destructive: #f332f6;
-  --color-destructive-foreground: #e0e0e0;
-  --color-input: #14100d;
-  --color-ring: #c8a47e;
-  --color-success: #22c55e;
-
-  --radius-sm: 2px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-pill: 1000px;
+@theme inline {
+  --color-accent: var(--color-accent);
+  --color-background: var(--color-background);
+  --color-border: var(--color-border);
+  --color-success: var(--color-success);
+  --color-foreground: var(--color-success);
+  --color-card: var(--color-color-22);
+  --color-card-foreground: var(--color-success);
+  --color-popover: var(--color-color-35);
+  --color-popover-foreground: var(--color-success);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-color-16);
+  --color-secondary: var(--color-color-22);
+  --color-secondary-foreground: var(--color-success);
+  --color-muted: var(--color-color-23);
+  --color-muted-foreground: var(--color-color-15);
+  --color-accent-foreground: var(--color-color-16);
+  --color-destructive: var(--color-color-26);
+  --color-destructive-foreground: var(--color-success);
+  --color-input: var(--color-color-22);
+  --color-ring: var(--color-accent);
 }
 
 @layer base {
@@ -69,27 +59,27 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background-color: #000000;
+    background-color: var(--color-background);
     background-image:
-      radial-gradient(ellipse 80% 48% at 50% -8%, #c8a47e33 0%, #0b0b0b00 58%),
-      linear-gradient(180deg, #c8a47e33 0%, #62503d00 100%);
+      radial-gradient(ellipse 80% 48% at 50% -8%, var(--color-color-28) 0%, var(--color-background) 58%),
+      linear-gradient(180deg, var(--color-color-28) 0%, var(--color-background) 100%);
     background-attachment: fixed;
-    color: #e0e0e0;
-    font-family: 'Almarai', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 17.856000900268555px;
+    color: var(--color-text-primary);
+    font-family: var(--font-body), 'Almarai', sans-serif;
+    font-size: var(--fs-body);
+    font-weight: var(--fw-body);
+    line-height: var(--lh-body);
     -webkit-font-smoothing: antialiased;
   }
 
   h1,
   h2,
   h3 {
-    font-family: 'EB Garamond', serif;
+    font-family: var(--font-heading-lg-19), 'EB Garamond', serif;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-ring);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 
@@ -99,11 +89,24 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #e0e0e0;
-    border-radius: 8px;
+    background: var(--color-success);
+    border-radius: var(--radius-8);
   }
 
   ::-webkit-scrollbar-track {
-    background: #14100d;
+    background: var(--color-color-22);
+  }
+
+  .toaster {
+    --normal-bg: var(--color-color-22);
+    --normal-text: var(--color-success);
+    --normal-border: var(--color-border);
+    --success-bg: var(--color-color-22);
+    --success-text: var(--color-success);
+    --success-border: var(--color-border);
+    --error-bg: var(--color-color-22);
+    --error-text: var(--color-success);
+    --error-border: var(--color-border);
+    --border-radius: var(--radius-10);
   }
 }

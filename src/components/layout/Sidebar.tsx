@@ -15,7 +15,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
         className={({ isActive }) =>
           cn(
             'rounded-[10px] px-3 py-2 text-sm font-semibold transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-            isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-white/5',
+            isActive ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-white/5',
           )
         }
       >
@@ -27,7 +27,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
 
 export default function Sidebar() {
   return (
-    <aside className="hidden w-60 shrink-0 border-r border-border/20 bg-[#0b0b0b] px-4 py-6 md:block">
+    <aside className="hidden w-60 shrink-0 border-r border-border bg-[color:var(--color-color-16)] px-[var(--padding-16)] py-[var(--padding-24)] md:block">
       <SidebarNav />
     </aside>
   );

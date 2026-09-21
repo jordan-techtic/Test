@@ -6,6 +6,7 @@ export default function NotFound() {
   return (
     <div className="flex w-full flex-col items-start gap-6">
       <EmptyState
+        headingLevel={1}
         title="Page not found"
         description="That address is not part of this workspace. Return home to continue."
       />

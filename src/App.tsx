@@ -1,11 +1,28 @@
-import { BrowserRouter } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
 import AppRouter from '@/routes';
 import Header from '@/components/layout/Header';
 import Sidebar from '@/components/layout/Sidebar';
+import { UNAUTHORIZED_EVENT } from '@/lib/auth/session';
+
+function UnauthorizedRedirect() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    function onUnauthorized() {
+      navigate('/', { replace: true });
+    }
+    window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+  }, [navigate]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <BrowserRouter>
+      <UnauthorizedRedirect />
       <div className="flex min-h-screen flex-col">
         <a
           href="#main-content"

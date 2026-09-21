@@ -14,7 +14,7 @@ type FormFieldContextValue<
   name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+const FormFieldContext = React.createContext<FormFieldContextValue | null>(null);
 
 function FormField<
   TFieldValues extends FieldValues = FieldValues,
@@ -41,6 +41,9 @@ function FormItem({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 function useFormField() {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
+  if (!fieldContext) {
+    throw new Error('useFormField must be used within <FormField>');
+  }
   const { getFieldState, formState } = useFormContext();
   const fieldState = getFieldState(fieldContext.name, formState);
   const { id } = itemContext;

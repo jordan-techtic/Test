@@ -14,7 +14,9 @@ export function buildRootCssVariables(): string {
 
   for (const [name, token] of Object.entries(typography) as [string, TypographyToken][]) {
     const key = cssTokenName(name);
-    lines.push(`--font-${key}: ${token.fontFamily};`);
+    const fontFamily =
+      token.fontFamily === 'Fellix' ? 'Fellix, Almarai, sans-serif' : token.fontFamily;
+    lines.push(`--font-${key}: ${fontFamily};`);
     lines.push(`--fs-${key}: ${token.fontSize};`);
     lines.push(`--fw-${key}: ${String(token.fontWeight)};`);
     lines.push(`--lh-${key}: ${token.lineHeight};`);
