@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-almarai: 'Almarai', sans-serif;
+  --font-eb-garamond: 'EB Garamond', serif;
+  --font-public-sans: 'Public Sans', sans-serif;
+  --font-fellix: 'Fellix', 'Almarai', sans-serif;
+  --font-sans: 'Almarai', sans-serif;
+
+  --color-accent: #c8a47e;
+  --color-background: #000000;
+  --color-border: #e0e0e0;
+  --color-13: #919eab;
+  --color-14: #0b0b0b;
+  --color-15: #959595;
+  --color-16: #ffffff19;
+  --color-17: #1877f2;
+  --color-18: #c8a47e33;
+  --color-19: #14100d;
+  --color-20: #0072ce;
+  --color-21: #d9d9d9;
+  --color-22: #22c55e;
+  --color-23: #494949;
+  --color-24: #020102;
+  --color-25: #0e0d0d;
+  --color-26: #333333;
+  --color-27: #f332f6;
+  --color-28: #2f271f;
+  --color-29: #0b0b0b00;
+  --color-30: #62503d00;
+  --color-31: #c8a47e7f;
+  --color-32: #0f0f0f;
+  --color-33: #7200ff;
+
+  --color-foreground: #e0e0e0;
+  --color-card: #14100d;
+  --color-card-foreground: #e0e0e0;
+  --color-popover: #0f0f0f;
+  --color-popover-foreground: #e0e0e0;
+  --color-primary: #c8a47e;
+  --color-primary-foreground: #0b0b0b;
+  --color-secondary: #14100d;
+  --color-secondary-foreground: #e0e0e0;
+  --color-muted: #0e0d0d;
+  --color-muted-foreground: #959595;
+  --color-accent-foreground: #0b0b0b;
+  --color-destructive: #f332f6;
+  --color-destructive-foreground: #e0e0e0;
+  --color-input: #14100d;
+  --color-ring: #c8a47e;
+  --color-success: #22c55e;
+
+  --radius-sm: 2px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 1000px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #000000;
+    background-image:
+      radial-gradient(ellipse 80% 48% at 50% -8%, #c8a47e33 0%, #0b0b0b00 58%),
+      linear-gradient(180deg, #c8a47e33 0%, #62503d00 100%);
+    background-attachment: fixed;
+    color: #e0e0e0;
+    font-family: 'Almarai', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 17.856000900268555px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'EB Garamond', serif;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #14100d;
+  }
+}
