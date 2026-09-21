@@ -5,11 +5,20 @@ from typing import Any
 from app.schemas.response import ErrorResponse
 
 
-def error_example(code: str, message: str, details: Any = None) -> dict[str, Any]:
-    """Build a documented error response example."""
+def error_example(
+    code: str,
+    message: str,
+    details: Any = None,
+    *,
+    role: str = "anonymous",
+    organization: str = "Marketing",
+) -> dict[str, Any]:
+    """Build a documented error response example matching ErrorResponse envelope."""
     return {
         "success": False,
         "message": message,
+        "role": role,
+        "organization": organization,
         "error": {"code": code, "details": details},
     }
 
@@ -54,6 +63,25 @@ VALIDATION_ERROR_RESPONSE = {
     },
 }
 
+LOGIN_VALIDATION_ERROR_RESPONSE = {
+    "model": ErrorResponse,
+    "description": "Login request validation failed.",
+    "content": {
+        "application/json": {
+            "example": error_example(
+                "VALIDATION_ERROR",
+                "Validation failed.",
+                [
+                    {
+                        "field": "password",
+                        "message": "String should have at least 8 characters",
+                    }
+                ],
+            )
+        }
+    },
+}
+
 INTERNAL_ERROR_RESPONSE = {
     "model": ErrorResponse,
     "description": "Unexpected server error.",
@@ -62,6 +90,19 @@ INTERNAL_ERROR_RESPONSE = {
             "example": error_example(
                 "INTERNAL_SERVER_ERROR",
                 "An unexpected error occurred. Please try again later.",
+            )
+        }
+    },
+}
+
+RATE_LIMIT_ERROR_RESPONSE = {
+    "model": ErrorResponse,
+    "description": "Too many requests from this client.",
+    "content": {
+        "application/json": {
+            "example": error_example(
+                "RATE_LIMIT_EXCEEDED",
+                "Too many requests. Please try again later.",
             )
         }
     },
@@ -104,6 +145,13 @@ AUTH_ERROR_RESPONSES = {
             }
         },
     },
+    422: LOGIN_VALIDATION_ERROR_RESPONSE,
+    429: RATE_LIMIT_ERROR_RESPONSE,
+    500: INTERNAL_ERROR_RESPONSE,
+}
+
+FORGOT_PASSWORD_ERROR_RESPONSES = {
     422: VALIDATION_ERROR_RESPONSE,
+    429: RATE_LIMIT_ERROR_RESPONSE,
     500: INTERNAL_ERROR_RESPONSE,
 }

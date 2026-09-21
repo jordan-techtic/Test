@@ -9,7 +9,7 @@ from app.schemas.auth import (
     LoginRequest,
     LoginResponse,
 )
-from app.schemas.openapi import AUTH_ERROR_RESPONSES, VALIDATION_ERROR_RESPONSE
+from app.schemas.openapi import AUTH_ERROR_RESPONSES, FORGOT_PASSWORD_ERROR_RESPONSES
 from app.services.auth_service import AuthService
 from app.services.forgot_password_service import ForgotPasswordService
 
@@ -25,8 +25,10 @@ router = APIRouter(prefix="/marketing-team-member", tags=["marketing-team-member
     description=(
         "Authenticate a marketing team member using a registered email address or username "
         "and password. Returns a JWT access/refresh token pair on success. "
-        "Inactive or unauthorized accounts receive 403. Invalid credentials receive 401 "
-        "without revealing whether the identifier exists."
+        "Inactive accounts receive 403 with code ACCOUNT_INACTIVE. "
+        "Unauthorized (viewer) accounts receive 403 with code NOT_AUTHORIZED. "
+        "Invalid credentials receive 401 with code INVALID_CREDENTIALS without revealing "
+        "whether the identifier exists. Public — no Bearer token required to call this endpoint."
     ),
     responses={
         200: {
@@ -50,6 +52,7 @@ router = APIRouter(prefix="/marketing-team-member", tags=["marketing-team-member
         },
         **AUTH_ERROR_RESPONSES,
     },
+    openapi_extra={"security": []},
 )
 async def login(
     body: LoginRequest,
@@ -67,9 +70,11 @@ async def login(
     summary="Initiate password recovery",
     description=(
         "Start the password recovery flow for a registered email address. "
-        "Always returns a generic success message to avoid revealing whether the email "
-        "is registered. When the account exists and is active, a reset email is sent "
-        "via Klaviyo with a time-limited token."
+        "Always returns HTTP 200 with a generic success message to avoid revealing whether "
+        "the email is registered (anti-enumeration). When the account exists, is active, "
+        "and is authorized, a time-limited reset token is stored and a reset email is "
+        "sent via Klaviyo. Inactive or unauthorized accounts are silently skipped. "
+        "Public — no Bearer token required to call this endpoint."
     ),
     responses={
         200: {
@@ -88,9 +93,9 @@ async def login(
                 }
             },
         },
-        422: VALIDATION_ERROR_RESPONSE,
-        500: AUTH_ERROR_RESPONSES[500],
+        **FORGOT_PASSWORD_ERROR_RESPONSES,
     },
+    openapi_extra={"security": []},
 )
 async def forgot_password(
     body: ForgotPasswordRequest,

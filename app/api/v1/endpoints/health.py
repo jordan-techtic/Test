@@ -3,6 +3,7 @@
 from fastapi import APIRouter, status
 
 from app.schemas.health import HealthData, HealthResponse
+from app.schemas.openapi import INTERNAL_ERROR_RESPONSE
 from app.utils.frontend_context import build_frontend_context
 
 router = APIRouter()
@@ -12,10 +13,12 @@ router = APIRouter()
     "/health",
     response_model=HealthResponse,
     status_code=status.HTTP_200_OK,
+    operation_id="getHealth",
     summary="Health check",
     description=(
         "Returns the current health status of the API. "
-        "Use this endpoint for load balancer and container liveness probes."
+        "Use this endpoint for load balancer and container liveness probes. "
+        "Public — no authentication required."
     ),
     responses={
         200: {
@@ -32,25 +35,10 @@ router = APIRouter()
                 }
             },
         },
-        500: {
-            "description": "Unexpected server error.",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "success": False,
-                        "message": "An unexpected error occurred. Please try again later.",
-                        "role": "anonymous",
-                        "organization": "Marketing",
-                        "error": {
-                            "code": "INTERNAL_SERVER_ERROR",
-                            "details": None,
-                        },
-                    }
-                }
-            },
-        },
+        500: INTERNAL_ERROR_RESPONSE,
     },
     tags=["health"],
+    openapi_extra={"security": []},
 )
 async def health_check() -> HealthResponse:
     """Return service health status."""
