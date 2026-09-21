@@ -21,8 +21,13 @@ target_metadata = Base.metadata
 
 
 def get_url() -> str:
-    """Return database URL from application settings."""
-    return get_settings().database_url
+    """Return a sync SQLAlchemy database URL for Alembic migrations."""
+    url = get_settings().database_url
+    if url.startswith("postgresql+asyncpg://"):
+        return url.replace("postgresql+asyncpg://", "postgresql+psycopg2://", 1)
+    if url.startswith("postgres+asyncpg://"):
+        return url.replace("postgres+asyncpg://", "postgresql+psycopg2://", 1)
+    return url
 
 
 def run_migrations_offline() -> None:
