@@ -3,28 +3,57 @@
 import os
 from collections.abc import Generator
 from datetime import timedelta
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-os.environ.setdefault(
-    "DATABASE_URL",
-    os.getenv(
-        "TEST_DATABASE_URL",
-        "postgresql://postgres:1234@127.0.0.1:5432/marketing_cal",
-    ),
-)
-os.environ.setdefault("JWT_SECRET", "test-jwt-secret-key-for-pytest")
-os.environ.setdefault("JWT_ALGORITHM", "HS256")
-os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-os.environ.setdefault("REFRESH_TOKEN_EXPIRE_DAYS", "7")
-os.environ.setdefault("AUTH_STRATEGY", "jwt")
-os.environ.setdefault("KLAVIYO_API_KEY", "test-klaviyo-key")
-os.environ.setdefault("KLAVIYO_API_BASE_URL", "https://a.klaviyo.com/api")
-os.environ.setdefault("CORS_ORIGINS", "http://localhost:3000")
-os.environ.setdefault("LOG_LEVEL", "ERROR")
+
+def _load_env_file(path: Path) -> None:
+    """Load KEY=VALUE pairs from a dotenv file into os.environ when unset."""
+    if not path.is_file():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+def _bootstrap_test_env() -> None:
+    """Bootstrap test configuration from .env.test and process environment."""
+    repo_root = Path(__file__).resolve().parents[1]
+    _load_env_file(repo_root / ".env.test")
+
+    test_database_url = os.getenv("TEST_DATABASE_URL")
+    if test_database_url:
+        os.environ.setdefault("DATABASE_URL", test_database_url)
+
+    os.environ.setdefault("JWT_ALGORITHM", "HS256")
+    os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+    os.environ.setdefault("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+    os.environ.setdefault("AUTH_STRATEGY", "jwt")
+    os.environ.setdefault("KLAVIYO_API_BASE_URL", "https://a.klaviyo.com/api")
+    os.environ.setdefault("CORS_ORIGINS", "http://localhost:3000")
+    os.environ.setdefault("LOG_LEVEL", "ERROR")
+
+    missing = [
+        name
+        for name in ("DATABASE_URL", "JWT_SECRET")
+        if not os.getenv(name)
+    ]
+    if missing:
+        raise RuntimeError(
+            "Missing required test environment variables: "
+            f"{', '.join(missing)}. "
+            "Set them in the environment or in .env.test (see .env.example)."
+        )
+
+
+_bootstrap_test_env()
 
 from app.core.config import get_settings
 from app.core.security import create_access_token
