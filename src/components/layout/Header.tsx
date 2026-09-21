@@ -16,7 +16,13 @@ export default function Header() {
           <Tooltip>
             <TooltipTrigger asChild>
               <SheetTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="md:hidden" aria-label="Menu">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="bg-accent text-accent-foreground md:hidden"
+                  aria-label="Menu"
+                >
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
@@ -32,7 +38,7 @@ export default function Header() {
             </div>
           </SheetContent>
         </Sheet>
-        <p className="font-eb-garamond font-semibold tracking-tight text-accent text-[length:var(--fs-heading-md-11)]">
+        <p className="font-eb-garamond font-semibold tracking-tight text-[color:var(--color-success)] text-[length:var(--fs-heading-md-11)]">
           Agentwise
         </p>
       </div>

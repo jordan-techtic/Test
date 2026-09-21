@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <div className="relative isolate flex w-full flex-col overflow-hidden gap-[var(--gap-24)] rounded-[var(--radius-16)] bg-background p-[var(--padding-24)] font-[family-name:var(--font-body)] text-[color:var(--color-text-primary)] bg-[image:radial-gradient(ellipse_70%_42%_at_18%_0%,var(--color-color-28)_0%,var(--color-background)_62%),linear-gradient(180deg,var(--color-color-28)_0%,var(--color-background)_100%)]">
       <header className="flex max-w-[1180px] flex-col gap-[var(--gap-12)]">
-        <p className="font-[family-name:var(--font-body-sm-32),Almarai,sans-serif] text-[length:var(--fs-body-sm-32)] font-[number:var(--fw-body-sm-32)] leading-[var(--lh-body-sm-32)] tracking-[var(--ls-body-sm-32)] text-accent">
+        <p className="font-[family-name:var(--font-body-sm-32),Almarai,sans-serif] text-[length:var(--fs-body-sm-32)] font-[number:var(--fw-body-sm-32)] leading-[var(--lh-body-sm-32)] tracking-[var(--ls-body-sm-32)] text-[color:var(--color-text-primary)]">
           Agentwise
         </p>
         <h1 className="m-0 font-[family-name:var(--font-heading-lg-19)] text-[length:var(--fs-heading-lg-19)] font-[number:var(--fw-heading-lg-19)] leading-[var(--lh-heading-lg-19)] text-[color:var(--color-text-primary)]">
@@ -53,7 +53,7 @@ export default function Home() {
           </Badge>
         </CardHeader>
         <CardContent className="flex flex-col gap-[var(--gap-16)] px-[var(--padding-24)] pb-[var(--padding-24)] pt-0">
-          <p className="m-0 font-[family-name:var(--font-body-sm-24)] text-[length:var(--fs-body-sm-24)] font-[number:var(--fw-body-sm-24)] leading-[var(--lh-body-sm-24)] text-[color:var(--color-color-15)]">
+          <p className="m-0 font-[family-name:var(--font-body-sm-24)] text-[length:var(--fs-body-sm-24)] font-[number:var(--fw-body-sm-24)] leading-[var(--lh-body-sm-24)] text-success">
             Runs the axios client against GET /example. A live not-found response is expected until that route exists.
           </p>
           <div className="flex max-w-[465px] flex-wrap items-center gap-[var(--gap-10)]">
