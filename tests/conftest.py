@@ -56,7 +56,7 @@ def _bootstrap_test_env() -> None:
 _bootstrap_test_env()
 
 from app.core.config import get_settings
-from app.core.security import create_access_token
+from app.core.security import create_access_token, create_refresh_token
 from app.db.session import SessionLocal, engine
 from app.main import create_app
 from app.models.marketing_team_member import MarketingTeamMember
@@ -64,6 +64,7 @@ from app.services.password_service import hash_password
 
 TABLES_TO_TRUNCATE = (
     "password_reset_tokens",
+    "marketing_activities",
     "marketing_team_members",
 )
 
@@ -139,6 +140,18 @@ def _insert_member(
 
 
 @pytest.fixture
+def admin_user(db: Session) -> MarketingTeamMember:
+    """Admin member with performance access (maps to role=admin)."""
+    return _insert_member(
+        db,
+        email="admin@test.com",
+        username="admin_user",
+        password="TestAdmin123!",
+        has_performance_access=True,
+    )
+
+
+@pytest.fixture
 def regular_user(db: Session) -> MarketingTeamMember:
     """Standard authorized marketing team member."""
     return _insert_member(
@@ -186,10 +199,38 @@ def new_user_data() -> dict[str, str]:
     return NEW_USER_DATA.copy()
 
 
+def _login_access_token(client: TestClient, email_or_username: str, password: str) -> str:
+    """Obtain an access token via the login endpoint."""
+    response = client.post(
+        "/api/v1/marketing-team-member/login",
+        json={"email_or_username": email_or_username, "password": password},
+    )
+    assert response.status_code == 200
+    return response.json()["data"]["access_token"]
+
+
+@pytest.fixture
+def admin_access_token(client: TestClient, admin_user: MarketingTeamMember) -> str:
+    """Valid JWT access token for the admin user."""
+    return _login_access_token(client, "admin@test.com", "TestAdmin123!")
+
+
+@pytest.fixture
+def user_access_token(client: TestClient, regular_user: MarketingTeamMember) -> str:
+    """Valid JWT access token for the regular user."""
+    return _login_access_token(client, "user@test.com", "TestUser123!")
+
+
 @pytest.fixture
 def expired_token(regular_user: MarketingTeamMember) -> str:
     """Expired JWT access token for auth failure tests."""
     return create_access_token(str(regular_user.id), expires_delta=timedelta(seconds=-1))
+
+
+@pytest.fixture
+def refresh_token(regular_user: MarketingTeamMember) -> str:
+    """Valid refresh token (rejected by access-token middleware)."""
+    return create_refresh_token(str(regular_user.id))
 
 
 @pytest.fixture
