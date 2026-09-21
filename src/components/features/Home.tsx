@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/sonner';
 import { FaBeer } from 'react-icons/fa';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { ErrorMessage } from '@/components/shared/ErrorMessage';
