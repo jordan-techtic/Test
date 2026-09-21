@@ -64,7 +64,6 @@ from app.services.password_service import hash_password
 
 TABLES_TO_TRUNCATE = (
     "password_reset_tokens",
-    "marketing_activities",
     "marketing_team_members",
 )
 
