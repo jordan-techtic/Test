@@ -1,5 +1,17 @@
 /** luna-spec-codegen: owned-layout */
+import { useState } from 'react';
+
 export function FigmaSection_n_2729_13112() {
+  const [firstName, setFirstName] = useState('First Name');
+  const [lastName, setLastName] = useState('Last Name');
+  const [email, setEmail] = useState('Email');
+  const [phone, setPhone] = useState('Phone number');
+  const [realEstateTenure, setRealEstateTenure] = useState('How long have you been in Real Estate?');
+  const [marketingApproach, setMarketingApproach] = useState(
+    'What do you currently do for marketing your business?',
+  );
+  const [message, setMessage] = useState('Your Message');
+
   return (
     <section data-figma-node="2729:13112" id="contact" className="absolute box-border left-[210px] top-[5737px] mt-[80px] w-[1500px] h-[802px] flex flex-row items-center gap-5">
       <img data-figma-node="3701:13295" src="/assets/figma/3701-13295.png" alt="Frame 1618873431 1" className="box-border w-[740px] h-[802px] max-w-none object-cover object-top" />
@@ -11,34 +23,34 @@ export function FigmaSection_n_2729_13112() {
         </div>
         <div data-figma-node="2729:13119" className="box-border w-[640px] h-[389px] absolute left-[50px] top-[283px] gap-5">
           <div data-figma-node="2729:13120" className="box-border w-[640px] h-[52px] absolute left-[0px] top-[0px] gap-4">
-            <div data-figma-node="2729:13121" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13127" type="text" defaultValue="First Name" placeholder="First Name" aria-label="First Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <div data-figma-node="2729:13121" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <input data-figma-node="2729:13127" type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} placeholder="First Name" aria-label="First Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
             </div>
-            <div data-figma-node="2729:13137" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13143" type="text" defaultValue="Last Name" placeholder="Last Name" aria-label="Last Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <div data-figma-node="2729:13137" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <input data-figma-node="2729:13143" type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} placeholder="Last Name" aria-label="Last Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
               <div data-figma-node="2729:13144" className="box-border w-[40px] h-[40px] absolute left-[1px] top-[6px]"></div>
             </div>
           </div>
           <div data-figma-node="2729:13153" className="box-border w-[640px] h-[52px] absolute left-[0px] top-[72px] gap-4">
-            <div data-figma-node="2729:13154" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13160" type="email" defaultValue="Email" placeholder="Email" aria-label="Email" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <div data-figma-node="2729:13154" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <input data-figma-node="2729:13160" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" aria-label="Email" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
               <div data-figma-node="2729:13161" className="box-border w-[40px] h-[40px] absolute left-[329px] top-[6px]"></div>
             </div>
-            <div data-figma-node="2729:13170" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13176" type="tel" defaultValue="Phone number" placeholder="Phone number" aria-label="Phone number" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <div data-figma-node="2729:13170" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <input data-figma-node="2729:13176" type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="Phone number" aria-label="Phone number" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
               <div data-figma-node="2729:13177" className="box-border w-[40px] h-[40px] absolute left-[1px] top-[6px]"></div>
             </div>
           </div>
-          <div data-figma-node="2729:13187" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[144px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <input data-figma-node="2729:13193" type="text" defaultValue="How long have you been in Real Estate?" placeholder="How long have you been in Real Estate?" aria-label="How long have you been in Real Estate?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+          <div data-figma-node="2729:13187" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[144px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+            <input data-figma-node="2729:13193" type="text" value={realEstateTenure} onChange={(event) => setRealEstateTenure(event.target.value)} placeholder="How long have you been in Real Estate?" aria-label="How long have you been in Real Estate?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
             <div data-figma-node="2729:13194" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-137px]"></div>
           </div>
-          <div data-figma-node="2729:13204" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[218px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <input data-figma-node="2729:13210" type="text" defaultValue="What do you currently do for marketing your business?" placeholder="What do you currently do for marketing your business?" aria-label="What do you currently do for marketing your business?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+          <div data-figma-node="2729:13204" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[218px] rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+            <input data-figma-node="2729:13210" type="text" value={marketingApproach} onChange={(event) => setMarketingApproach(event.target.value)} placeholder="What do you currently do for marketing your business?" aria-label="What do you currently do for marketing your business?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
             <div data-figma-node="2729:13211" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-211px]"></div>
           </div>
           <div data-figma-node="2729:13220" className="box-border w-[640px] h-[97px] absolute left-[0px] top-[292px] overflow-hidden rounded-[10px] pt-[20px] pr-[20px] pb-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <textarea data-figma-node="2729:13226" defaultValue="Your Message" placeholder="Your Message" aria-label="Your Message" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[20px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <textarea data-figma-node="2729:13226" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Your Message" aria-label="Your Message" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[20px] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
             <div data-figma-node="2729:13227" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-263px]"></div>
           </div>
         </div>

@@ -77,7 +77,7 @@ export function FigmaSection_n_1007_1733() {
   return (
     <form
       data-figma-node="1007:1733"
-      id="contact"
+      id="signup-form"
       noValidate
       onSubmit={(event) => {
         void handleSubmit(event);
@@ -195,9 +195,6 @@ export function FigmaSection_n_1007_1733() {
         </div>
         <div data-figma-node="1007:1915" className="box-border w-[461px] h-[20px] absolute left-[0px] top-[216px] gap-2">
           <div className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
-            <label htmlFor="terms-accepted" className="sr-only">
-              Checkbox
-            </label>
             <input
               type="checkbox"
               id="terms-accepted"
@@ -207,7 +204,7 @@ export function FigmaSection_n_1007_1733() {
               checked={termsAccepted}
               onChange={(event) => setTermsAccepted(event.target.checked)}
               aria-invalid={Boolean(mergedFieldError('terms_accepted'))}
-              className="relative z-10 pointer-events-auto opacity-100 box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] rounded-[4px] border border-[#ffffff] bg-transparent appearance-none checked:bg-[#c8a47e] checked:border-[#c8a47e] cursor-pointer"
+              className="absolute z-10 pointer-events-auto opacity-100 box-border w-[20px] h-[20px] left-[0px] top-[0px] rounded-[4px] border border-[#ffffff] bg-transparent appearance-none checked:bg-[#c8a47e] checked:border-[#c8a47e] cursor-pointer"
             />
             <div data-figma-node="1007:1917" className="box-border w-[17px] h-[17px] absolute left-[2px] top-[2px] rounded-[4px] pointer-events-none z-0" />
             <div data-figma-node="1007:1918" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] pointer-events-none z-0">

@@ -98,18 +98,18 @@ export function FigmaHomePage({ visitorHome, apiStatus, apiError }: FigmaHomePag
                 className="box-border w-[317px] h-[553px] absolute left-[640px] top-[739px] max-w-none object-cover object-top"
               />
             </div>
-            <div
-              data-figma-node="2264:10405"
-              className="box-border w-[1394px] h-[110px] absolute left-[263px] top-[1115px] bg-[#ffffff]"
-            >
-              <p
-                data-figma-node="2264:10451"
-                className="box-border w-[1394px] h-[110px] font-eb-garamond text-[84px] font-[400] leading-[110px] text-center whitespace-nowrap text-[#ffffff]"
-              >
-                Stunning marketing, in three simple steps
-              </p>
-            </div>
           </section>
+          <div
+            data-figma-node="2264:10405"
+            className="box-border w-[1394px] h-[110px] absolute left-[263px] top-[2009px] bg-[#ffffff]"
+          >
+            <p
+              data-figma-node="2264:10451"
+              className="box-border w-[1394px] h-[110px] font-eb-garamond text-[84px] font-[400] leading-[110px] text-center whitespace-nowrap text-[#ffffff]"
+            >
+              Stunning marketing, in three simple steps
+            </p>
+          </div>
           <FigmaSection_n_2295_3500 />
           <FigmaSection_n_2270_14191 />
           <FigmaSection_n_2270_14193 />
