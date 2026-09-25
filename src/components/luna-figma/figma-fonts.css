@@ -1,0 +1,29 @@
+/** luna-spec-codegen: owned-layout */
+@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@400;500;600;700&family=EB+Garamond:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+@theme {
+  --font-almarai: 'Almarai', sans-serif;
+  --font-eb-garamond: 'EB Garamond', serif;
+  --font-public-sans: 'Public Sans', sans-serif;
+  --font-sans: 'Almarai', sans-serif;
+}
+
+.font-almarai { font-family: 'Almarai', sans-serif; }
+.font-eb-garamond { font-family: 'EB Garamond', serif; }
+.font-public-sans { font-family: 'Public Sans', sans-serif; }
+
+html, body { background-color: #0e0d0d; min-height: 100%; font-family: 'Almarai', sans-serif; }
+
+@keyframes luna-spec-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.luna-spec-marquee-track {
+  animation: luna-spec-marquee 40s linear infinite;
+}
+.luna-spec-marquee-track:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .luna-spec-marquee-track { animation: none; }
+}
