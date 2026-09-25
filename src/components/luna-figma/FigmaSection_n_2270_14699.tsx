@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_2270_14699() {
   return (
-    <section data-figma-node="2270:14699" className="absolute box-border left-[337px] top-[3393px] w-[1267px] h-[519px] flex flex-row items-center gap-12">
+    <section data-figma-node="2270:14699" className="absolute box-border left-[337px] top-[3393px] mt-[60px] w-[1267px] h-[519px] flex flex-row items-center gap-12">
       <div data-figma-node="2270:14700" className="box-border w-[517px] h-[288px] relative gap-5">
         <div data-figma-node="2270:14701" className="box-border w-[517px] h-[288px] absolute left-[0px] top-[0px] gap-5">
           <a data-figma-node="2270:15222" href="#contact" className="box-border w-[131px] h-[54px] absolute left-[0px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundImage: "linear-gradient(150.1deg, #0b0b0b 0.0%, rgba(11, 11, 11, 0) 100.0%)"}}><span className="font-almarai text-[28px] font-[400] leading-[31px] text-left whitespace-nowrap text-[#c8a47e] whitespace-nowrap">Step 03</span></a>

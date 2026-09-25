@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_3654_11564() {
   return (
-    <section data-figma-node="3654:11564" className="absolute box-border left-[210px] top-[4009px] w-[1500px] h-[695px] block">
+    <section data-figma-node="3654:11564" className="absolute box-border left-[210px] top-[4009px] mt-[97px] w-[1500px] h-[695px] block">
       <div className="relative box-border w-[1500px] h-[695px] block" style={{backgroundImage: "linear-gradient(180.0deg, rgba(24, 38, 32, 0.7) 0.0%, rgba(16, 93, 57, 0.7) 100.0%)"}}>
         <div data-figma-node="2270:16233" className="box-border w-[1500px] h-[695px] absolute left-[0px] top-[0px] rounded-[20px]">
           <div data-figma-node="2270:16234" className="box-border w-[1500px] h-[695px] absolute left-[0px] top-[0px] rounded-[20px]" style={{backgroundImage: "linear-gradient(180.0deg, rgba(24, 38, 32, 0.7) 0.0%, rgba(16, 93, 57, 0.7) 100.0%)"}}></div>
