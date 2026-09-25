@@ -100,14 +100,19 @@ export function FigmaHomePage({ visitorHome, apiStatus, apiError }: FigmaHomePag
             </div>
             <div
               data-figma-node="2264:10405"
-              className="box-border w-[1394px] h-[110px] absolute left-[263px] top-[1115px] bg-[#ffffff]"
+              className="box-border w-[1394px] h-[110px] absolute left-[263px] top-[1115px]"
             >
-              <p
-                data-figma-node="2264:10406"
-                className="box-border w-[1394px] h-[110px] font-eb-garamond text-[84px] font-[400] leading-[110px] text-center whitespace-nowrap text-[#ffffff]"
+              <div
+                data-figma-node="2264:10451"
+                className="box-border w-[1394px] h-[110px] bg-[#ffffff]"
               >
-                Stunning marketing, in three simple steps
-              </p>
+                <p
+                  data-figma-node="2264:10406"
+                  className="box-border w-[1394px] h-[110px] font-eb-garamond text-[84px] font-[400] leading-[110px] text-center whitespace-nowrap text-[#ffffff]"
+                >
+                  Stunning marketing, in three simple steps
+                </p>
+              </div>
             </div>
           </section>
           <FigmaSection_n_2295_3500 />

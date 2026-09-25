@@ -15,7 +15,7 @@ export function FigmaSection_n_2295_3505() {
           <div data-figma-node="2270:16930" className="box-border w-[403px] h-[1624px] absolute left-[0px] top-[-153px] overflow-hidden gap-5">
             <div data-figma-node="2270:16931" className="box-border w-[403px] h-[254px] absolute left-[0px] top-[0px] overflow-hidden rounded-[24px] gap-5 pt-[20px] pr-[20px] pb-[20px] pl-[20px] border-[#e0e0e0] border-[1px]">
               <div data-figma-node="2270:16932" className="box-border w-[90px] h-[20px] absolute left-[20px] top-[20px] gap-3">
-                <div data-figma-node="2270:16933" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-0">
+                <div data-figma-node="2270:16933" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-[-2.5px]">
                   <div data-figma-node="I2270:16933;2615:382325" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I2270:16933;2615:382325;2615:382304" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]"></div>
                   </div>
@@ -44,7 +44,7 @@ export function FigmaSection_n_2295_3505() {
             </div>
             <div data-figma-node="2270:16940" className="box-border w-[403px] h-[254px] absolute left-[0px] top-[274px] overflow-hidden rounded-[24px] gap-5 pt-[20px] pr-[20px] pb-[20px] pl-[20px] border-[#e0e0e0] border-[1px]">
               <div data-figma-node="2270:16941" className="box-border w-[90px] h-[20px] absolute left-[20px] top-[20px] gap-3">
-                <div data-figma-node="2270:16942" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-0">
+                <div data-figma-node="2270:16942" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-[-2.5px]">
                   <div data-figma-node="I2270:16942;2615:382325" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I2270:16942;2615:382325;2615:382304" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]"></div>
                   </div>
@@ -73,7 +73,7 @@ export function FigmaSection_n_2295_3505() {
             </div>
             <div data-figma-node="2270:16949" className="box-border w-[403px] h-[254px] absolute left-[0px] top-[548px] overflow-hidden rounded-[24px] gap-5 pt-[20px] pr-[20px] pb-[20px] pl-[20px] border-[#e0e0e0] border-[1px]">
               <div data-figma-node="2270:16950" className="box-border w-[90px] h-[20px] absolute left-[20px] top-[20px] gap-3">
-                <div data-figma-node="2270:16951" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-0">
+                <div data-figma-node="2270:16951" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-[-2.5px]">
                   <div data-figma-node="I2270:16951;2615:382325" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I2270:16951;2615:382325;2615:382304" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]"></div>
                   </div>
@@ -102,7 +102,7 @@ export function FigmaSection_n_2295_3505() {
             </div>
             <div data-figma-node="2270:16958" className="box-border w-[403px] h-[254px] absolute left-[0px] top-[822px] overflow-hidden rounded-[24px] gap-5 pt-[20px] pr-[20px] pb-[20px] pl-[20px] border-[#e0e0e0] border-[1px]">
               <div data-figma-node="2270:16959" className="box-border w-[90px] h-[20px] absolute left-[20px] top-[20px] gap-3">
-                <div data-figma-node="2270:16960" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-0">
+                <div data-figma-node="2270:16960" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-[-2.5px]">
                   <div data-figma-node="I2270:16960;2615:382325" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I2270:16960;2615:382325;2615:382304" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]"></div>
                   </div>
@@ -131,7 +131,7 @@ export function FigmaSection_n_2295_3505() {
             </div>
             <div data-figma-node="2270:16967" className="box-border w-[403px] h-[254px] absolute left-[0px] top-[1096px] overflow-hidden rounded-[24px] gap-5 pt-[20px] pr-[20px] pb-[20px] pl-[20px] border-[#e0e0e0] border-[1px]">
               <div data-figma-node="2270:16968" className="box-border w-[90px] h-[20px] absolute left-[20px] top-[20px] gap-3">
-                <div data-figma-node="2270:16969" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-0">
+                <div data-figma-node="2270:16969" className="box-border w-[90px] h-[20px] absolute left-[0px] top-[0px] gap-[-2.5px]">
                   <div data-figma-node="I2270:16969;2615:382325" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I2270:16969;2615:382325;2615:382304" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]"></div>
                   </div>
