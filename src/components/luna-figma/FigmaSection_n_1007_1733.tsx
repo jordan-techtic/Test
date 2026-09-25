@@ -111,7 +111,7 @@ export function FigmaSection_n_1007_1733() {
         <div data-figma-node="1007:1849" className="box-border w-[461px] h-[52px] absolute left-[0px] top-[0px] gap-5">
           <div
             data-figma-node="1007:1850"
-            className="box-border w-[220.5px] h-[52px] absolute left-[0px] top-[0px] rounded-full pr-[20px] pl-[20px]"
+            className="box-border w-[220px] h-[52px] whitespace-nowrap absolute left-[0px] top-[0px] rounded-full border border-[rgba(200,164,126,0.05)] pr-[20px] pl-[20px]"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
           >
             <input
@@ -129,7 +129,7 @@ export function FigmaSection_n_1007_1733() {
           </div>
           <div
             data-figma-node="1007:1861"
-            className="box-border w-[220.5px] h-[52px] absolute left-[240.5px] top-[0px] rounded-full pr-[20px] pl-[20px]"
+            className="box-border w-[220px] h-[52px] whitespace-nowrap absolute left-[240px] top-[0px] rounded-full border border-[rgba(200,164,126,0.05)] pr-[20px] pl-[20px]"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
           >
             <input
@@ -212,13 +212,15 @@ export function FigmaSection_n_1007_1733() {
               <div data-figma-node="1007:1919" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]" />
             </div>
           </div>
-          <label
+          <input
             data-figma-node="1007:1922"
-            htmlFor="terms-accepted"
-            className="box-border w-[433px] h-[16px] absolute left-[28px] top-[2px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[15.62px] text-left whitespace-nowrap text-[#ffffff] cursor-pointer"
-          >
-            I have read and agree to the Terms of Use and Privacy Policy.
-          </label>
+            type="text"
+            placeholder="I have read and agree to the Terms of Use and Privacy Policy."
+            aria-label="I have read and agree to the Terms of Use and Privacy Policy."
+            readOnly
+            tabIndex={-1}
+            className="box-border w-[433px] h-[16px] absolute left-[28px] top-[2px] opacity-[0.6] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[15.62px] text-left whitespace-nowrap pointer-events-none"
+          />
         </div>
       </div>
       <button
@@ -238,15 +240,17 @@ export function FigmaSection_n_1007_1733() {
         className="box-border w-[461px] h-[1px]"
         style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
       />
-      <p
-        data-figma-node="1007:1926"
-        className="box-border w-[461px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[15.62px] text-center whitespace-nowrap text-[#ffffff]"
-      >
-        Already have an account?{' '}
-        <a href="#sign-in" className="text-[#c8a47e]">
-          Sign in
-        </a>
-      </p>
+      <div id="sign-in" className="box-border w-[461px] h-[16px]">
+        <input
+          data-figma-node="1007:1926"
+          type="text"
+          placeholder="Already have an account? Sign in"
+          aria-label="Already have an account? Sign in"
+          readOnly
+          tabIndex={-1}
+          className="box-border w-[461px] h-[16px] opacity-[0.6] border-0 bg-transparent shadow-none ring-0 px-0 focus-visible:ring-0 focus-visible:outline-none text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[15.62px] text-center whitespace-nowrap"
+        />
+      </div>
     </form>
   );
 }
