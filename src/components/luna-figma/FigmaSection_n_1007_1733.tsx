@@ -205,9 +205,9 @@ export function FigmaSection_n_1007_1733() {
               checked={termsAccepted}
               onChange={(event) => setTermsAccepted(event.target.checked)}
               aria-invalid={Boolean(mergedFieldError('terms_accepted'))}
-              className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] rounded-[4px] border border-[#ffffff] bg-transparent appearance-none checked:bg-[#c8a47e] checked:border-[#c8a47e] cursor-pointer"
+              className="relative z-10 box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] rounded-[4px] border border-[#ffffff] bg-transparent appearance-none checked:bg-[#c8a47e] checked:border-[#c8a47e] cursor-pointer"
             />
-            <div data-figma-node="1007:1917" className="box-border w-[17px] h-[17px] absolute left-[2px] top-[2px] rounded-[4px] pointer-events-none" />
+            <div data-figma-node="1007:1917" className="box-border w-[17px] h-[17px] absolute left-[2px] top-[2px] rounded-[4px] pointer-events-none z-0" />
             <div data-figma-node="1007:1918" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] pointer-events-none">
               <div data-figma-node="1007:1919" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]" />
             </div>

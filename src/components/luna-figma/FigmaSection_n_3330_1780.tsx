@@ -12,14 +12,14 @@ export function FigmaSection_n_3330_1780() {
             <p data-figma-node="2252:10080" className="box-border w-[334px] h-[20px] absolute left-[154px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">of other agents on the waitlist for Agentwise</p>
           </div>
         </div>
-        <a data-figma-node="2241:1738" href="/signup" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap bg-[#c8a47e] hover:opacity-90"><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
+        <a data-figma-node="2241:1738" href="/signup" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap pt-[10px] pr-[32px] pb-[10px] pl-[32px] bg-[#c8a47e] hover:opacity-90"><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
       </div>
       <img data-figma-node="2291:5798" src="/assets/figma/2291-5798.png" alt="Frame 2147227831" className="box-border w-[695px] h-[445px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
       <img data-figma-node="2291:5795" src="/assets/figma/2291-5795.png" alt="Frame 2147227830" className="box-border w-[1153px] h-[767px] absolute left-[967px] top-[243px] overflow-hidden max-w-none object-cover object-top" />
       <div data-figma-node="2291:5796" className="box-border w-[393px] h-[393px] absolute left-[1562px] top-[594px]" style={{backgroundColor: "rgba(24, 119, 242, 0.5)"}}></div>
       <div data-figma-node="2291:5793" className="box-border w-[387px] h-[387px] absolute left-[1331px] top-[594px]" style={{backgroundColor: "rgba(46, 0, 255, 0.3)"}}></div>
       <div data-figma-node="2264:10401" className="box-border w-[1584px] h-[582px] absolute left-[210px] top-[213px]">
-        <img data-figma-node="2241:8954" src="/assets/figma/2241-8954.png" alt="Dashboard" className="box-border w-[824px] h-[520px] absolute left-[678px] top-[62px] overflow-hidden rounded-[11px] max-w-none object-cover object-top" />
+        <img data-figma-node="2241:8954" src="/assets/figma/2241-8954.png" alt="Dashboard" className="box-border w-[824px] h-[520px] absolute left-[678px] top-[62px] overflow-hidden rounded-[11px] max-w-none object-cover object-top bg-[#0b0b0b]" />
         <div data-figma-node="2252:10317" className="box-border w-[286px] h-[128px] absolute left-[1216px] top-[0px] gap-1">
           <div data-figma-node="2241:3485" className="box-border w-[286px] h-[128px] absolute left-[0px] top-[0px] overflow-hidden rounded-[7px] gap-2 pt-[15px] pr-[15px] pb-[15px] pl-[15px] border-[#44413e] border-[1px] bg-[#2f271f]">
             <div data-figma-node="2252:10306" className="box-border w-[256px] h-[30px] absolute left-[15px] top-[15px] gap-24">
@@ -57,7 +57,7 @@ export function FigmaSection_n_3330_1780() {
       </div>
       <div data-figma-node="2304:8136" className="box-border w-[1920px] h-[85px] absolute left-[0px] top-[0px]">
         <div data-figma-node="2241:1731" className="box-border w-[223px] h-[46px] absolute left-[1487px] top-[20px] gap-2.5">
-          <a data-figma-node="2241:1732" href="/signup" className="box-border w-[131px] h-[46px] absolute left-[0px] top-[0px] rounded-full border-[#ffffff] border-[1px] inline-flex items-center justify-center whitespace-nowrap bg-transparent hover:bg-[#ffffff] hover:text-[#0b0b0b]"><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
+          <a data-figma-node="2241:1732" href="/signup" className="box-border w-[131px] h-[46px] absolute left-[0px] top-[0px] rounded-full border-[#ffffff] border-[1px] inline-flex items-center justify-center whitespace-nowrap pt-[10px] pr-[20px] pb-[10px] pl-[20px] bg-transparent hover:bg-[#ffffff] hover:text-[#0b0b0b]"><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
           <div data-figma-node="3321:20568" className="box-border w-[82px] h-[46px] absolute left-[141px] top-[0px] rounded-full gap-1.5 pt-[10px] pr-[20px] pb-[10px] pl-[20px] bg-[#c8a47e]">
             <div data-figma-node="3321:20569" className="box-border w-[42px] h-[18px] absolute left-[20px] top-[14px] gap-1.5">
               <a data-figma-node="3321:20570" href="/login" className="box-border w-[42px] h-[18px] absolute left-[0px] top-[0px] opacity-[0.98] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Log in</a>
