@@ -11,10 +11,12 @@ export default function HomePage() {
   }, []);
 
   return (
-    <FigmaHomePage
-      visitorHome={data}
-      apiStatus={status}
-      apiError={error}
-    />
+    <div className="w-full flex flex-col">
+      <FigmaHomePage
+        visitorHome={data}
+        apiStatus={status}
+        apiError={error}
+      />
+    </div>
   );
 }

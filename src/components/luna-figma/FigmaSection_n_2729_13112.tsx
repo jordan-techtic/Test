@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_2729_13112() {
   return (
-    <section data-figma-node="2729:13112" id="contact" className="absolute box-border left-[210px] top-[5737px] w-[1500px] h-[802px] flex flex-row items-center gap-5">
+    <section data-figma-node="2729:13112" id="contact" className="absolute box-border left-[210px] top-[5737px] mt-[80px] w-[1500px] h-[802px] flex flex-row items-center gap-5">
       <img data-figma-node="3701:13295" src="/assets/figma/3701-13295.png" alt="Frame 1618873431 1" className="box-border w-[740px] h-[802px] max-w-none object-cover object-top" />
       <div data-figma-node="2729:13115" className="box-border w-[740px] h-[802px] overflow-hidden rounded-[20px] relative gap-7 pt-[50px] pr-[50px] pb-[50px] pl-[50px]" style={{backgroundColor: "rgba(255, 255, 255, 0.04)"}}>
         <img data-figma-node="3361:5722" src="/assets/figma/3361-5722.png" alt="Group 33654447" className="box-border w-[430px] h-[984px] absolute left-[160px] top-[-73px] max-w-none object-cover object-top" />
