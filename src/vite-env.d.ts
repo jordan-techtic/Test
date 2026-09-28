@@ -10,6 +10,7 @@ interface ImportMeta {
 
 declare module 'virtual:luna-screen-spec-emit' {
   export function FigmaSpecMaskGroupSection(): import('react').JSX.Element;
+  export function FigmaSpecFrame1618873475Section(): import('react').JSX.Element;
   export function FigmaSpecThreeStepsHeadline(): import('react').JSX.Element;
   export function FigmaSpecGroup33654419Section(): import('react').JSX.Element;
 }

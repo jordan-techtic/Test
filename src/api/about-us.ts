@@ -1,3 +1,5 @@
+import { createElement } from 'react';
+import { FigmaAboutUsScreenPage } from '../components/luna-figma/FigmaAboutUsScreenPage';
 import { apiRequest } from '../lib/api-client';
 import { unwrapResponse } from '../lib/unwrap-response';
 import type { AboutUsContent } from '../types/api';
@@ -39,4 +41,8 @@ function parseAboutUsResponse(body: unknown): AboutUsContent {
 export async function getAboutUs(): Promise<AboutUsContent> {
   const response = await apiRequest<unknown>('GET', ABOUT_US_PATH);
   return parseAboutUsResponse(response);
+}
+
+export function AboutUsPage() {
+  return createElement('div', { className: 'w-full flex flex-col' }, createElement(FigmaAboutUsScreenPage));
 }
