@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { logout } from './api/auth';
-import { AboutUsPage } from './api/about-us';
+import { FigmaAboutUsScreenPage } from './components/luna-figma/FigmaAboutUsScreenPage';
 import { getAccessToken } from './lib/auth-session';
 import { OffCanvasApiStatus } from './components/OffCanvasApiStatus';
 import { FigmaFrameShell } from './components/luna-figma/FigmaFrameShell';
@@ -29,6 +29,7 @@ import { DashboardStubPage } from './pages/DashboardStubPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { PlaceholderLegalPage } from './pages/PlaceholderLegalPage';
 import type { AboutUsContent } from './types/api';
+import { FigmaSection_n_1091_231 } from './components/luna-figma/FigmaSection_n_1091_231';
 import {
   FigmaSpecGroup33654419Section,
   FigmaSpecMaskGroupSection,
@@ -123,6 +124,7 @@ function FigmaSignUpScreenPage() {
           <FigmaSection_n_1006_1336 />
           <FigmaSection_n_1006_1338 />
           <FigmaSpecGroup33654419Section />
+          <FigmaSection_n_1091_231 />
           <FigmaSection_n_1007_1733 />
         </FigmaFrameShell>
       </main>
@@ -149,7 +151,7 @@ export default function App() {
         path="/about-us"
         element={
           <>
-            <AboutUsPage />
+            <FigmaAboutUsScreenPage />
             <AboutUsApiBinding />
           </>
         }

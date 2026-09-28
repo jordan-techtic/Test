@@ -67,7 +67,7 @@ export function FigmaSpecFrame1618873475Section() {
         preserveAspectRatio: 'none',
         'aria-hidden': 'true',
         className:
-          'box-border w-[403px] h-[403px] absolute left-[292px] top-[26px] blur-[197px] pointer-events-none overflow-visible',
+          'box-border w-[403px] h-[403px] absolute left-[275px] top-[26px] blur-[197px] pointer-events-none overflow-visible',
         children: _jsx('path', {
           d: 'M201.519 403.039C312.816 403.039 403.039 312.816 403.039 201.519C403.039 90.2233 312.816 0 201.519 0C90.2233 0 0 90.2233 0 201.519C0 312.816 90.2233 403.039 201.519 403.039Z',
           fill: '#c8a47e',
@@ -91,7 +91,7 @@ export function FigmaSpecFrame1618873475Section() {
         preserveAspectRatio: 'none',
         'aria-hidden': 'true',
         className:
-          'box-border w-[287px] h-[287px] absolute left-[1425px] top-[807px] blur-[197px] pointer-events-none overflow-visible',
+          'box-border w-[287px] h-[287px] absolute left-[1408px] top-[807px] blur-[197px] pointer-events-none overflow-visible',
         children: _jsx('path', {
           d: 'M143.5 287C222.753 287 287 222.753 287 143.5C287 64.2471 222.753 0 143.5 0C64.2471 0 0 64.2471 0 143.5C0 222.753 64.2471 287 143.5 287Z',
           fill: 'rgba(255, 86, 48, 0.9)',
@@ -103,7 +103,7 @@ export function FigmaSpecFrame1618873475Section() {
         preserveAspectRatio: 'none',
         'aria-hidden': 'true',
         className:
-          'box-border w-[393px] h-[393px] absolute left-[1562px] top-[594px] blur-[197px] pointer-events-none overflow-visible',
+          'box-border w-[393px] h-[393px] absolute left-[1545px] top-[594px] blur-[197px] pointer-events-none overflow-visible',
         children: _jsx('path', {
           d: 'M196.369 392.738C304.821 392.738 392.738 304.821 392.738 196.369C392.738 87.9174 304.821 0 196.369 0C87.9174 0 0 87.9174 0 196.369C0 304.821 87.9174 392.738 196.369 392.738Z',
           fill: 'rgba(24, 119, 242, 0.5)',
@@ -115,7 +115,7 @@ export function FigmaSpecFrame1618873475Section() {
         preserveAspectRatio: 'none',
         'aria-hidden': 'true',
         className:
-          'box-border w-[387px] h-[387px] absolute left-[1331px] top-[594px] blur-[257px] pointer-events-none overflow-visible',
+          'box-border w-[387px] h-[387px] absolute left-[1314px] top-[594px] blur-[257px] pointer-events-none overflow-visible',
         children: _jsx('path', {
           d: 'M193.328 386.656C300.1 386.656 386.656 300.1 386.656 193.328C386.656 86.5559 300.1 0 193.328 0C86.5559 0 0 86.5559 0 193.328C0 300.1 86.5559 386.656 193.328 386.656Z',
           fill: 'rgba(47, 0, 255, 0.3)',

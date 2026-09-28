@@ -10,6 +10,8 @@ interface FigmaFrameShellProps {
   id?: string;
   className?: string;
   marginTopPx?: number;
+  /** When false, frame children remain in the layout tree without inner overflow clipping (tall About/Home frames). */
+  clipContent?: boolean;
   children: ReactNode;
 }
 
@@ -20,6 +22,7 @@ export function FigmaFrameShell({
   id,
   className = "",
   marginTopPx = 0,
+  clipContent = true,
   children,
 }: FigmaFrameShellProps) {
   const outerRef = useRef<HTMLDivElement>(null);
@@ -29,12 +32,12 @@ export function FigmaFrameShell({
     <div
       ref={outerRef}
       id={id}
-      className="w-full overflow-hidden"
+      className={`w-full ${clipContent ? 'overflow-hidden' : 'overflow-visible'}`}
       style={{ height: frameHeight * scale, marginTop: marginTopPx * scale }}
     >
       <section
         data-figma-node={nodeId}
-        className={`relative box-border overflow-hidden ${className}`}
+        className={`relative box-border ${clipContent ? 'overflow-hidden' : 'overflow-visible'} ${className}`}
         style={{
           width: frameWidth,
           height: frameHeight,
