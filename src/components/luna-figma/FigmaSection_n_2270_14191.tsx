@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_2270_14191() {
   return (
-    <section data-figma-node="2270:14191" className="absolute box-border left-[337px] top-[2235px] w-[1267px] h-[519px] flex flex-row items-start gap-[50px] z-[3]">
+    <section data-figma-node="2270:14191" className="relative box-border left-[337px] mt-[306px] w-[1267px] h-[519px] flex flex-row items-start gap-[50px] z-[3]">
       <div data-figma-node="2264:10897" className="box-border w-[517px] h-[260px] relative gap-5">
         <div data-figma-node="2270:14185" className="box-border w-[517px] h-[260px] absolute left-[0px] top-[0px] gap-5">
           <div data-figma-node="2270:14187" className="box-border w-[517px] h-[260px] absolute left-[0px] top-[0px] gap-5">
@@ -27,70 +27,62 @@ export function FigmaSection_n_2270_14191() {
         <div data-figma-node="3795:12068" className="box-border w-[549px] h-[405px] absolute left-[132px] top-[101px] overflow-hidden gap-[9.72px]">
           <div data-figma-node="3795:12069" className="box-border w-[130px] h-[209px] absolute left-[0px] top-[0px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12070" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12071" src="/assets/figma/3795-12071.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12072" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12072;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12072;741:2397" src="/assets/figma/3795-12071.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12072;741:2398" href="#contact" className="box-border w-[103px] h-[41px] absolute left-[2px] top-[190px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">[City Name win], hallelujah | Justin Bieber Trend</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12073" className="box-border w-[130px] h-[209px] absolute left-[140px] top-[0px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12074" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12075" src="/assets/figma/3795-12075.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12076" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12076;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12076;741:2397" src="/assets/figma/3795-12075.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12076;741:2398" href="#contact" className="box-border w-[103px] h-[41px] absolute left-[2px] top-[190px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">[City Name win], hallelujah | Justin Bieber Trend</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12077" className="box-border w-[130px] h-[209px] absolute left-[279px] top-[0px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12078" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12079" src="/assets/figma/3795-12079.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12080" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12080;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12080;741:2397" src="/assets/figma/3795-12079.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12080;741:2398" href="#contact" className="box-border w-[103px] h-[33px] absolute left-[2px] top-[198px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">Hates to see me coming</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12081" className="box-border w-[130px] h-[209px] absolute left-[418px] top-[0px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12082" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12083" src="/assets/figma/3795-12083.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12084" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12084;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12084;741:2397" src="/assets/figma/3795-12083.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12084;741:2398" href="#contact" className="box-border w-[103px] h-[41px] absolute left-[2px] top-[190px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">Things I consider perfect | [City Name] edition</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12085" className="box-border w-[130px] h-[209px] absolute left-[0px] top-[218px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12086" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12087" src="/assets/figma/3795-12087.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12088" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12088;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12088;741:2397" src="/assets/figma/3795-12087.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12088;741:2398" href="#contact" className="box-border w-[103px] h-[33px] absolute left-[2px] top-[198px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">Hates to see me coming</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12089" className="box-border w-[130px] h-[209px] absolute left-[140px] top-[218px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <img data-figma-node="3795:12090" src="/assets/figma/3795-12090.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px] rounded-[4.86px] max-w-none object-cover object-top" />
             <div data-figma-node="3795:12091" className="box-border w-[106px] h-[185px] absolute left-[11px] top-[12px] overflow-hidden rounded-[2.95px]">
-              <div data-figma-node="I3795:12091;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+              <img data-figma-node="I3795:12091;741:2397" src="/assets/figma/3795-12090.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
               <a data-figma-node="I3795:12091;741:2398" href="#contact" className="box-border w-[103px] h-[33px] absolute left-[2px] top-[198px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">Hates to see me coming</span></a>
             </div>
           </div>
           <div data-figma-node="3795:12092" className="box-border w-[130px] h-[209px] absolute left-[279px] top-[218px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12093" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12094" src="/assets/figma/3795-12094.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12095" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12095;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12095;741:2397" src="/assets/figma/3795-12094.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12095;741:2398" href="#contact" className="box-border w-[103px] h-[41px] absolute left-[2px] top-[190px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">[City Name win], hallelujah | Justin Bieber Trend</span></a>
               </div>
             </div>
           </div>
           <div data-figma-node="3795:12096" className="box-border w-[130px] h-[209px] absolute left-[418px] top-[218px] rounded-[4.86px] gap-[7.78px] pt-[12px] pr-[8px] pb-[12px] pl-[8px] border-[rgba(200,164,126,0.05)] border-[0.49px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="3795:12097" className="box-border w-[106px] h-[185px] absolute left-[12px] top-[12px]">
-              <img data-figma-node="3795:12098" src="/assets/figma/3795-12098.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[4.86px] max-w-none object-cover object-top" />
               <div data-figma-node="3795:12099" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] overflow-hidden rounded-[2.95px]">
-                <div data-figma-node="I3795:12099;741:2397" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px]"></div>
+                <img data-figma-node="I3795:12099;741:2397" src="/assets/figma/3795-12098.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[106px] h-[185px] absolute left-[0px] top-[0px] rounded-[2.95px] max-w-none object-cover object-top" />
                 <a data-figma-node="I3795:12099;741:2398" href="#contact" className="box-border w-[103px] h-[33px] absolute left-[2px] top-[198px] rounded-[1.77px] inline-flex items-center justify-center whitespace-nowrap bg-[#ffffff] hover:opacity-90"><span className="font-almarai text-[7px] font-[400] leading-[8px] text-left whitespace-nowrap text-[#000000] whitespace-nowrap">Hates to see me coming</span></a>
               </div>
             </div>

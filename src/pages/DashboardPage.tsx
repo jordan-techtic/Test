@@ -58,7 +58,7 @@ export default function DashboardPage() {
             : 'Sign in to access your Agentwise workspace.'}
         </p>
         {error ? (
-          <p role="alert" className="font-almarai text-[14px] text-[#ff6b6b]">
+          <p role="alert" className="font-almarai text-[14px] text-[#c8a47e]">
             {error}
           </p>
         ) : null}

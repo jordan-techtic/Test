@@ -16,7 +16,7 @@
   --color-muted: var(--color-surface-alt);
   --color-muted-foreground: var(--color-text);
   --color-accent-foreground: var(--color-text);
-  --color-destructive: #ff6b6b;
+  --color-destructive: var(--color-accent);
   --color-destructive-foreground: var(--color-text);
   --color-input: var(--color-surface-alt);
   --color-ring: var(--color-accent);

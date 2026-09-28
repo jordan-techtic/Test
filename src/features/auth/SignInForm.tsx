@@ -97,7 +97,7 @@ export function SignInForm() {
       </div>
 
       {bannerError ? (
-        <p role="alert" className="w-full rounded-full bg-[rgba(255,107,107,0.12)] px-5 py-3 text-center font-almarai text-[14px] text-[#ff6b6b]">
+        <p role="alert" className="w-full rounded-full px-5 py-3 text-center font-almarai text-[14px] text-[#c8a47e]" style={{ backgroundColor: 'rgba(200, 164, 126, 0.1)' }}>
           {bannerError}
         </p>
       ) : null}
@@ -121,7 +121,7 @@ export function SignInForm() {
           />
         </div>
         {mergedFieldError('email') ? (
-          <p role="alert" className="absolute left-0 top-[56px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[56px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('email')}
           </p>
         ) : null}
@@ -154,7 +154,7 @@ export function SignInForm() {
           </button>
         </div>
         {mergedFieldError('password') ? (
-          <p role="alert" className="absolute left-0 top-[128px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[128px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('password')}
           </p>
         ) : null}

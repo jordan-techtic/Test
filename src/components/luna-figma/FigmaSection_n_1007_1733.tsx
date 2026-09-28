@@ -117,7 +117,7 @@ export function FigmaSection_n_1007_1733() {
         </p>
       </div>
       {error ? (
-        <p role="alert" className="w-full rounded-full bg-[rgba(255,107,107,0.12)] px-5 py-3 text-center font-almarai text-[14px] text-[#ff6b6b]">
+        <p role="alert" className="w-full rounded-full px-5 py-3 text-center font-almarai text-[14px] text-[#c8a47e]" style={{ backgroundColor: 'rgba(200, 164, 126, 0.1)' }}>
           {error}
         </p>
       ) : null}
@@ -166,7 +166,7 @@ export function FigmaSection_n_1007_1733() {
           </div>
         </div>
         {mergedFieldError('first_name') || mergedFieldError('last_name') ? (
-          <p role="alert" className="absolute left-0 top-[56px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[56px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('first_name') ?? mergedFieldError('last_name')}
           </p>
         ) : null}
@@ -189,7 +189,7 @@ export function FigmaSection_n_1007_1733() {
           />
         </div>
         {mergedFieldError('email') ? (
-          <p role="alert" className="absolute left-0 top-[128px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[128px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('email')}
           </p>
         ) : null}
@@ -224,7 +224,7 @@ export function FigmaSection_n_1007_1733() {
           </div>
         </div>
         {mergedFieldError('password') ? (
-          <p role="alert" className="absolute left-0 top-[200px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[200px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('password')}
           </p>
         ) : null}
@@ -253,7 +253,7 @@ export function FigmaSection_n_1007_1733() {
           </label>
         </div>
         {mergedFieldError('terms_accepted') ? (
-          <p role="alert" className="absolute left-0 top-[240px] font-almarai text-[12px] text-[#ff6b6b]">
+          <p role="alert" className="absolute left-0 top-[240px] font-almarai text-[12px] text-[#c8a47e]">
             {mergedFieldError('terms_accepted')}
           </p>
         ) : null}
