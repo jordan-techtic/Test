@@ -25,11 +25,10 @@ import { jsx as _jsx, jsxs as _jsxs } from 'react/jsx-runtime';
 
 export function FigmaSpecMaskGroupSection() {
   return _jsx('section', {
-    'data-figma-node': '2264:10397',
+    'data-figma-node': '2264:10398',
     id: 'content',
     className: 'absolute box-border left-[0px] top-[1929px] w-[1920px] h-[2875px] block overflow-hidden z-[4]',
     children: _jsxs('div', {
-      'data-figma-node': '2264:10398',
       className: 'box-border w-[1920px] h-[2875px] absolute left-[0px] top-[0px] overflow-hidden',
       children: _jsxs('div', {
         'data-figma-node': '2264:10404',
@@ -60,42 +59,67 @@ export function FigmaSpecFrame1618873475Section() {
     'data-figma-node': '3361:6461',
     id: 'pricing',
     className:
-      'absolute box-border left-[-17px] top-[0px] w-[1955px] h-[1094px] overflow-hidden opacity-[0.4] pointer-events-none block z-[0]',
+      'absolute box-border left-[-17px] top-[0px] w-[1955px] h-[1094px] opacity-[0.4] pointer-events-none block z-[0]',
     children: [
-      _jsx('img', {
+      _jsx('svg', {
         'data-figma-node': '3361:6462',
-        src: '/assets/figma/3361-6462.png',
-        alt: 'Vector',
+        viewBox: '0 0 403.04 403.04',
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true',
         className:
-          'box-border w-[403px] h-[403px] absolute left-[275px] top-[26px] max-w-none object-cover object-top pointer-events-none',
+          'box-border w-[403px] h-[403px] absolute left-[292px] top-[26px] blur-[197px] pointer-events-none overflow-visible',
+        children: _jsx('path', {
+          d: 'M201.519 403.039C312.816 403.039 403.039 312.816 403.039 201.519C403.039 90.2233 312.816 0 201.519 0C90.2233 0 0 90.2233 0 201.519C0 312.816 90.2233 403.039 201.519 403.039Z',
+          fill: '#c8a47e',
+        }),
       }),
-      _jsx('img', {
+      _jsx('svg', {
         'data-figma-node': '3361:6463',
-        src: '/assets/figma/3361-6463.png',
-        alt: 'Vector',
+        viewBox: '0 0 445 445',
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true',
         className:
-          'box-border w-[445px] h-[445px] absolute left-[0px] top-[0px] max-w-none object-cover object-top pointer-events-none',
+          'box-border w-[445px] h-[445px] absolute left-[0px] top-[0px] blur-[257px] pointer-events-none overflow-visible',
+        children: _jsx('path', {
+          d: 'M222.5 445C345.383 445 445 345.383 445 222.5C445 99.6167 345.383 0 222.5 0C99.6167 0 0 99.6167 0 222.5C0 345.383 99.6167 445 222.5 445Z',
+          fill: 'rgba(243, 50, 246, 0.3)',
+        }),
       }),
-      _jsx('img', {
+      _jsx('svg', {
         'data-figma-node': '3361:6464',
-        src: '/assets/figma/3361-6464.png',
-        alt: 'Vector',
+        viewBox: '0 0 287 287',
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true',
         className:
-          'box-border w-[287px] h-[287px] absolute left-[1408px] top-[807px] max-w-none object-cover object-top pointer-events-none',
+          'box-border w-[287px] h-[287px] absolute left-[1425px] top-[807px] blur-[197px] pointer-events-none overflow-visible',
+        children: _jsx('path', {
+          d: 'M143.5 287C222.753 287 287 222.753 287 143.5C287 64.2471 222.753 0 143.5 0C64.2471 0 0 64.2471 0 143.5C0 222.753 64.2471 287 143.5 287Z',
+          fill: 'rgba(255, 86, 48, 0.9)',
+        }),
       }),
-      _jsx('img', {
+      _jsx('svg', {
         'data-figma-node': '3361:6465',
-        src: '/assets/figma/3361-6465.png',
-        alt: 'Vector',
+        viewBox: '0 0 392.74 392.74',
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true',
         className:
-          'box-border w-[393px] h-[393px] absolute left-[1545px] top-[594px] max-w-none object-cover object-top pointer-events-none',
+          'box-border w-[393px] h-[393px] absolute left-[1562px] top-[594px] blur-[197px] pointer-events-none overflow-visible',
+        children: _jsx('path', {
+          d: 'M196.369 392.738C304.821 392.738 392.738 304.821 392.738 196.369C392.738 87.9174 304.821 0 196.369 0C87.9174 0 0 87.9174 0 196.369C0 304.821 87.9174 392.738 196.369 392.738Z',
+          fill: 'rgba(24, 119, 242, 0.5)',
+        }),
       }),
-      _jsx('img', {
+      _jsx('svg', {
         'data-figma-node': '3361:6466',
-        src: '/assets/figma/3361-6466.png',
-        alt: 'Vector',
+        viewBox: '0 0 386.66 386.66',
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true',
         className:
-          'box-border w-[387px] h-[387px] absolute left-[1314px] top-[594px] max-w-none object-cover object-top pointer-events-none',
+          'box-border w-[387px] h-[387px] absolute left-[1331px] top-[594px] blur-[257px] pointer-events-none overflow-visible',
+        children: _jsx('path', {
+          d: 'M193.328 386.656C300.1 386.656 386.656 300.1 386.656 193.328C386.656 86.5559 300.1 0 193.328 0C86.5559 0 0 86.5559 0 193.328C0 300.1 86.5559 386.656 193.328 386.656Z',
+          fill: 'rgba(47, 0, 255, 0.3)',
+        }),
       }),
     ],
   });

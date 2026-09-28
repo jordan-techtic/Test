@@ -40,10 +40,10 @@ const HOME_FRAME_HEIGHT = 6943;
 const ABOUT_US_TEXT_BINDINGS: Array<{ nodeId: string; field: keyof AboutUsContent }> = [
   { nodeId: '572:3937', field: 'mission_statement' },
   { nodeId: '572:3934', field: 'story' },
+  { nodeId: '631:829', field: 'problem_statement' },
   { nodeId: '639:2642', field: 'team_intro' },
   { nodeId: '643:3290', field: 'contact_email' },
-  { nodeId: '643:2729', field: 'mission_statement' },
-  { nodeId: '643:2730', field: 'story' },
+  { nodeId: '643:3313', field: 'footer' },
 ];
 
 function applyAboutUsContent(data: AboutUsContent | null): void {

@@ -1,7 +1,15 @@
 /** luna-spec-codegen: owned-layout */
-export function FigmaSection_n_632_836() {
+type FigmaSection632Props = {
+  sectionId?: string;
+};
+
+export function FigmaSection_n_632_836({ sectionId }: FigmaSection632Props = {}) {
   return (
-    <section data-figma-node="632:836" className="absolute box-border left-[0px] top-[876px] w-[1920px] h-[673px] block z-[7]">
+    <section
+      id={sectionId}
+      data-figma-node="632:836"
+      className="absolute box-border left-[0px] top-[876px] w-[1920px] h-[673px] block z-[7]"
+    >
       <div data-figma-node="631:823" className="box-border w-[1920px] h-[673px] absolute left-[0px] top-[0px] bg-[#ffffff]"></div>
       <div data-figma-node="3010:21235" className="box-border w-[1500px] h-[513px] absolute left-[210px] top-[80px] gap-[102px]">
         <img data-figma-node="631:833" src="/assets/figma/631-833.png" alt="Rectangle 30" className="box-border w-[740px] h-[513px] absolute left-[0px] top-[0px] rounded-[20px] max-w-none object-cover object-top" />

@@ -17,7 +17,7 @@ export function FigmaAboutUsScreenPage() {
           <FigmaSection_n_3527_5463 />
           <FigmaSection_n_3785_1859 />
           <FigmaSection_n_4008_20203 />
-          <FigmaSection_n_632_836 />
+          <FigmaSection_n_632_836 sectionId="content" />
           <FigmaSection_n_856_1700 />
           <FigmaSection_n_863_4306 />
         </FigmaFrameShell>

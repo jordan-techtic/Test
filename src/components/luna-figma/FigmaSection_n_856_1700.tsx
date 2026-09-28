@@ -4,7 +4,8 @@ export function FigmaSection_n_856_1700() {
     <section data-figma-node="856:1700" className="absolute box-border left-[0px] top-[1549px] w-[1920px] h-[1685px] block overflow-hidden z-[1]">
       <div data-figma-node="856:1701" className="box-border w-[1920px] h-[1685px] absolute left-[0px] top-[0px] bg-[#000000]"></div>
       <div data-figma-node="856:1702" className="box-border w-[3424px] h-[1715px] absolute left-[-752px] top-[-15px] overflow-hidden">
-        <div data-figma-node="856:1703" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px]">
+        <div data-figma-node="856:1703" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] overflow-hidden">
+          <img data-figma-node="856:1704" src="/assets/figma/856-1704.png" alt="" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
           <div data-figma-node="856:1706" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px]">
             <img data-figma-node="856:1707" src="/assets/figma/856-1707.png" alt="Vector" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
             <img data-figma-node="856:1708" src="/assets/figma/856-1708.png" alt="Group" className="box-border w-[1179px] h-[1178px] absolute left-[1123px] top-[348px] blur-[977.21px] pointer-events-none max-w-none object-cover object-top" />

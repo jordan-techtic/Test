@@ -21,4 +21,7 @@ body {
   height: 52px;
   white-space: nowrap;
   border: 1px solid rgba(200, 164, 126, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
