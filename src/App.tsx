@@ -1,3 +1,4 @@
+import { FigmaScreenPage } from "./components/luna-figma/FigmaScreenPage";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Toaster } from '@/components/ui/sonner';
@@ -12,7 +13,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<FigmaScreenPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
