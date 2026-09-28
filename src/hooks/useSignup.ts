@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { ApiClientError, getApiErrorMessage } from '../lib/api-client';
 import { signup as signupRequest } from '../services/signup';
-import type { ApiValidationErrorResponse, SignupRequest } from '../types/auth';
+import type { ApiErrorResponse, ApiValidationErrorResponse, SignupRequest } from '../types/auth';
 
 export function useSignup() {
   const [isPending, setIsPending] = useState(false);
@@ -21,12 +21,14 @@ export function useSignup() {
       setIsSuccess(true);
     } catch (err) {
       if (err instanceof ApiClientError) {
-        const body = err.body as ApiValidationErrorResponse | null;
+        const body = err.body as ApiValidationErrorResponse | ApiErrorResponse | null;
 
         if (err.status === 409) {
           setFieldErrors({ email: ['This email is already registered.'] });
-        } else if (body?.errors) {
+        } else if (body && 'errors' in body && body.errors) {
           setFieldErrors(body.errors);
+        } else if (body && 'error' in body && body.error?.details) {
+          setFieldErrors(body.error.details);
         } else {
           setError(getApiErrorMessage(err, 'Unable to sign up. Please try again.'));
         }

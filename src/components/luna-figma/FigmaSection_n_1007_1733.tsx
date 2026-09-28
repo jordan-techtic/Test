@@ -1,9 +1,9 @@
 /** luna-spec-codegen: owned-layout */
-import { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { toast } from '@/components/ui/sonner';
 
+import { Checkbox } from '@/components/ui/checkbox';
 import { useSignup } from '../../hooks/useSignup';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,18 +18,6 @@ export function FigmaSection_n_1007_1733() {
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
 
   const { mutate, isPending, error, fieldErrors, isSuccess } = useSignup();
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('Account created successfully.');
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
 
   const canSubmit = termsAccepted && !isPending;
 
@@ -128,6 +116,16 @@ export function FigmaSection_n_1007_1733() {
           Create your account today
         </p>
       </div>
+      {error ? (
+        <p role="alert" className="w-full rounded-full bg-[rgba(255,107,107,0.12)] px-5 py-3 text-center font-almarai text-[14px] text-[#ff6b6b]">
+          {error}
+        </p>
+      ) : null}
+      {isSuccess ? (
+        <p role="status" className="w-full text-center font-almarai text-[14px] text-[var(--color-text)]">
+          Account created successfully.
+        </p>
+      ) : null}
       <div data-figma-node="1007:1848" className="box-border w-[461px] h-[236px] relative gap-5">
         <div data-figma-node="1007:1849" className="box-border w-[461px] h-[52px] absolute left-[0px] top-[0px] gap-5">
           <div
@@ -232,17 +230,14 @@ export function FigmaSection_n_1007_1733() {
         ) : null}
         <div data-figma-node="1007:1915" className="box-border w-[461px] h-[20px] absolute left-[0px] top-[216px] gap-2">
           <div className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px]">
-            <input
-              type="checkbox"
+            <Checkbox
               id="terms-accepted"
               name="terms_accepted"
               data-figma-node="1007:1916"
-              role="checkbox"
-              aria-label="Checkbox"
               checked={termsAccepted}
-              onChange={(event) => setTermsAccepted(event.target.checked)}
+              onCheckedChange={(checked) => setTermsAccepted(checked === true)}
               aria-invalid={Boolean(mergedFieldError('terms_accepted'))}
-              className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] rounded-[4px] border border-[#ffffff] bg-transparent appearance-none checked:bg-[#c8a47e] checked:border-[#c8a47e] cursor-pointer"
+              className="box-border h-[20px] w-[20px] rounded-[4px] border border-[#ffffff] bg-transparent data-[state=checked]:border-[var(--color-accent)] data-[state=checked]:bg-[var(--color-accent)] data-[state=checked]:text-[var(--color-text)]"
             />
             <div data-figma-node="1007:1917" className="box-border w-[17px] h-[17px] absolute left-[2px] top-[2px] rounded-[4px] pointer-events-none" />
             <div data-figma-node="1007:1918" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] pointer-events-none">
@@ -268,7 +263,7 @@ export function FigmaSection_n_1007_1733() {
         type="submit"
         disabled={!canSubmit}
         aria-busy={isPending}
-        className={`box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap pt-[10px] pr-[24px] pb-[10px] pl-[24px] text-[#ffffff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8a47e] ${canSubmit ? 'bg-[#c8a47e] hover:opacity-90' : 'pointer-events-none opacity-50'}`}
+        className={`box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap pt-[10px] pr-[24px] pb-[10px] pl-[24px] text-[#ffffff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${canSubmit ? 'bg-[var(--color-accent)] hover:opacity-90' : 'pointer-events-none opacity-50'}`}
         style={canSubmit ? undefined : { backgroundColor: 'rgba(200, 164, 126, 0.5)' }}
       >
         <span className="font-almarai text-[18px] font-[400] leading-[20.09px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">
@@ -285,7 +280,7 @@ export function FigmaSection_n_1007_1733() {
         className="box-border w-[461px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[15.62px] text-center whitespace-nowrap text-[#ffffff]"
       >
         Already have an account?{' '}
-        <Link to="/login" className="text-[#c8a47e] hover:opacity-90">
+        <Link to="/login" className="text-[var(--color-accent)] hover:opacity-90">
           Sign in
         </Link>
       </p>

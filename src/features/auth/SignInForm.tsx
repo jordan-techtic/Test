@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLogin } from '@/hooks/useLogin';
 import { getRememberMe } from '@/lib/auth/session';
@@ -147,7 +148,7 @@ export function SignInForm() {
             aria-pressed={showPassword}
             disabled={isPending}
             onClick={() => setShowPassword((current) => !current)}
-            className="absolute left-[411px] top-[6px] box-border flex h-[40px] w-[40px] cursor-pointer items-center justify-center rounded-[500px] border-0 bg-transparent p-0 text-[#ffffff] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8a47e] disabled:cursor-not-allowed"
+            className="absolute left-[411px] top-[6px] box-border flex h-[40px] w-[40px] cursor-pointer items-center justify-center rounded-[500px] border-0 bg-transparent p-0 text-[#ffffff] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] disabled:cursor-not-allowed"
           >
             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </button>
@@ -160,14 +161,14 @@ export function SignInForm() {
 
         <div className="absolute left-0 top-[144px] box-border flex h-[20px] w-[461px] items-center justify-between gap-2">
           <label className="flex cursor-pointer items-center gap-2">
-            <input
-              type="checkbox"
+            <Checkbox
+              id="remember_me"
               name="remember_me"
               checked={rememberMe}
-              onChange={(event) => setRememberMe(event.target.checked)}
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
               disabled={isPending}
               aria-label="Remember me"
-              className="box-border h-[20px] w-[20px] cursor-pointer appearance-none rounded-[4px] border border-[#ffffff] bg-transparent checked:border-[#c8a47e] checked:bg-[#c8a47e] disabled:cursor-not-allowed"
+              className="box-border h-[20px] w-[20px] rounded-[4px] border border-[#ffffff] bg-transparent data-[state=checked]:border-[var(--color-accent)] data-[state=checked]:bg-[var(--color-accent)] data-[state=checked]:text-[var(--color-text)]"
             />
             <span className="font-almarai text-[14px] font-[400] leading-[15.62px] text-[#ffffff] opacity-60">
               Remember me
@@ -175,7 +176,7 @@ export function SignInForm() {
           </label>
           <Link
             to="/forgot-password"
-            className="font-almarai text-[14px] font-[400] leading-[15.62px] text-[#c8a47e] hover:opacity-90"
+            className="font-almarai text-[14px] font-[400] leading-[15.62px] text-[var(--color-accent)] hover:opacity-90"
           >
             Forgot your password?
           </Link>
@@ -186,7 +187,7 @@ export function SignInForm() {
         type="submit"
         disabled={isPending}
         aria-busy={isPending}
-        className="relative box-border inline-flex h-[52px] w-[461px] items-center justify-center rounded-full bg-[#c8a47e] px-[24px] py-[10px] text-[#ffffff] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8a47e] disabled:pointer-events-none disabled:opacity-50"
+        className="relative box-border inline-flex h-[52px] w-[461px] items-center justify-center rounded-full bg-[var(--color-accent)] px-[24px] py-[10px] text-[#ffffff] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] disabled:pointer-events-none disabled:opacity-50"
       >
         {isPending ? (
           <>
@@ -204,7 +205,7 @@ export function SignInForm() {
 
       <p className="box-border h-[16px] w-[461px] whitespace-nowrap text-center font-almarai text-[14px] font-[400] leading-[15.62px] text-[#ffffff] opacity-60">
         Not a member yet?{' '}
-        <Link to="/signup" className="text-[#c8a47e] hover:opacity-90">
+        <Link to="/signup" className="text-[var(--color-accent)] hover:opacity-90">
           Sign up here.
         </Link>
       </p>

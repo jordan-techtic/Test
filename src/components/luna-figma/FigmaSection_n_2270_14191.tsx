@@ -120,6 +120,8 @@ export function FigmaSection_n_2270_14191() {
           <p data-figma-node="3795:12209" className="box-border w-[25px] h-[9px] absolute left-[23px] top-[6px] opacity-[0.6] font-almarai text-[8px] font-[400] leading-[9px] text-left whitespace-nowrap text-[#ffffff]">Search</p>
         </div>
         <img data-figma-node="3795:12211" src="/assets/figma/3795-12211.png" alt="Dashboard/Nav/Vertical" className="box-border w-[117px] h-[408px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+        <p data-figma-node="3795:12212" className="box-border w-[90px] h-[11px] absolute left-[14px] top-[88px] font-almarai text-[7px] font-[400] leading-[11px] text-left whitespace-nowrap text-[#ffffff]">Instagram Stories</p>
+        <p data-figma-node="3795:12213" className="box-border w-[90px] h-[11px] absolute left-[14px] top-[118px] font-almarai text-[7px] font-[400] leading-[11px] text-left whitespace-nowrap text-[#ffffff]">Instagram Feed</p>
       </div>
     </section>
   );

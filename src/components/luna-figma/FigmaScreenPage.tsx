@@ -11,11 +11,27 @@ import { FigmaSection_n_2295_3505 } from "./FigmaSection_n_2295_3505";
 import { FigmaSection_n_2729_13112 } from "./FigmaSection_n_2729_13112";
 import { FigmaSection_n_2270_16773 } from "./FigmaSection_n_2270_16773";
 
-export function FigmaScreenPage() {
+export interface FigmaScreenPageProps {
+  privacyPolicyLink?: string;
+  termsOfServiceLink?: string;
+  contactEmail?: string;
+  phone?: string;
+  visitorHomeError?: string | null;
+  visitorHomeLoading?: boolean;
+}
+
+export function FigmaScreenPage({
+  privacyPolicyLink,
+  termsOfServiceLink,
+  contactEmail,
+  phone,
+  visitorHomeError,
+  visitorHomeLoading,
+}: FigmaScreenPageProps = {}) {
   return (
     <div
       className="relative flex w-full flex-col"
-      style={{ backgroundColor: "#0e0d0d" }}
+      style={{ backgroundColor: "var(--color-surface)" }}
     >
       <main className="relative z-10 flex w-full flex-col">
         <FigmaFrameShell frameWidth={1920} frameHeight={6943} nodeId="frame">
@@ -27,7 +43,14 @@ export function FigmaScreenPage() {
         <FigmaSection_n_3654_11564 />
         <FigmaSection_n_2295_3505 />
         <FigmaSection_n_2729_13112 />
-        <FigmaSection_n_2270_16773 />
+        <FigmaSection_n_2270_16773
+          privacyPolicyLink={privacyPolicyLink}
+          termsOfServiceLink={termsOfServiceLink}
+          contactEmail={contactEmail}
+          phone={phone}
+          visitorHomeError={visitorHomeError}
+          visitorHomeLoading={visitorHomeLoading}
+        />
         <div className="pointer-events-none absolute inset-0 z-[1]">
           <div data-figma-node="2289:17290" className="box-border w-[1964px] h-[2875px] absolute left-[-44px] top-[1929px] block">
             <div data-figma-node="2289:17245" className="box-border w-[1955px] h-[2875px] absolute left-[0px] top-[0px] overflow-hidden opacity-[0.24]">
