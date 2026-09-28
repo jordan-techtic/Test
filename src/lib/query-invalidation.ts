@@ -1,3 +1,5 @@
+import { resetVisitorHomeCache } from '../api/visitor-home';
+
 type InvalidationListener = () => void;
 
 const visitorHomeListeners = new Set<InvalidationListener>();
@@ -14,6 +16,7 @@ export function subscribeAboutUs(listener: InvalidationListener): () => void {
 }
 
 export function invalidateVisitorHome(): void {
+  resetVisitorHomeCache();
   visitorHomeListeners.forEach((listener) => listener());
 }
 

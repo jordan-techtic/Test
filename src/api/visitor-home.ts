@@ -1,10 +1,9 @@
 import { apiRequest } from '../lib/api-client';
 import { unwrapResponse } from '../lib/unwrap-response';
-import type { ListUnwrapKey } from '../lib/unwrap-response';
 import type { VisitorHomeContent } from '../types/api';
 
 export const VISITOR_HOME_PATH = '/api/visitor/home';
-export const VISITOR_HOME_LIST_UNWRAP_KEY = 'data' satisfies ListUnwrapKey;
+export const VISITOR_HOME_LIST_UNWRAP_KEY = null;
 
 function isVisitorHomeContent(value: unknown): value is VisitorHomeContent {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -21,6 +20,14 @@ function isVisitorHomeContent(value: unknown): value is VisitorHomeContent {
 }
 
 function parseVisitorHomeResponse(body: unknown): VisitorHomeContent {
+  if (body && typeof body === 'object' && !Array.isArray(body) && 'data' in body) {
+    const envelope = body as Record<string, unknown>;
+    const inner = envelope.data;
+    if (isVisitorHomeContent(inner)) {
+      return inner;
+    }
+  }
+
   const unwrapped = unwrapResponse<unknown>(body, VISITOR_HOME_LIST_UNWRAP_KEY);
   if (isVisitorHomeContent(unwrapped)) {
     return unwrapped;
@@ -30,8 +37,17 @@ function parseVisitorHomeResponse(body: unknown): VisitorHomeContent {
 }
 
 let visitorHomeInflight: Promise<VisitorHomeContent> | null = null;
+let visitorHomeCache: VisitorHomeContent | null = null;
+
+export function resetVisitorHomeCache(): void {
+  visitorHomeCache = null;
+}
 
 export async function getVisitorHome(): Promise<VisitorHomeContent> {
+  if (visitorHomeCache) {
+    return visitorHomeCache;
+  }
+
   if (visitorHomeInflight) {
     return visitorHomeInflight;
   }
@@ -39,7 +55,9 @@ export async function getVisitorHome(): Promise<VisitorHomeContent> {
   visitorHomeInflight = (async () => {
     try {
       const response = await apiRequest<unknown>('GET', VISITOR_HOME_PATH);
-      return parseVisitorHomeResponse(response);
+      const parsed = parseVisitorHomeResponse(response);
+      visitorHomeCache = parsed;
+      return parsed;
     } finally {
       visitorHomeInflight = null;
     }

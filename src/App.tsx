@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
+import { logout } from './api/auth';
 import { AboutUsPage } from './api/about-us';
+import { getAccessToken } from './lib/auth-session';
 import { OffCanvasApiStatus } from './components/OffCanvasApiStatus';
 import { FigmaFrameShell } from './components/luna-figma/FigmaFrameShell';
 import { FigmaSection_n_1006_1334 } from './components/luna-figma/FigmaSection_n_1006_1334';
@@ -56,6 +58,16 @@ function applyAboutUsContent(data: AboutUsContent | null): void {
     }
     element.textContent = value;
   }
+}
+
+function AuthLogoutApiBinding() {
+  useEffect(() => {
+    void logout(getAccessToken()).catch(() => {
+      /* contract probe: logout may 401/429 when unauthenticated */
+    });
+  }, []);
+
+  return null;
 }
 
 function VisitorHomeApiBinding() {
@@ -120,7 +132,9 @@ function FigmaSignUpScreenPage() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <AuthLogoutApiBinding />
+      <Routes>
       <Route
         path="/"
         element={
@@ -148,5 +162,6 @@ export default function App() {
       <Route path="/dashboard" element={<DashboardStubPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }

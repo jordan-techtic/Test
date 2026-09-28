@@ -1,5 +1,10 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_2729_13112() {
+  const fieldLabelClass =
+    'box-border h-[16px] absolute left-[20px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff] pointer-events-none';
+  const inputClass =
+    'box-border h-[16px] absolute left-[20px] z-[1] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-transparent font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap';
+
   return (
     <section data-figma-node="2729:13112" id="contact" className="absolute box-border left-[210px] top-[5737px] mt-[80px] w-[1500px] h-[802px] flex flex-row items-center gap-5 z-[10]">
       <img data-figma-node="3701:13295" src="/assets/figma/3701-13295.png" alt="Frame 1618873431 1" className="box-border w-[740px] h-[802px] max-w-none object-cover object-top" />
@@ -12,33 +17,40 @@ export function FigmaSection_n_2729_13112() {
         <div data-figma-node="2729:13119" className="box-border w-[640px] h-[389px] absolute left-[50px] top-[283px] gap-5">
           <div data-figma-node="2729:13120" className="box-border w-[640px] h-[52px] absolute left-[0px] top-[0px] gap-4">
             <div data-figma-node="2729:13121" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13127" type="text" placeholder="First Name" aria-label="First Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+              <p data-figma-node="2729:13127" className={`${fieldLabelClass} w-[272px] top-[18px]`}>First Name</p>
+              <input type="text" placeholder="First Name" aria-label="First Name" className={`${inputClass} w-[272px] top-[18px]`} />
             </div>
             <div data-figma-node="2729:13137" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13143" type="text" placeholder="Last Name" aria-label="Last Name" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+              <p data-figma-node="2729:13143" className={`${fieldLabelClass} w-[272px] top-[18px]`}>Last Name</p>
+              <input type="text" placeholder="Last Name" aria-label="Last Name" className={`${inputClass} w-[272px] top-[18px]`} />
               <div data-figma-node="2729:13144" className="box-border w-[40px] h-[40px] absolute left-[1px] top-[6px]"></div>
             </div>
           </div>
           <div data-figma-node="2729:13153" className="box-border w-[640px] h-[52px] absolute left-[0px] top-[72px] gap-4">
             <div data-figma-node="2729:13154" className="box-border w-[312px] h-[52px] absolute left-[0px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13160" type="email" placeholder="Email" aria-label="Email" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+              <p data-figma-node="2729:13160" className={`${fieldLabelClass} w-[272px] top-[18px]`}>Email</p>
+              <input type="email" placeholder="Email" aria-label="Email" className={`${inputClass} w-[272px] top-[18px]`} />
               <div data-figma-node="2729:13161" className="box-border w-[40px] h-[40px] absolute left-[329px] top-[6px]"></div>
             </div>
             <div data-figma-node="2729:13170" className="box-border w-[312px] h-[52px] absolute left-[328px] top-[0px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <input data-figma-node="2729:13176" type="tel" placeholder="Phone number" aria-label="Phone number" className="box-border w-[272px] h-[16px] absolute left-[20px] top-[18px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+              <p data-figma-node="2729:13176" className={`${fieldLabelClass} w-[272px] top-[18px]`}>Phone number</p>
+              <input type="tel" placeholder="Phone number" aria-label="Phone number" className={`${inputClass} w-[272px] top-[18px]`} />
               <div data-figma-node="2729:13177" className="box-border w-[40px] h-[40px] absolute left-[1px] top-[6px]"></div>
             </div>
           </div>
           <div data-figma-node="2729:13187" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[144px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <input data-figma-node="2729:13193" type="text" placeholder="How long have you been in Real Estate?" aria-label="How long have you been in Real Estate?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <p data-figma-node="2729:13193" className={`${fieldLabelClass} w-[600px] top-[19px]`}>How long have you been in Real Estate?</p>
+            <input type="text" placeholder="How long have you been in Real Estate?" aria-label="How long have you been in Real Estate?" className={`${inputClass} w-[600px] top-[19px]`} />
             <div data-figma-node="2729:13194" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-137px]"></div>
           </div>
           <div data-figma-node="2729:13204" className="box-border w-[640px] h-[54px] absolute left-[0px] top-[218px] overflow-hidden rounded-full pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <input data-figma-node="2729:13210" type="text" placeholder="What do you currently do for marketing your business?" aria-label="What do you currently do for marketing your business?" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[19px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <p data-figma-node="2729:13210" className={`${fieldLabelClass} w-[600px] top-[19px]`}>What do you currently do for marketing your business?</p>
+            <input type="text" placeholder="What do you currently do for marketing your business?" aria-label="What do you currently do for marketing your business?" className={`${inputClass} w-[600px] top-[19px]`} />
             <div data-figma-node="2729:13211" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-211px]"></div>
           </div>
           <div data-figma-node="2729:13220" className="box-border w-[640px] h-[97px] absolute left-[0px] top-[292px] overflow-hidden rounded-[10px] pt-[20px] pr-[20px] pb-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-            <textarea data-figma-node="2729:13226" placeholder="Your Message" aria-label="Your Message" className="box-border w-[600px] h-[16px] absolute left-[20px] top-[20px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 bg-transparent px-0 text-[#ffffff] placeholder:text-[#ffffff] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap" />
+            <p data-figma-node="2729:13226" className={`${fieldLabelClass} w-[600px] top-[20px]`}>Your Message</p>
+            <textarea placeholder="Your Message" aria-label="Your Message" className={`${inputClass} w-[600px] top-[20px]`} />
             <div data-figma-node="2729:13227" className="box-border w-[40px] h-[40px] absolute left-[657px] top-[-263px]"></div>
           </div>
         </div>
