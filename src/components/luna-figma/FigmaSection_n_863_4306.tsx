@@ -30,21 +30,21 @@ export function FigmaSection_n_863_4306() {
         </div>
         <div data-figma-node="643:2676" className="box-border w-[868px] h-[1775px] absolute left-[842px] top-[80px]">
           <div data-figma-node="643:2650" className="box-border w-[424px] h-[565px] absolute left-[0px] top-[0px] gap-5">
-            <img data-figma-node="643:2644" src="/assets/figma/643-2644.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 1" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+            <img data-figma-node="643:2656" src="/assets/figma/643-2656.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 1" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
             <div data-figma-node="643:2646" className="box-border w-[424px] h-[65px] absolute left-[0px] top-[500px] gap-2.5">
               <p data-figma-node="643:2647" className="box-border w-[424px] h-[27px] absolute left-[0px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left capitalize whitespace-nowrap text-[#000000]">Hunter</p>
               <p data-figma-node="643:2648" className="box-border w-[111px] h-[28px] absolute left-[0px] top-[37px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-left whitespace-nowrap text-[#000000]">CEO/Founder</p>
             </div>
           </div>
           <div data-figma-node="643:2655" className="box-border w-[424px] h-[565px] absolute left-[0px] top-[605px] gap-5">
-            <img data-figma-node="643:2656" src="/assets/figma/643-2656.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 1" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+            <img data-figma-node="643:2666" src="/assets/figma/643-2666.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 1" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
             <div data-figma-node="643:2657" className="box-border w-[424px] h-[65px] absolute left-[0px] top-[500px] gap-2.5">
               <p data-figma-node="643:2658" className="box-border w-[424px] h-[27px] absolute left-[0px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left capitalize whitespace-nowrap text-[#000000]">Abby</p>
               <p data-figma-node="643:2659" className="box-border w-[175px] h-[28px] absolute left-[0px] top-[37px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-left whitespace-nowrap text-[#000000]">Marketing Coordinator</p>
             </div>
           </div>
           <div data-figma-node="643:2665" className="box-border w-[424px] h-[565px] absolute left-[0px] top-[1210px] gap-5">
-            <img data-figma-node="643:2666" src="/assets/figma/643-2666.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 1" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+            <img data-figma-node="643:2671" src="/assets/figma/643-2671.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 2" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
             <div data-figma-node="643:2667" className="box-border w-[424px] h-[65px] absolute left-[0px] top-[500px] gap-2.5">
               <p data-figma-node="643:2668" className="box-border w-[424px] h-[27px] absolute left-[0px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left capitalize whitespace-nowrap text-[#000000]">Josh</p>
               <p data-figma-node="643:2669" className="box-border w-[59px] h-[28px] absolute left-[0px] top-[37px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-left whitespace-nowrap text-[#000000]">Partner</p>

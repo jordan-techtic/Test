@@ -7,3 +7,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare module 'virtual:luna-screen-spec-emit' {
+  export function FigmaSpecMaskGroupSection(): import('react').JSX.Element;
+  export function FigmaSpecThreeStepsHeadline(): import('react').JSX.Element;
+}
