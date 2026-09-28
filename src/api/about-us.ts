@@ -38,9 +38,34 @@ function parseAboutUsResponse(body: unknown): AboutUsContent {
   return unwrapped as AboutUsContent;
 }
 
+let aboutUsInflight: Promise<AboutUsContent> | null = null;
+let aboutUsCache: AboutUsContent | null = null;
+
+export function resetAboutUsCache(): void {
+  aboutUsCache = null;
+}
+
 export async function getAboutUs(): Promise<AboutUsContent> {
-  const response = await apiRequest<unknown>('GET', ABOUT_US_PATH);
-  return parseAboutUsResponse(response);
+  if (aboutUsCache) {
+    return aboutUsCache;
+  }
+
+  if (aboutUsInflight) {
+    return aboutUsInflight;
+  }
+
+  aboutUsInflight = (async () => {
+    try {
+      const response = await apiRequest<unknown>('GET', ABOUT_US_PATH);
+      const parsed = parseAboutUsResponse(response);
+      aboutUsCache = parsed;
+      return parsed;
+    } finally {
+      aboutUsInflight = null;
+    }
+  })();
+
+  return aboutUsInflight;
 }
 
 export function AboutUsPage() {

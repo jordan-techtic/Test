@@ -1,3 +1,4 @@
+import { resetAboutUsCache } from '../api/about-us';
 import { resetVisitorHomeCache } from '../api/visitor-home';
 
 type InvalidationListener = () => void;
@@ -21,5 +22,6 @@ export function invalidateVisitorHome(): void {
 }
 
 export function invalidateAboutUs(): void {
+  resetAboutUsCache();
   aboutUsListeners.forEach((listener) => listener());
 }
