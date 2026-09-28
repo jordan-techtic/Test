@@ -1,19 +1,9 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_3330_1780() {
   return (
-    <section data-figma-node="3330:1780" id="about" className="absolute box-border left-[0px] top-[0px] w-[1920px] h-[1010px] block z-[12]">
+    <section data-figma-node="3330:1780" id="about" className="relative box-border left-[0px] top-[0px] w-[1920px] h-[1010px] block z-[12]">
       <img data-figma-node="2295:7893" src="/assets/figma/2295-7893.png" alt="Frame 2147227835" className="box-border w-[1920px] h-[1010px] absolute left-[0px] top-[0px] overflow-hidden max-w-none object-cover object-top" />
       <div data-figma-node="2264:10397" className="box-border w-[1920px] h-[300px] absolute left-[0px] top-[710px]" style={{backgroundImage: "linear-gradient(180.0deg, rgba(0, 0, 0, 0) 0.0%, #000000 100.0%)"}}></div>
-      <div data-figma-node="2252:10079" className="box-border z-20 w-[488px] h-[102px] absolute left-[716px] top-[840px] gap-5">
-        <div data-figma-node="2252:10063" className="box-border w-[488px] h-[32px] absolute left-[0px] top-[0px] gap-[4.92px]">
-          <div data-figma-node="2252:10075" className="box-border w-[488px] h-[27px] absolute left-[0px] top-[2px] gap-[5px]">
-            <p data-figma-node="2252:10077" className="box-border z-20 w-[33px] h-[20px] absolute left-[0px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">Join</p>
-            <p data-figma-node="2252:10082" className="box-border z-20 w-[111px] h-[27px] absolute left-[38px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left whitespace-nowrap text-[#c8a47e]">Hundreds</p>
-            <p data-figma-node="2252:10080" className="box-border z-20 w-[334px] h-[20px] absolute left-[154px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">of other agents on the waitlist for Agentwise</p>
-          </div>
-        </div>
-        <a data-figma-node="2241:1738" href="#contact" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap bg-[#c8a47e] hover:opacity-90"><span data-figma-node="2241:1739" className="relative z-20 font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
-      </div>
       <img data-figma-node="2291:5798" src="/assets/figma/2291-5798.png" alt="Frame 2147227831" className="box-border w-[695px] h-[445px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
       <img data-figma-node="2291:5795" src="/assets/figma/2291-5795.png" alt="Frame 2147227830" className="box-border w-[1153px] h-[767px] absolute left-[967px] top-[243px] overflow-hidden max-w-none object-cover object-top" />
       <div data-figma-node="2291:5796" className="box-border w-[393px] h-[393px] absolute left-[1562px] top-[594px]" style={{backgroundColor: "rgba(24, 119, 242, 0.5)"}}></div>
@@ -71,6 +61,16 @@ export function FigmaSection_n_3330_1780() {
           <a data-figma-node="2241:1728" href="#pricing" className="box-border z-20 w-[49px] h-[18px] absolute left-[310px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Pricing</a>
         </div>
         <img data-figma-node="2289:17291" src="/assets/figma/2289-17291.png" alt="Group 1" className="box-border w-[153px] h-[51px] absolute left-[211px] top-[17px] max-w-none object-cover object-top" />
+      </div>
+      <div data-figma-node="2252:10079" className="box-border z-20 w-[488px] h-[102px] absolute left-[716px] top-[840px] gap-5">
+        <div data-figma-node="2252:10063" className="box-border w-[488px] h-[32px] absolute left-[0px] top-[0px] gap-[4.92px]">
+          <div data-figma-node="2252:10075" className="box-border w-[488px] h-[27px] absolute left-[0px] top-[2px] gap-[5px]">
+            <p data-figma-node="2252:10077" className="box-border z-20 w-[33px] h-[20px] absolute left-[0px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">Join</p>
+            <p data-figma-node="2252:10082" className="box-border z-20 w-[111px] h-[27px] absolute left-[38px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left whitespace-nowrap text-[#c8a47e]">Hundreds</p>
+            <p data-figma-node="2252:10080" className="box-border z-20 w-[334px] h-[20px] absolute left-[154px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">of other agents on the waitlist for Agentwise</p>
+          </div>
+        </div>
+        <a data-figma-node="2241:1738" href="#contact" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap bg-[#c8a47e] hover:opacity-90"><span data-figma-node="2241:1739" className="relative z-20 font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
       </div>
     </section>
   );

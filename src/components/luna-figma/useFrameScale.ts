@@ -1,5 +1,5 @@
 /** luna-spec-codegen: owned-layout */
-import { useEffect, useState, type RefObject } from "react";
+import { useLayoutEffect, useState, type RefObject } from "react";
 
 export const FRAME_WIDTH = 1920;
 
@@ -9,7 +9,7 @@ export function useFrameScale(
 ): number {
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = outerRef.current;
     if (!node || !frameWidth) {
       return;
