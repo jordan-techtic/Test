@@ -1,9 +1,10 @@
 import { apiRequest } from '../lib/api-client';
 import { unwrapResponse } from '../lib/unwrap-response';
+import type { ListUnwrapKey } from '../lib/unwrap-response';
 import type { VisitorHomeContent } from '../types/api';
 
 export const VISITOR_HOME_PATH = '/api/visitor/home';
-export const VISITOR_HOME_LIST_UNWRAP_KEY = null;
+export const VISITOR_HOME_LIST_UNWRAP_KEY = 'data' satisfies ListUnwrapKey;
 
 function isVisitorHomeContent(value: unknown): value is VisitorHomeContent {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -20,14 +21,6 @@ function isVisitorHomeContent(value: unknown): value is VisitorHomeContent {
 }
 
 function parseVisitorHomeResponse(body: unknown): VisitorHomeContent {
-  if (body && typeof body === 'object' && !Array.isArray(body) && 'data' in body) {
-    const envelope = body as Record<string, unknown>;
-    const inner = envelope.data;
-    if (isVisitorHomeContent(inner)) {
-      return inner;
-    }
-  }
-
   const unwrapped = unwrapResponse<unknown>(body, VISITOR_HOME_LIST_UNWRAP_KEY);
   if (isVisitorHomeContent(unwrapped)) {
     return unwrapped;
@@ -36,7 +29,21 @@ function parseVisitorHomeResponse(body: unknown): VisitorHomeContent {
   return unwrapped as VisitorHomeContent;
 }
 
+let visitorHomeInflight: Promise<VisitorHomeContent> | null = null;
+
 export async function getVisitorHome(): Promise<VisitorHomeContent> {
-  const response = await apiRequest<unknown>('GET', VISITOR_HOME_PATH);
-  return parseVisitorHomeResponse(response);
+  if (visitorHomeInflight) {
+    return visitorHomeInflight;
+  }
+
+  visitorHomeInflight = (async () => {
+    try {
+      const response = await apiRequest<unknown>('GET', VISITOR_HOME_PATH);
+      return parseVisitorHomeResponse(response);
+    } finally {
+      visitorHomeInflight = null;
+    }
+  })();
+
+  return visitorHomeInflight;
 }

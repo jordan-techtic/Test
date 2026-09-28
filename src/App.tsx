@@ -14,6 +14,7 @@ import { FigmaSection_n_2270_16773 } from './components/luna-figma/FigmaSection_
 import { FigmaSection_n_2295_3500 } from './components/luna-figma/FigmaSection_n_2295_3500';
 import { FigmaSection_n_2295_3505 } from './components/luna-figma/FigmaSection_n_2295_3505';
 import { FigmaSection_n_2729_13112 } from './components/luna-figma/FigmaSection_n_2729_13112';
+import { FigmaSection_n_3361_6461 } from './components/luna-figma/FigmaSection_n_3361_6461';
 import { FigmaSection_n_3330_1780 } from './components/luna-figma/FigmaSection_n_3330_1780';
 import { FigmaSection_n_3654_11564 } from './components/luna-figma/FigmaSection_n_3654_11564';
 import { FigmaSection_n_4008_20203 } from './components/luna-figma/FigmaSection_n_4008_20203';
@@ -27,7 +28,6 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { PlaceholderLegalPage } from './pages/PlaceholderLegalPage';
 import type { AboutUsContent } from './types/api';
 import {
-  FigmaSpecFrame1618873475Section,
   FigmaSpecGroup33654419Section,
   FigmaSpecMaskGroupSection,
   FigmaSpecThreeStepsHeadline,
@@ -81,7 +81,8 @@ function FigmaHomeScreenPage() {
     <div className="relative flex w-full flex-col" style={{ backgroundColor: '#0b0b0b' }}>
       <main className="relative z-10 flex w-full flex-col">
         <FigmaFrameShell frameWidth={1920} frameHeight={HOME_FRAME_HEIGHT} nodeId="2241:1459">
-          <FigmaSpecFrame1618873475Section />
+          <FigmaSection_n_2729_13112 />
+          <FigmaSection_n_3361_6461 />
           <FigmaSection_n_3330_1780 />
           <FigmaSection_n_4008_20203 />
           <FigmaSection_n_632_836 />
@@ -94,7 +95,6 @@ function FigmaHomeScreenPage() {
           <FigmaSection_n_2270_14699 />
           <FigmaSection_n_3654_11564 />
           <FigmaSection_n_2295_3505 />
-          <FigmaSection_n_2729_13112 />
           <FigmaSection_n_2270_16773 />
         </FigmaFrameShell>
       </main>

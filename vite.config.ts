@@ -108,7 +108,7 @@ export function FigmaSpecThreeStepsHeadline() {
     children: _jsx('p', {
       'data-figma-node': '2264:10403',
       className:
-        'box-border w-[1394px] h-[110px] absolute left-[0px] top-[0px] font-public-sans text-[84px] font-[400] leading-[110px] text-center capitalize whitespace-nowrap text-[#000000]',
+        'box-border w-[1394px] h-[110px] absolute left-[0px] top-[0px] font-eb-garamond text-[84px] font-[400] leading-[110px] text-center capitalize whitespace-nowrap text-[#ffffff]',
       children: 'Stunning marketing, in three simple steps',
     }),
   });
@@ -135,6 +135,13 @@ export function FigmaSpecGroup33654419Section() {
 export default defineConfig({
   plugins: [react(), tailwindcss(), lunaScreenSpecEmitPlugin()],
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://174.138.72.184:4040',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
     port: 5173,
   },
 });
