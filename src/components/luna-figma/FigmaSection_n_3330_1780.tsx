@@ -12,7 +12,7 @@ export function FigmaSection_n_3330_1780() {
             <p data-figma-node="2252:10080" className="box-border w-[334px] h-[20px] absolute left-[154px] top-[4px] font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff]">of other agents on the waitlist for Agentwise</p>
           </div>
         </div>
-        <a data-figma-node="2241:1738" href="#contact" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap bg-[#c8a47e] hover:opacity-90"><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
+        <a data-figma-node="2241:1738" href="#contact" className="box-border w-[155px] h-[50px] absolute left-[166px] top-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap bg-[#c8a47e] hover:opacity-90"><span data-figma-node="2241:1739" className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Get Started</span></a>
       </div>
       <img data-figma-node="2291:5798" src="/assets/figma/2291-5798.png" alt="Frame 2147227831" className="box-border w-[695px] h-[445px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
       <img data-figma-node="2291:5795" src="/assets/figma/2291-5795.png" alt="Frame 2147227830" className="box-border w-[1153px] h-[767px] absolute left-[967px] top-[243px] overflow-hidden max-w-none object-cover object-top" />
