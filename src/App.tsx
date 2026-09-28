@@ -1,8 +1,8 @@
-import { useSyncExternalStore } from 'react';
-import { AboutUsPage } from './api/about-us';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { OffCanvasApiStatus } from './components/OffCanvasApiStatus';
+import { AboutUsPage } from './components/luna-figma/FigmaAboutUsScreenPage';
 import { FigmaFrameShell } from './components/luna-figma/FigmaFrameShell';
-import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
+import { FigmaSection_n_1007_1733 } from './components/luna-figma/FigmaSection_n_1007_1733';
 import { FigmaSection_n_2270_14191 } from './components/luna-figma/FigmaSection_n_2270_14191';
 import { FigmaSection_n_2270_14193 } from './components/luna-figma/FigmaSection_n_2270_14193';
 import { FigmaSection_n_2270_14699 } from './components/luna-figma/FigmaSection_n_2270_14699';
@@ -20,27 +20,12 @@ import { FigmaSignInScreenPage } from './components/luna-figma/FigmaSignInScreen
 import { useAboutUs } from './hooks/useAboutUs';
 import { useVisitorHome } from './hooks/useVisitorHome';
 import {
+  FigmaSpecGroup33654419Section,
   FigmaSpecMaskGroupSection,
   FigmaSpecThreeStepsHeadline,
 } from 'virtual:luna-screen-spec-emit';
 
 const HOME_FRAME_HEIGHT = 6943;
-
-function subscribeToPath(onStoreChange: () => void): () => void {
-  window.addEventListener('popstate', onStoreChange);
-  return () => window.removeEventListener('popstate', onStoreChange);
-}
-
-function getPathname(): string {
-  return window.location.pathname;
-}
-
-function normalizePath(pathname: string): string {
-  if (pathname.length > 1 && pathname.endsWith('/')) {
-    return pathname.slice(0, -1);
-  }
-  return pathname;
-}
 
 function VisitorHomeApiBinding() {
   const { loading, error } = useVisitorHome();
@@ -78,44 +63,76 @@ function FigmaHomeScreenPage() {
   );
 }
 
-export default function App() {
-  const pathname = normalizePath(useSyncExternalStore(subscribeToPath, getPathname, () => '/'));
-
-  if (pathname === '/login') {
-    return (
-      <>
-        <FigmaSignInScreenPage />
-        <VisitorHomeApiBinding />
-      </>
-    );
-  }
-
-  if (pathname === '/about-us') {
-    return (
-      <>
-        <AboutUsPage />
-        <AboutUsApiBinding />
-      </>
-    );
-  }
-
-  if (pathname === '/sign-up' || pathname === '/join') {
-    return <FigmaScreenPage />;
-  }
-
-  if (pathname === '/') {
-    return (
-      <>
-        <FigmaHomeScreenPage />
-        <VisitorHomeApiBinding />
-      </>
-    );
-  }
-
+function FigmaSignUpScreenPage() {
   return (
-    <>
-      <FigmaHomeScreenPage />
-      <VisitorHomeApiBinding />
-    </>
+    <div className="relative flex w-full flex-col" style={{ backgroundColor: '#0b0b0b' }}>
+      <main className="relative z-10 flex w-full flex-col">
+        <FigmaFrameShell frameWidth={1440} frameHeight={850} nodeId="frame">
+          <FigmaSpecGroup33654419Section />
+          <FigmaSection_n_1007_1733 />
+        </FigmaFrameShell>
+      </main>
+    </div>
+  );
+}
+
+function LegalStubPage({ title }: { title: string }) {
+  return (
+    <div className="relative flex min-h-[40vh] w-full flex-col items-center justify-center p-[40px]" style={{ backgroundColor: '#0b0b0b' }}>
+      <h1 className="font-eb-garamond text-[48px] font-[500] capitalize text-[#ffffff]">{title}</h1>
+      <p className="mt-4 font-almarai text-[18px] text-[#ffffff] opacity-[0.6]">
+        Content for this page will be published here.
+      </p>
+      <a href="/" className="mt-8 font-almarai text-[18px] text-[#c8a47e] no-underline hover:opacity-90">
+        Back to home
+      </a>
+    </div>
+  );
+}
+
+function DashboardStubPage() {
+  return (
+    <div className="relative flex min-h-[40vh] w-full flex-col items-center justify-center p-[40px]" style={{ backgroundColor: '#0b0b0b' }}>
+      <h1 className="font-eb-garamond text-[48px] font-[500] capitalize text-[#ffffff]">Dashboard</h1>
+      <p className="mt-4 font-almarai text-[18px] text-[#ffffff] opacity-[0.6]">Sign in to access your dashboard.</p>
+      <a href="/login" className="mt-8 font-almarai text-[18px] text-[#c8a47e] no-underline hover:opacity-90">
+        Sign in
+      </a>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <FigmaHomeScreenPage />
+              <VisitorHomeApiBinding />
+            </>
+          }
+        />
+        <Route path="/login" element={<FigmaSignInScreenPage />} />
+        <Route
+          path="/about-us"
+          element={
+            <>
+              <AboutUsPage />
+              <AboutUsApiBinding />
+            </>
+          }
+        />
+        <Route path="/sign-up" element={<FigmaSignUpScreenPage />} />
+        <Route path="/join" element={<Navigate to="/sign-up" replace />} />
+        <Route path="/privacy-policy" element={<LegalStubPage title="Privacy Policy" />} />
+        <Route path="/terms-of-service" element={<LegalStubPage title="Terms of Service" />} />
+        <Route path="/forgot-password" element={<LegalStubPage title="Forgot Password" />} />
+        <Route path="/dashboard" element={<DashboardStubPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

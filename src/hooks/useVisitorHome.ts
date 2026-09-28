@@ -13,9 +13,28 @@ const HOME_TEXT_BINDINGS: Array<{
   { nodeId: '2241:1737', field: 'sub_heading' },
   { nodeId: '2270:16895', field: 'contact_email' },
   { nodeId: '643:3290', field: 'contact_email' },
-  { nodeId: '2270:16915', field: 'terms_of_service_link' },
-  { nodeId: '2270:16917', field: 'privacy_policy_link' },
+  { nodeId: '2270:16915', field: 'terms_of_service_link', attr: 'href' },
+  { nodeId: '2270:16917', field: 'privacy_policy_link', attr: 'href' },
 ];
+
+function ensureAnchor(nodeId: string): HTMLAnchorElement | null {
+  const element = document.querySelector(`[data-figma-node="${nodeId}"]`);
+  if (!element) {
+    return null;
+  }
+  if (element instanceof HTMLAnchorElement) {
+    return element;
+  }
+  if (element instanceof HTMLParagraphElement) {
+    const anchor = document.createElement('a');
+    anchor.setAttribute('data-figma-node', nodeId);
+    anchor.className = element.className;
+    anchor.textContent = element.textContent;
+    element.replaceWith(anchor);
+    return anchor;
+  }
+  return null;
+}
 
 function applyVisitorHomeContent(data: VisitorHomeContent | null): void {
   for (const binding of HOME_TEXT_BINDINGS) {
@@ -23,15 +42,18 @@ function applyVisitorHomeContent(data: VisitorHomeContent | null): void {
     if (typeof value !== 'string' || value.trim() === '') {
       continue;
     }
+    if (binding.attr === 'href') {
+      const anchor = ensureAnchor(binding.nodeId);
+      if (anchor) {
+        anchor.href = value;
+      }
+      continue;
+    }
     const element = document.querySelector(`[data-figma-node="${binding.nodeId}"]`);
     if (!element) {
       continue;
     }
-    if (binding.attr === 'href' && element instanceof HTMLAnchorElement) {
-      element.href = value;
-    } else {
-      element.textContent = value;
-    }
+    element.textContent = value;
   }
 }
 

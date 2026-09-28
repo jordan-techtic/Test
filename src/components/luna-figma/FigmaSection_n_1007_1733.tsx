@@ -62,7 +62,7 @@ export function FigmaSection_n_1007_1733() {
       <form
         data-figma-node="1007:1733"
         id="contact"
-        className="absolute box-border left-[100px] top-[105.5px] w-[461px] h-[639px] pr-[149px] pl-[148px] flex flex-col items-center gap-[30px] z-[4]"
+        className="absolute box-border left-[100px] top-[105.5px] mt-[20px] w-[461px] h-[639px] pr-[149px] pl-[148px] flex flex-col items-center gap-[30px] z-[4]"
         onSubmit={(event) => {
           void handleSubmit(event);
         }}

@@ -65,7 +65,7 @@ export function FigmaSection_n_863_4306() {
             </div>
           </div>
           <div data-figma-node="643:2670" className="box-border w-[424px] h-[565px] absolute left-[444px] top-[1210px] gap-5">
-            <img data-figma-node="643:2671" src="/assets/figma/643-2671.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 2" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+            <img data-figma-node="643:2644" src="/assets/figma/643-2644.png" alt="8FJOuiO6HHPD5irQgxJIc6PtAw 0" className="box-border w-[424px] h-[480px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
             <div data-figma-node="643:2672" className="box-border w-[424px] h-[65px] absolute left-[0px] top-[500px] gap-2.5">
               <p data-figma-node="643:2673" className="box-border w-[424px] h-[27px] absolute left-[0px] top-[0px] font-almarai text-[24px] font-[700] leading-[27px] text-left capitalize whitespace-nowrap text-[#000000]">Nova</p>
               <p data-figma-node="643:2674" className="box-border w-[106px] h-[28px] absolute left-[0px] top-[37px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-left whitespace-nowrap text-[#000000]">Coming Soon</p>
