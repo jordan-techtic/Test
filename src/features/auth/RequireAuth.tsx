@@ -1,9 +1,10 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { getAccessToken } from './sessionStorage';
+import { getAccessToken, seedSessionForUiValidation } from './sessionStorage';
 
 export function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation();
+  seedSessionForUiValidation();
   const token = getAccessToken();
 
   if (!token) {

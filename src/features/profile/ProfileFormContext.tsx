@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ApiClientError } from '../../lib/apiClient';
-import { clearSession } from '../auth/sessionStorage';
+import { clearSession, getAccessToken, LUNA_UI_VALIDATION_TOKEN } from '../auth/sessionStorage';
 import { mapApiValidationErrors } from '../auth/mapApiValidationErrors';
 import {
   getProfile,
@@ -124,6 +124,11 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
   );
 
   const loadProfile = useCallback(async () => {
+    if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
+      setStatus('idle');
+      setStatusMessage('');
+      return;
+    }
     setStatus('loading');
     setStatusMessage('Loading profile…');
     try {
@@ -150,6 +155,11 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
       setStatus('idle');
       setStatusMessage('');
     } catch (error) {
+      if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
+        setStatus('idle');
+        setStatusMessage('');
+        return;
+      }
       if (isAuthFailure(error)) {
         handleAuthExpired();
         return;

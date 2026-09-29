@@ -24,7 +24,18 @@ export function FigmaScreenPage() {
         <FigmaSection_n_3158_23028 />
         <div className="pointer-events-none absolute inset-0 z-[8]">
           <div data-figma-node="3158:22263" className="box-border w-[240px] h-[840px] overflow-hidden absolute left-[0px] top-[0px]">
-            <img data-figma-node="3047:21447" src="/assets/figma/3047-21447.png" alt="Dashboard/Nav/Vertical" className="box-border w-[240px] h-[840px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+            <img
+              src="/assets/figma/3158-22263.png"
+              alt="Dashboard/Nav/Vertical"
+              className="box-border w-full h-[840px] max-w-none object-cover object-top"
+            />
+            <img
+              data-figma-node="I3158-22263;1237:1966"
+              src="/assets/figma/1237-1966.png"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none box-border absolute left-[0px] top-[0px] h-[840px] w-[240px] max-w-none object-cover object-top"
+            />
           </div>
         </div>
         </FigmaFrameShell>
