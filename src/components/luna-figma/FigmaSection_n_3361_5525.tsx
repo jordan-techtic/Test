@@ -3,7 +3,7 @@ export function FigmaSection_n_3361_5525() {
   return (
     <section data-figma-node="3361:5525" className="absolute box-border left-[788px] top-[0px] w-[652px] h-[1049px] block z-[9]">
       <div data-figma-node="3361:5526" className="box-border w-[652px] h-[2224px] absolute left-[0px] top-[0px]">
-        <div data-figma-node="3361:5527" className="box-border w-[652px] h-[2224px] absolute left-[0px] top-[0px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[#ffffff]"></div>
+        <div data-figma-node="3361:5527" className="pointer-events-none box-border w-[652px] h-[2224px] absolute left-[0px] top-[0px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[#ffffff]"></div>
         <div data-figma-node="3361:5528" className="box-border w-[24px] h-[24px] absolute left-[588px] top-[40px]"></div>
         <div data-figma-node="3361:5531" className="box-border w-[572px] h-[636px] absolute left-[40px] top-[848px]">
           <div data-figma-node="3361:5532" className="box-border w-[572px] h-[636px] absolute left-[0px] top-[0px] rounded-[16px] bg-[#0b0b0b]"></div>
