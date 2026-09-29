@@ -1,27 +1,42 @@
 /** luna-spec-codegen: owned-layout */
-import "./figma-fonts.css";
-import { FigmaFrameShell } from "./FigmaFrameShell";
-import { FigmaSection_n_1091_246 } from "./FigmaSection_n_1091_246";
-import { FigmaSection_n_1018_1101 } from "./FigmaSection_n_1018_1101";
-import { FigmaSection_n_1018_1105 } from "./FigmaSection_n_1018_1105";
-import { FigmaSection_n_1018_1107 } from "./FigmaSection_n_1018_1107";
-import { FigmaSection_n_1018_1103 } from "./FigmaSection_n_1018_1103";
+import './figma-fonts.css';
+import { OffCanvasLiveRegion } from '../OffCanvasLiveRegion';
+import { ProfileFormProvider, useProfileForm } from '../../features/profile/ProfileFormContext';
+import { FigmaFrameShell } from './FigmaFrameShell';
+import { FigmaSection_n_3158_22054 } from './FigmaSection_n_3158_22054';
+import { FigmaSection_n_3158_22259 } from './FigmaSection_n_3158_22259';
+import { FigmaSection_n_3158_22262 } from './FigmaSection_n_3158_22262';
+import { FigmaSection_n_3158_22607 } from './FigmaSection_n_3158_22607';
+import { FigmaSection_n_3158_22895 } from './FigmaSection_n_3158_22895';
+import { FigmaSection_n_3158_23028 } from './FigmaSection_n_3158_23028';
+
+function ProfileLiveRegion() {
+  const { statusMessage } = useProfileForm();
+  return <OffCanvasLiveRegion message={statusMessage} />;
+}
 
 export function FigmaScreenPage() {
   return (
-    <div
-      className="relative flex w-full flex-col"
-      style={{ backgroundColor: "#0b0b0b" }}
-    >
-      <main className="relative z-10 flex w-full flex-col">
-        <FigmaFrameShell frameWidth={1440} frameHeight={850} nodeId="frame">
-        <FigmaSection_n_1091_246 />
-        <FigmaSection_n_1018_1101 />
-        <FigmaSection_n_1018_1105 />
-        <FigmaSection_n_1018_1107 />
-        <FigmaSection_n_1018_1103 />
-        </FigmaFrameShell>
-      </main>
-    </div>
+    <ProfileFormProvider>
+      <ProfileLiveRegion />
+      <div
+        className="relative flex w-full flex-col"
+        style={{ backgroundColor: '#0b0b0b' }}
+      >
+        <main className="relative z-10 flex w-full flex-col">
+          <FigmaFrameShell frameWidth={1440} frameHeight={1218} nodeId="frame">
+            <FigmaSection_n_3158_22054 />
+            <FigmaSection_n_3158_22259 />
+            <FigmaSection_n_3158_22262 />
+            <FigmaSection_n_3158_22607 />
+            <FigmaSection_n_3158_22895 />
+            <FigmaSection_n_3158_23028 />
+            <div className="pointer-events-none absolute inset-0 z-[8]">
+              <img data-figma-node="3158:22263" src="/assets/figma/3158-22263.png" alt="Dashboard/Nav/Vertical" className="box-border w-[240px] h-[840px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+            </div>
+          </FigmaFrameShell>
+        </main>
+      </div>
+    </ProfileFormProvider>
   );
 }
