@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_1007_1733() {
   return (
-    <section data-figma-node="1007:1733" id="contact" className="absolute box-border left-[100px] top-[106px] w-[461px] h-[639px] pr-[149px] pl-[148px] flex flex-col items-center gap-[30px] z-[4]">
+    <section data-figma-node="1007:1733" id="contact" className="absolute box-border left-[100px] top-[106px] mt-[8px] w-[461px] h-[639px] pr-[149px] pl-[148px] flex flex-col items-center gap-[30px] z-[4]">
       <img data-figma-node="1007:1734" src="/assets/figma/1007-1734.png" alt="Group 33654336" className="box-border w-[164px] h-[55px] max-w-none object-cover object-top" />
       <div data-figma-node="1915:2241" className="box-border w-[461px] h-[130px] relative gap-2.5">
         <p data-figma-node="1007:1847" className="box-border w-[461px] h-[100px] absolute left-[0px] top-[0px] font-eb-garamond text-[38px] font-[500] leading-[50px] text-center text-[#ffffff]">Great Marketing Made Easier. Specifically for Agents</p>

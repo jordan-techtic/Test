@@ -8,9 +8,16 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ApiClientError } from '../../lib/apiClient';
+import { clearSession } from '../auth/sessionStorage';
 import { mapApiValidationErrors } from '../auth/mapApiValidationErrors';
-import { getProfile, putProfile } from './profileApi';
+import {
+  getProfile,
+  normalizeProfilePayload,
+  ProfileNotAuthenticatedError,
+  putProfile,
+} from './profileApi';
 import type { ProfileData, ProfileUpdateRequest } from './profileTypes';
 import { validateProfileFields } from './validateProfile';
 
@@ -67,7 +74,15 @@ function applyProfileData(data: ProfileData, apply: (values: ProfileUpdateReques
   });
 }
 
+function isAuthFailure(error: unknown): boolean {
+  return (
+    error instanceof ApiClientError &&
+    (error.status === 401 || error.status === 403)
+  );
+}
+
 export function ProfileFormProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const snapshotRef = useRef<ProfileUpdateRequest | null>(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -83,6 +98,13 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ProfileFormStatus>('loading');
   const [statusMessage, setStatusMessage] = useState('');
   const [passwordChangeOpen, setPasswordChangeOpen] = useState(false);
+
+  const handleAuthExpired = useCallback(() => {
+    clearSession();
+    setStatus('error');
+    setStatusMessage('Sign in to view your profile.');
+    navigate('/sign-in', { replace: true });
+  }, [navigate]);
 
   const currentPayload = useCallback(
     (): ProfileUpdateRequest => ({
@@ -106,7 +128,11 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
     setStatusMessage('Loading profile…');
     try {
       const response = await getProfile();
-      const data = response.data ?? {};
+      if (response === null) {
+        handleAuthExpired();
+        return;
+      }
+      const data = normalizeProfilePayload(response);
       applyProfileData(data, (values) => {
         setFirstName(values.first_name);
         setLastName(values.last_name);
@@ -124,14 +150,14 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
       setStatus('idle');
       setStatusMessage('');
     } catch (error) {
-      setStatus('error');
-      if (error instanceof ApiClientError && error.status === 401) {
-        setStatusMessage('Sign in to view your profile.');
-      } else {
-        setStatusMessage('Could not load profile.');
+      if (isAuthFailure(error)) {
+        handleAuthExpired();
+        return;
       }
+      setStatus('error');
+      setStatusMessage('Could not load profile.');
     }
-  }, []);
+  }, [handleAuthExpired]);
 
   useEffect(() => {
     void loadProfile();
@@ -155,11 +181,15 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
       setStatusMessage('Profile saved.');
       setStatus('idle');
     } catch (error) {
+      if (isAuthFailure(error)) {
+        handleAuthExpired();
+        return;
+      }
       const mapped = mapApiValidationErrors(error);
       setStatus('error');
       setStatusMessage(mapped._form ?? 'Could not save profile.');
     }
-  }, [currentPayload]);
+  }, [currentPayload, handleAuthExpired]);
 
   const cancel = useCallback(() => {
     if (snapshotRef.current) {
@@ -200,16 +230,21 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
       setStatusMessage('Password updated.');
       setStatus('idle');
     } catch (error) {
+      if (isAuthFailure(error)) {
+        handleAuthExpired();
+        return;
+      }
+      if (error instanceof ProfileNotAuthenticatedError) {
+        handleAuthExpired();
+        return;
+      }
       const mapped = mapApiValidationErrors(error);
       setStatus('error');
       setStatusMessage(mapped._form ?? 'Could not update password.');
     }
-  }, [currentPayload]);
+  }, [currentPayload, handleAuthExpired]);
 
-  const displayName = useMemo(() => {
-    const composed = `${firstName} ${lastName}`.trim();
-    return composed.length > 0 ? composed : 'Joseph Stanley';
-  }, [firstName, lastName]);
+  const displayName = useMemo(() => `${firstName} ${lastName}`.trim(), [firstName, lastName]);
 
   const value: ProfileFormContextValue = {
     displayName,

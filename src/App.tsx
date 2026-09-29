@@ -1,6 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ContentLibraryProvider } from "./contentLibraryContext";
+import { OffCanvasLiveRegion } from "./components/OffCanvasLiveRegion";
 import { FigmaScreenPage } from "./components/luna-figma/FigmaScreenPage";
+import { RequireAuth } from "./features/auth/RequireAuth";
+import { ProfileFormProvider, useProfileForm } from "./features/profile/ProfileFormContext";
 import { ForgotPasswordFigmaScreenPage } from "./components/luna-figma/ForgotPasswordFigmaScreenPage";
 import { SignInFigmaScreenPage } from "./components/luna-figma/SignInFigmaScreenPage";
 import { SignUpFigmaScreenPage } from "./components/luna-figma/SignUpFigmaScreenPage";
@@ -40,11 +43,33 @@ function ContentLibraryFigmaScreenPage() {
   );
 }
 
+function ProfileLiveRegion() {
+  const { statusMessage } = useProfileForm();
+  return <OffCanvasLiveRegion message={statusMessage} />;
+}
+
+function ProfileFigmaScreenPage() {
+  return (
+    <ProfileFormProvider>
+      <ProfileLiveRegion />
+      <FigmaScreenPage />
+    </ProfileFormProvider>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<FigmaScreenPage />} />
+        <Route path="/" element={<Navigate to="/content-library" replace />} />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <ProfileFigmaScreenPage />
+            </RequireAuth>
+          }
+        />
         <Route path="/sign-up" element={<SignUpFigmaScreenPage />} />
         <Route path="/sign-in" element={<SignInFigmaScreenPage />} />
         <Route path="/login" element={<Navigate to="/sign-in" replace />} />
