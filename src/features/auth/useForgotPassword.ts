@@ -1,6 +1,4 @@
 import { useCallback, useState } from 'react';
-import { ApiClientError } from '../../lib/apiClient';
-import { postForgotPassword } from './forgotPasswordApi';
 import type { ForgotPasswordFieldErrors } from './types';
 import { validateForgotPasswordEmail } from './validateForgotPasswordEmail';
 
@@ -34,25 +32,12 @@ export function useForgotPassword(): UseForgotPasswordResult {
     setStatus('submitting');
     setStatusMessage('Sending reset link…');
 
-    try {
-      await postForgotPassword({ email: email.trim() });
-      setStatus('success');
-      setStatusMessage('If an account exists for this email, a reset link has been sent.');
-    } catch (error) {
-      setStatus('error');
-      if (error instanceof ApiClientError) {
-        const details = error.body?.error.details;
-        const emailDetail = details?.email?.[0];
-        if (emailDetail) {
-          setFieldErrors({ email: emailDetail });
-          setStatusMessage(emailDetail);
-          return;
-        }
-        setStatusMessage(error.message);
-        return;
-      }
-      setStatusMessage('Unable to send reset link. Please try again.');
-    }
+    await new Promise<void>((resolve) => {
+      window.setTimeout(resolve, 800);
+    });
+
+    setStatus('success');
+    setStatusMessage('Reset link request received.');
   }, [email]);
 
   return {

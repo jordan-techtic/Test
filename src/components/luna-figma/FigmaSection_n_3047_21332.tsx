@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_3047_21332() {
   return (
-    <section data-figma-node="3047:21332" className="absolute box-border left-[272px] top-[173px] w-[1128px] h-[40px] flex flex-row items-center justify-between gap-[624px] z-[5]">
+    <section data-figma-node="3047:21332" className="absolute box-border left-[272px] top-[173px] mt-[19px] w-[1128px] h-[40px] flex flex-row items-center justify-between gap-[624px] z-[5]">
       <p data-figma-node="3047:21333" className="box-border w-[70px] h-[22px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[22px] text-left whitespace-nowrap text-[#ffffff]">452 Results</p>
       <div data-figma-node="3047:21334" className="box-border w-[673px] h-[40px] relative gap-5">
         <div data-figma-node="3047:21335" className="box-border w-[185px] h-[40px] absolute left-[316px] top-[0px] gap-5">

@@ -1,7 +1,7 @@
 /** luna-spec-codegen: owned-layout */
 export function FigmaSection_n_1018_1107() {
   return (
-    <section data-figma-node="1018:1107" className="absolute box-border left-[100px] top-[232px] w-[461px] h-[385px] pr-[114px] pl-[114px] flex flex-col items-center gap-[30px] z-[3]">
+    <section data-figma-node="1018:1107" className="absolute box-border left-[100px] top-[232px] mt-[20px] w-[461px] h-[385px] pr-[114px] pl-[114px] flex flex-col items-center gap-[30px] z-[3]">
       <img data-figma-node="1018:1108" src="/assets/figma/1018-1108.png" alt="Group 33654336" className="box-border w-[164px] h-[55px] max-w-none object-cover object-top" />
       <p data-figma-node="1018:1221" className="box-border w-[232px] h-[50px] font-eb-garamond text-[38px] font-[500] leading-[50px] text-center whitespace-nowrap text-[#ffffff]">Reset Password</p>
       <p data-figma-node="1018:1279" className="box-border w-[461px] h-[56px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-center text-[#ffffff]">Enter the email address you used to create your account and we’ll send you a link to reset your password.</p>

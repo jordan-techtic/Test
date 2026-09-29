@@ -1,7 +1,5 @@
-/** Request payload for POST /api/auth/forgot-password (email field from Figma form). */
-export interface ForgotPasswordRequest {
-  email: string;
-}
+/** Reserved until backend publishes OpenAPI request body for POST /api/auth/forgot-password. */
+export type ForgotPasswordRequest = Record<string, never>;
 
 /** Backend success body is not yet defined in live OpenAPI. */
 export type ForgotPasswordResponse = Record<string, never>;
