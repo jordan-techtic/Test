@@ -16,50 +16,68 @@ export interface ContentLibraryItem {
   tags: string[];
 }
 
-const CONTENT_LIBRARY_MOCK: ContentLibraryItem[] = [
+export interface ContentLibraryCardSlot {
+  title: string;
+  category: string;
+}
+
+/** One entry per compiled card in FigmaSection_n_3047_21253 (grid order). */
+export const CONTENT_LIBRARY_CARD_SLOTS: ContentLibraryCardSlot[] = [
   {
-    id: '1',
     title: '[City Name win], hallelujah | Justin Bieber Trend',
-    description: 'Instagram Reel trend template',
     category: 'Instagram Reel',
-    tags: ['reel', 'trend', 'music'],
   },
   {
-    id: '2',
-    title: 'Hates to see me coming',
-    description: 'Stories and feed variants',
-    category: 'Social Media',
-    tags: ['stories', 'feed'],
+    title: '[City Name win], hallelujah | Justin Bieber Trend',
+    category: 'Instagram Reel',
   },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
   {
-    id: '3',
     title: 'Things I consider perfect | [City Name] edition',
-    description: 'Instagram Feed carousel',
-    category: 'Social Media',
-    tags: ['feed', 'local'],
+    category: 'Instagram Feed',
   },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
   {
-    id: '4',
-    title: 'Market update — Austin Q2',
-    description: 'Professional market snapshot',
-    category: 'Social Media',
-    tags: ['market', 'update'],
-  },
-  {
-    id: '5',
-    title: 'Neighborhood spotlight template',
-    description: 'Highlight local areas',
+    title: '[City Name win], hallelujah | Justin Bieber Trend',
     category: 'Instagram Reel',
-    tags: ['neighborhood', 'reel'],
   },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
   {
-    id: '6',
-    title: 'Open house promo reel',
-    description: 'Drive attendance with short video',
+    title: '[City Name win], hallelujah | Justin Bieber Trend',
     category: 'Instagram Reel',
-    tags: ['open house', 'reel'],
   },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
+  {
+    title: '[City Name win], hallelujah | Justin Bieber Trend',
+    category: 'Instagram Reel',
+  },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
+  { title: 'Hates to see me coming', category: 'Instagram Feed' },
+  {
+    title: '[City Name win], hallelujah | Justin Bieber Trend',
+    category: 'Instagram Reel',
+  },
+  { title: 'Hates to see me coming', category: 'Instagram Stories' },
 ];
+
+function slotToItem(slot: ContentLibraryCardSlot, index: number): ContentLibraryItem {
+  return {
+    id: String(index + 1),
+    title: slot.title,
+    description: slot.title,
+    category: slot.category,
+    tags: [slot.category.toLowerCase()],
+  };
+}
+
+const CONTENT_LIBRARY_MOCK: ContentLibraryItem[] =
+  CONTENT_LIBRARY_CARD_SLOTS.map(slotToItem);
 
 const PAGE_SIZE = 6;
 
@@ -93,12 +111,55 @@ function matchesQuery(item: ContentLibraryItem, query: string): boolean {
   return haystack.includes(q);
 }
 
+function matchingCardIndices(searchQuery: string): number[] {
+  return CONTENT_LIBRARY_CARD_SLOTS.map((slot, index) =>
+    matchesQuery(slotToItem(slot, index), searchQuery) ? index : -1,
+  ).filter((index) => index >= 0);
+}
+
+export function cardMatchesLibraryFilter(
+  cardTitle: string,
+  cardCategory: string,
+  ctx: ContentLibraryContextValue,
+  cardIndex: number,
+): boolean {
+  const slot = CONTENT_LIBRARY_CARD_SLOTS[cardIndex];
+  const title = slot?.title ?? cardTitle;
+  const category = slot?.category ?? cardCategory;
+  const item = slot
+    ? slotToItem(slot, cardIndex)
+    : {
+        id: String(cardIndex),
+        title,
+        description: title,
+        category,
+        tags: [category.toLowerCase()],
+      };
+
+  if (!matchesQuery(item, ctx.searchQuery)) {
+    return false;
+  }
+
+  const matching = matchingCardIndices(ctx.searchQuery);
+  if (matching.length === 0) {
+    return false;
+  }
+
+  const visible = matching.slice(0, ctx.visibleCount);
+  return visible.includes(cardIndex);
+}
+
 export function ContentLibraryProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filteredItems = useMemo(
     () => CONTENT_LIBRARY_MOCK.filter((item) => matchesQuery(item, searchQuery)),
+    [searchQuery],
+  );
+
+  const matchingCount = useMemo(
+    () => matchingCardIndices(searchQuery).length,
     [searchQuery],
   );
 
@@ -115,12 +176,12 @@ export function ContentLibraryProvider({ children }: { children: ReactNode }) {
       searchQuery,
       setSearchQuery,
       filteredItems,
-      visibleCount: Math.min(visibleCount, filteredItems.length),
+      visibleCount,
       loadMore,
-      hasMore: visibleCount < filteredItems.length,
-      isEmpty: filteredItems.length === 0,
+      hasMore: visibleCount < matchingCount,
+      isEmpty: matchingCount === 0,
     }),
-    [searchQuery, filteredItems, visibleCount, loadMore],
+    [searchQuery, filteredItems, visibleCount, loadMore, matchingCount],
   );
 
   return (
@@ -136,23 +197,4 @@ export function useContentLibrary(): ContentLibraryContextValue {
     throw new Error('useContentLibrary must be used within ContentLibraryProvider');
   }
   return ctx;
-}
-
-export function cardMatchesLibraryFilter(
-  cardTitle: string,
-  cardCategory: string,
-  ctx: ContentLibraryContextValue,
-  cardIndex: number,
-): boolean {
-  if (ctx.isEmpty) {
-    return false;
-  }
-  const q = ctx.searchQuery.trim().toLowerCase();
-  if (q) {
-    const haystack = `${cardTitle} ${cardCategory}`.toLowerCase();
-    if (!haystack.includes(q)) {
-      return false;
-    }
-  }
-  return cardIndex < ctx.visibleCount;
 }

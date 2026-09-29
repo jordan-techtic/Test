@@ -21,20 +21,16 @@ export function FigmaSection_n_3047_21248() {
       </section>
       <section
         data-figma-node="3047:21447"
-        className="absolute box-border left-[0px] top-[0px] w-[240px] h-[840px] z-[10] overflow-hidden"
+        className="absolute box-border left-[0px] top-[0px] w-[240px] h-[840px] z-[10]"
       >
-        <img
-          data-figma-node="I3047:21447;1237:1966"
-          src="/assets/figma/I3047-21447-1237-1966.png"
-          alt=""
-          className="box-border w-[240px] h-[80px] max-w-none object-cover object-top absolute left-[0px] top-[0px]"
-        />
-        <img
-          data-figma-node="I3047:21447;1237:2080"
-          src="/assets/figma/I3047-21447-1237-2080.png"
-          alt="Dashboard/Nav/Vertical"
-          className="box-border w-[240px] h-[760px] max-w-none object-cover object-top absolute left-[0px] top-[80px]"
-        />
+        <div className="box-border w-full overflow-hidden h-[840px]">
+          <img
+            data-figma-node="3047:21447"
+            src="/assets/figma/3047-21447.png"
+            alt="Dashboard/Nav/Vertical"
+            className="box-border w-full h-[840px] max-w-none object-cover object-top"
+          />
+        </div>
       </section>
     </>
   );

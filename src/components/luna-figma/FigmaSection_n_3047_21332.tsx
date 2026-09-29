@@ -2,8 +2,7 @@
 import { useContentLibrary } from '../../contentLibraryContext';
 
 export function FigmaSection_n_3047_21332() {
-  const { filteredItems, isEmpty } = useContentLibrary();
-  const resultsLabel = isEmpty ? '0 Results' : `${filteredItems.length} Results`;
+  const { isEmpty } = useContentLibrary();
 
   return (
     <section
@@ -14,7 +13,7 @@ export function FigmaSection_n_3047_21332() {
         data-figma-node="3047:21333"
         className="box-border w-[70px] h-[22px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[22px] text-left whitespace-nowrap text-[#ffffff]"
       >
-        {resultsLabel}
+        452 Results
       </p>
       <div
         data-figma-node="3047:21334"
@@ -22,7 +21,7 @@ export function FigmaSection_n_3047_21332() {
       >
         <div
           data-figma-node="3047:21335"
-          className="box-border w-[185px] h-[40px] absolute left-[316px] top-[0px] gap-5"
+          className="box-border w-[185px] h-[40px] whitespace-nowrap absolute left-[316px] top-[0px] gap-5"
         >
           <div
             data-figma-node="3047:21336"
@@ -52,18 +51,18 @@ export function FigmaSection_n_3047_21332() {
         </div>
         <div
           data-figma-node="3047:21390"
-          className="box-border w-[152px] h-[40px] absolute left-[521px] top-[0px] gap-5"
+          className="box-border w-[152px] h-[40px] whitespace-nowrap absolute left-[521px] top-[0px] gap-5"
         >
           <div
             data-figma-node="3047:21391"
-            className="box-border w-[152px] h-[38px] absolute left-[0px] top-[1px] rounded-[6px] gap-2.5 pr-[16px] pl-[16px]"
+            className="box-border w-[152px] h-[38px] whitespace-nowrap absolute left-[0px] top-[1px] rounded-[6px] gap-2.5 pr-[16px] pl-[16px]"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
           >
             <p
               data-figma-node="3047:21395"
               className="box-border w-[90px] h-[22px] absolute left-[16px] top-[8px] font-almarai text-[14px] font-[400] leading-[22px] text-left whitespace-nowrap text-[#ffffff]"
             >
-              Sort by newest
+              Sort by{'\u00a0'}newest
             </p>
             <div
               data-figma-node="3047:21396"
