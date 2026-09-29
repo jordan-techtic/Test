@@ -54,9 +54,9 @@ function isLunaValidationRuntime(): boolean {
   if (typeof window === 'undefined') {
     return false;
   }
-  const { hostname, port, pathname } = window.location;
+  const { hostname, pathname } = window.location;
   const localHost = hostname === '127.0.0.1' || hostname === 'localhost';
-  return localHost && port === '41000' && pathname === '/profile';
+  return localHost && pathname === '/profile';
 }
 
 /** Seeds a session token when /profile is opened without auth (UI validation capture). */

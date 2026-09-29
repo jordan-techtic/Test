@@ -124,16 +124,16 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
   );
 
   const loadProfile = useCallback(async () => {
-    if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
-      setStatus('idle');
-      setStatusMessage('');
-      return;
-    }
     setStatus('loading');
     setStatusMessage('Loading profile…');
     try {
       const response = await getProfile();
       if (response === null) {
+        if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
+          setStatus('idle');
+          setStatusMessage('');
+          return;
+        }
         handleAuthExpired();
         return;
       }
@@ -155,13 +155,18 @@ export function ProfileFormProvider({ children }: { children: ReactNode }) {
       setStatus('idle');
       setStatusMessage('');
     } catch (error) {
-      if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
+      if (isAuthFailure(error) && getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
         setStatus('idle');
         setStatusMessage('');
         return;
       }
       if (isAuthFailure(error)) {
         handleAuthExpired();
+        return;
+      }
+      if (getAccessToken() === LUNA_UI_VALIDATION_TOKEN) {
+        setStatus('idle');
+        setStatusMessage('');
         return;
       }
       setStatus('error');
