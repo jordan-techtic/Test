@@ -1,4 +1,5 @@
 /** luna-spec-codegen: owned-layout */
+import "./figma-fonts.css";
 import { FigmaFrameShell } from "./FigmaFrameShell";
 import { FigmaSection_n_1091_246 } from "./FigmaSection_n_1091_246";
 import { FigmaSection_n_1018_1101 } from "./FigmaSection_n_1018_1101";
