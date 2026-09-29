@@ -41,7 +41,7 @@ export function FigmaSection_n_1007_1733() {
             aria-label="Checkbox"
             checked={termsAccepted}
             onChange={(event) => setTermsAccepted(event.target.checked)}
-            className="box-border mt-[2px] h-[17px] w-[17px] shrink-0 rounded-[4.17px] border border-[rgba(200,164,126,0.05)] bg-transparent accent-[#c8a47e]"
+            className="box-border mt-[2px] h-[17px] w-[17px] shrink-0 appearance-none rounded-[4px] border border-[rgba(200,164,126,0.05)] bg-transparent accent-[#c8a47e] [-webkit-appearance:none]"
           />
           <label
             htmlFor={SIGNUP_TERMS_ID}
