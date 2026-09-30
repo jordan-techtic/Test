@@ -13,6 +13,10 @@ function normalizePathname(): string {
  */
 export default function App() {
   const path = normalizePathname();
+  if (path === "dashboard") {
+    window.location.replace("/updated-dashboard");
+    return null;
+  }
   if (PROTECTED_PATHS.has(path) && !getStoredAccessToken()) {
     window.location.replace("/sign-in");
     return null;
