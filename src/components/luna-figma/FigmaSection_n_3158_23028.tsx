@@ -2,7 +2,7 @@
 import { figmaFieldProps } from "./useFigmaScreenData";
 export function FigmaSection_n_3158_23028() {
   return (
-    <section data-figma-node="3158:23028" id="contact" className="absolute box-border left-[272px] top-[359px] w-[1128px] h-[819px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex flex-col items-start gap-6 z-[1] mt-[30px]">
+    <section id="contact" className="absolute box-border left-[272px] top-[359px] w-[1128px] h-[819px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex flex-col items-start gap-6 z-[1] mt-[30px]">
       <div className="relative box-border w-[1128px] h-[819px] flex flex-col items-start gap-6" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
         <div data-figma-node="3158:23030" className="box-border w-[1080px] h-[301px] relative gap-6">
           <div data-figma-node="3158:23032" className="box-border w-[157px] h-[31px] absolute left-[0px] top-[0px] gap-3.5">
@@ -17,7 +17,7 @@ export function FigmaSection_n_3158_23028() {
               <input data-figma-node="3158:23183" name="email" data-figma-field="email" {...figmaFieldProps("email")} type="email" placeholder="Email" aria-label="Email" className="box-border w-[532px] h-[52px] absolute left-[0px] top-[0px] rounded-full shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-[rgba(200,164,126,0.05)] border-[1px] pr-[20px] pl-[20px] text-[#ffffff] placeholder:text-[#ffffff]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}} />
               <input data-figma-node="3158:23194" name="mobile-number" data-figma-field="mobile-number" {...figmaFieldProps("mobile-number")} type="number" placeholder="Mobile Number" aria-label="Mobile Number" className="box-border w-[532px] h-[52px] absolute left-[548px] top-[0px] rounded-full shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-[rgba(200,164,126,0.05)] border-[1px] pr-[20px] pl-[20px] text-[#ffffff] placeholder:text-[#ffffff]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}} />
             </div>
-            <textarea data-figma-node="3158:23493" name="bio" data-figma-field="bio" {...figmaFieldProps("bio")} placeholder="Bio" aria-label="Bio" className="box-border w-[1080px] h-[110px] absolute left-[0px] top-[136px] rounded-[10px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-[rgba(200,164,126,0.05)] border-[1px] pt-[20px] pr-[20px] pl-[20px] text-[#ffffff] placeholder:text-[#ffffff]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}} />
+            <textarea data-figma-node="3158:23028" name="bio" data-figma-field="bio" {...figmaFieldProps("bio")} placeholder="Bio" aria-label="Bio" className="box-border w-[1080px] h-[110px] absolute left-[0px] top-[136px] rounded-[10px] shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-[rgba(200,164,126,0.05)] border-[1px] pt-[20px] pr-[20px] pl-[20px] text-[#ffffff] placeholder:text-[#ffffff]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}} />
           </div>
         </div>
         <div data-figma-node="3158:23687" className="box-border w-[1080px] h-[107px] relative gap-6">

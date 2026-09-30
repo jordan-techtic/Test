@@ -72,7 +72,7 @@ export function FigmaScreen_n_4543_3496() {
                   <div data-figma-node="I4543:3853;1237:2144" className="box-border w-[208px] h-[44px] absolute left-[0px] top-[20px] rounded-[8px] pr-[8px] pl-[12px]">
                     <div data-figma-node="I4543:3853;1237:2145" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] pr-[16px]">
                       <div data-figma-node="I4543:3853;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden rounded-[4px]">
-                        <FigmaComponent_HeroiconsOutlineMegaphone_887ab813 data-figma-node="I4543:3853;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px]" />
+                        <FigmaComponent_HeroiconsOutlineMegaphone_887ab813 data-figma-node="I4543:3853;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px] overflow-hidden rounded-[4px]" />
                       </div>
                     </div>
                     <div data-figma-node="I4543:3853;1237:2152" className="box-border w-[148px] h-[18px] absolute left-[52px] top-[13px] pr-[16px]">
