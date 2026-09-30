@@ -1,5 +1,5 @@
 /** luna-spec-codegen: owned-layout */
-import { figmaActionProps, figmaFieldProps } from "./useFigmaScreenData";
+import { figmaFieldProps } from "./useFigmaScreenData";
 export function FigmaSection_n_3158_23028() {
   return (
     <section data-figma-node="3158:23028" id="contact" className="absolute box-border left-[272px] top-[359px] w-[1128px] h-[819px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex flex-col items-start gap-6 z-[1]">
@@ -43,8 +43,8 @@ export function FigmaSection_n_3158_23028() {
         <div data-figma-node="3526:5330" className="box-border w-[1080px] h-[48px] relative gap-6">
           <input data-figma-node="3158:23669" name="change-password" data-figma-field="change-password" {...figmaFieldProps("change-password")} type="password" placeholder="Change Password" aria-label="Change Password" className="box-border w-[167px] h-[48px] absolute left-[0px] top-[0px] rounded-full shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none border-0 pt-[10px] pr-[20px] pb-[10px] pl-[20px] text-[#ffffff] placeholder:text-[#ffffff]" style={{backgroundColor: "rgba(255, 255, 255, 0.3)"}} />
           <div data-figma-node="3526:5325" className="box-border w-[181px] h-[48px] absolute left-[899px] top-[0px] gap-4">
-            <button data-figma-node="3526:5326" type="button" className="box-border w-[76px] h-[48px] absolute left-[0px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}} {...figmaActionProps("profile-save")}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Save</span></button>
-            <button data-figma-node="3526:5328" type="button" className="box-border w-[89px] h-[48px] absolute left-[92px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{backgroundColor: "rgba(255, 255, 255, 0.3)"}} {...figmaActionProps("profile-cancel")}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Cancel</span></button>
+            <button data-figma-node="3526:5326" type="button" className="box-border w-[76px] h-[48px] absolute left-[0px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Save</span></button>
+            <button data-figma-node="3526:5328" type="button" className="box-border w-[89px] h-[48px] absolute left-[92px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{backgroundColor: "rgba(255, 255, 255, 0.3)"}}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Cancel</span></button>
           </div>
         </div>
       </div>

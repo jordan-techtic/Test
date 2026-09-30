@@ -1,38 +1,21 @@
 /** luna-spec-codegen: owned-layout */
-import {
-  figmaActionProps,
-  figmaFieldProps,
-  useFigmaDisplayText,
-  useFigmaSuggestionOptions,
-} from "./useFigmaScreenData";
+import { figmaFieldProps } from "./useFigmaScreenData";
 import { FigmaComponent_HeroiconsOutlineMegaphone_887ab813 } from "./FigmaComponent_HeroiconsOutlineMegaphone_887ab813";
 export function FigmaSection_n_4543_3497() {
-  const greeting = useFigmaDisplayText("4543:3510", "Good morning, Ava.");
-  const announcementTitle = useFigmaDisplayText(
-    "I4559:6049;4559:5864",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-  );
-  const announcementBody = useFigmaDisplayText(
-    "I4559:6049;4559:5865",
-    "Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.",
-  );
-  const downloads = useFigmaDisplayText("4543:3593", "312");
-  const contentGenerated = useFigmaDisplayText("4543:3603", "247");
-  const suggestionOptions = useFigmaSuggestionOptions();
   return (
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] block z-[0]">
       <div data-figma-node="4543:3498" className="box-border w-[1190px] h-[1866px] absolute left-[0px] top-[10px] rounded-[16px_16px_0px_0px] shadow-[-3px_0px_25px_0px_rgba(0,0,0,0.1)] gap-[30px] pt-[30px] pr-[30px] pb-[30px] pl-[30px]" style={{backgroundImage: "linear-gradient(180.0deg, rgba(200, 164, 126, 0.2) 0.0%, rgba(98, 80, 62, 0) 100.0%)"}}></div>
       <div data-figma-node="4543:3507" className="box-border w-[1130px] h-[2548px] absolute left-[30px] top-[40px] gap-[30px]">
         <img data-figma-node="4644:5834" src="/assets/figma/4644-5834.png" alt="Group 33654450" className="box-border w-[1113px] h-[522px] absolute left-[8px] top-[66px] max-w-none object-cover object-top" />
-        <h1 data-figma-node="4543:3510" className="box-border w-[345px] h-[55px] absolute left-[0px] top-[0px] font-eb-garamond text-[42px] font-[500] leading-[55px] text-left whitespace-nowrap text-[#ffffff]">{greeting}</h1>
+        <h1 data-figma-node="4543:3510" className="box-border w-[345px] h-[55px] absolute left-[0px] top-[0px] font-eb-garamond text-[42px] font-[500] leading-[55px] text-left whitespace-nowrap text-[#ffffff]">Good morning, Ava.</h1>
         <div data-figma-node="4543:3508" className="box-border w-[1130px] h-[487px] absolute left-[0px] top-[85px] rounded-[16px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(26, 26, 25, 0.5)"}}>
           <div data-figma-node="4559:6049" data-figma-component="4559:6044" className="box-border w-[1106px] h-[439px] absolute left-[24px] top-[24px] gap-5">
             <div data-figma-node="I4559:6049;4559:6109" className="box-border w-[1106px] h-[415px] absolute left-[0px] top-[0px]">
               <div data-figma-node="I4559:6049;4559:5861" className="box-border w-[710px] h-[415px] absolute left-[0px] top-[0px] gap-5">
                 <div data-figma-node="I4559:6049;4559:5862" className="box-border w-[710px] h-[302px] absolute left-[0px] top-[57px] gap-8">
                   <div data-figma-node="I4559:6049;4559:5863" className="box-border w-[710px] h-[148px] absolute left-[0px] top-[0px] gap-4">
-                    <p data-figma-node="I4559:6049;4559:5864" className="box-border w-[710px] h-[60px] absolute left-[0px] top-[0px] font-eb-garamond text-[24px] font-[500] leading-[30px] text-left text-[#c8a47e]">{announcementTitle}</p>
-                    <p data-figma-node="I4559:6049;4559:5865" className="box-border w-[710px] h-[72px] absolute left-[0px] top-[76px] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[24px] text-left text-[#ffffff]">{announcementBody}</p>
+                    <p data-figma-node="I4559:6049;4559:5864" className="box-border w-[710px] h-[60px] absolute left-[0px] top-[0px] font-eb-garamond text-[24px] font-[500] leading-[30px] text-left text-[#c8a47e]">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <p data-figma-node="I4559:6049;4559:5865" className="box-border w-[710px] h-[72px] absolute left-[0px] top-[76px] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[24px] text-left text-[#ffffff]">Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.</p>
                   </div>
                   <div data-figma-node="I4559:6049;4559:5866" className="box-border w-[710px] h-[122px] absolute left-[0px] top-[180px] gap-6">
                     <div data-figma-node="I4559:6049;4559:5867" className="box-border w-[710px] h-[50px] absolute left-[0px] top-[0px] rounded-[10px] gap-2.5 pr-[20px] pl-[20px]" style={{backgroundColor: "rgba(255, 255, 255, 0.1)"}}>
@@ -49,7 +32,7 @@ export function FigmaSection_n_4543_3497() {
                 <div data-figma-node="I4559:6049;4559:5904" className="box-border w-[326px] h-[24px] absolute left-[0px] top-[0px] gap-2.5 pr-[24px]">
                   <p data-figma-node="I4559:6049;4559:5905" className="box-border w-[114px] h-[24px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[24px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
                   <div data-figma-node="I4559:6049;4559:5906" className="box-border w-[50px] h-[20px] absolute left-[252px] top-[2px] gap-2.5">
-                    <div data-figma-node="I4559:6049;4559:5907" role="button" tabIndex={0} aria-label="Dismiss notification" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] opacity-[0.6]" {...figmaActionProps("dashboard-delete-notification")}></div>
+                    <div data-figma-node="I4559:6049;4559:5907" className="box-border w-[20px] h-[20px] absolute left-[0px] top-[0px] opacity-[0.6]"></div>
                     <div data-figma-node="I4559:6049;4559:5910" className="box-border w-[20px] h-[20px] absolute left-[30px] top-[0px] opacity-[0.6]"></div>
                   </div>
                 </div>
@@ -83,7 +66,7 @@ export function FigmaSection_n_4543_3497() {
               </div>
               <div data-figma-node="4543:3590" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]"></div>
             </div>
-            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{downloads}</p>
+            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">312</p>
           </div>
           <div data-figma-node="4543:3594" className="box-border w-[555px] h-[133px] absolute left-[575px] top-[0px] rounded-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3595" className="box-border w-[507px] h-[28px] absolute left-[24px] top-[24px] gap-[75px]">
@@ -99,7 +82,7 @@ export function FigmaSection_n_4543_3497() {
               </div>
               <div data-figma-node="4543:3600" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]"></div>
             </div>
-            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{contentGenerated}</p>
+            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">247</p>
           </div>
         </div>
         <div data-figma-node="4543:3604" className="box-border w-[1130px] h-[258px] absolute left-[0px] top-[1302px] gap-5">
@@ -119,7 +102,7 @@ export function FigmaSection_n_4543_3497() {
                   </div>
                   <p data-figma-node="4543:3626" className="box-border w-[1010px] h-[18px] absolute left-[0px] top-[41px] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Agentwise Ultimate Mind is your strategic advisor and business partner customized for your business - not just a generic chatbot.</p>
                 </div>
-                <div className="box-border w-[168px] h-[48px] absolute left-[0px] top-[79px] rounded-full" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><select data-figma-node="4543:3627" name="start-a-session" data-figma-field="start-a-session" {...figmaFieldProps("start-a-session")} aria-label="Start a session" className="absolute inset-0 h-full w-full appearance-none bg-transparent shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none cursor-pointer text-[#ffffff] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap pt-[10px] pr-[20px] pb-[10px] pl-[20px]"><option value="">Start a session</option>{suggestionOptions.map((option) => (<option key={option.value} value={option.value}>{option.label}</option>))}</select><div className="pointer-events-none absolute inset-0"><div data-figma-node="4543:3629" className="box-border w-[20px] h-[20px] absolute left-[128px] top-[14px] opacity-[0.98]"></div></div></div>
+                <div className="box-border w-[168px] h-[48px] absolute left-[0px] top-[79px] rounded-full" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><select data-figma-node="4543:3627" name="start-a-session" data-figma-field="start-a-session" {...figmaFieldProps("start-a-session")} aria-label="Start a session" className="absolute inset-0 h-full w-full appearance-none bg-transparent shadow-none ring-0 focus-visible:ring-0 focus-visible:outline-none cursor-pointer text-[#ffffff] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap pt-[10px] pr-[20px] pb-[10px] pl-[20px]"><option value="">Start a session</option></select><div className="pointer-events-none absolute inset-0"><div data-figma-node="4543:3629" className="box-border w-[20px] h-[20px] absolute left-[128px] top-[14px] opacity-[0.98]"></div></div></div>
               </div>
             </div>
           </div>

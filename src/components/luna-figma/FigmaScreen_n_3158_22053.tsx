@@ -1,23 +1,16 @@
 /** luna-spec-codegen: owned-layout */
 import "./figma-fonts.css";
 import { FigmaFrameShell } from "./FigmaFrameShell";
-import { figmaActionProps, useFigmaDisplayText, useFigmaScreenData } from "./useFigmaScreenData";
+import { useFigmaScreenData } from "./useFigmaScreenData";
 import { FigmaSection_n_3158_22054 } from "./FigmaSection_n_3158_22054";
 import { FigmaSection_n_3158_22259 } from "./FigmaSection_n_3158_22259";
 import { FigmaSection_n_3158_22262 } from "./FigmaSection_n_3158_22262";
 import { FigmaSection_n_3158_22607 } from "./FigmaSection_n_3158_22607";
 import { FigmaSection_n_3158_22895 } from "./FigmaSection_n_3158_22895";
 import { FigmaSection_n_3158_23028 } from "./FigmaSection_n_3158_23028";
-import { FigmaComponent_Property1Linear_df3182a2 } from "./FigmaComponent_Property1Linear_df3182a2";
-import { FigmaComponent_Property1Linear_620d53ed } from "./FigmaComponent_Property1Linear_620d53ed";
-import { FigmaComponent_Property1Linear_724f25e8 } from "./FigmaComponent_Property1Linear_724f25e8";
-import { FigmaComponent_HeroiconsOutlineMegaphone_887ab813 } from "./FigmaComponent_HeroiconsOutlineMegaphone_887ab813";
-import { FigmaComponent_Property1Linear_ae6502a4 } from "./FigmaComponent_Property1Linear_ae6502a4";
-import { FigmaComponent_Property1Linear_d47dea33 } from "./FigmaComponent_Property1Linear_d47dea33";
 
 export function FigmaScreen_n_3158_22053() {
   const screenData = useFigmaScreenData();
-  const sidebarProfileName = useFigmaDisplayText("I3158:22263;1226:1920", "Joseph Stanley");
   return (
     <div
       data-figma-bound={screenData.bound}
@@ -129,11 +122,11 @@ export function FigmaScreen_n_3158_22053() {
                       </div>
                     </div>
                   </div>
-                  <p data-figma-node="I3158:22263;1226:1920" className="box-border w-[94px] h-[16px] absolute left-[38px] top-[7px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">{sidebarProfileName}</p>
+                  <p data-figma-node="I3158:22263;1226:1920" className="box-border w-[94px] h-[16px] absolute left-[38px] top-[7px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Joseph Stanley</p>
                 </div>
                 <div data-figma-node="I3158:22263;1226:1598" className="box-border w-[20px] h-[20px] absolute left-[190px] top-[5px] opacity-[0.6]"></div>
               </div>
-              <div data-figma-node="I3158:22263;1237:2201" role="button" tabIndex={0} aria-label="Logout" className="box-border w-[192px] h-[44px] absolute left-[16px] top-[692px] rounded-[8px] pr-[8px] pl-[12px]" {...figmaActionProps("auth-logout")}>
+              <div data-figma-node="I3158:22263;1237:2201" className="box-border w-[192px] h-[44px] absolute left-[16px] top-[692px] rounded-[8px] pr-[8px] pl-[12px]">
                 <div data-figma-node="I3158:22263;1237:2202" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] pr-[16px]">
                   <FigmaComponent_Property1Linear_d47dea33 data-figma-node="I3158:22263;1660:2168" data-figma-component="1028:2903" className="absolute left-[0px] top-[0px]" />
                 </div>

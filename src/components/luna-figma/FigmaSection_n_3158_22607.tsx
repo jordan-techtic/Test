@@ -1,8 +1,5 @@
 /** luna-spec-codegen: owned-layout */
-import { useFigmaDisplayText } from "./useFigmaScreenData";
-
 export function FigmaSection_n_3158_22607() {
-  const profileName = useFigmaDisplayText("3158:22834", "Joseph Stanley");
   return (
     <section data-figma-node="3158:22607" className="absolute box-border left-[272px] top-[159px] w-[295px] h-[92px] flex flex-row items-center gap-5 z-[6]">
       <div data-figma-node="3158:22608" className="box-border w-[92px] h-[92px] rounded-[60px] relative">
@@ -12,7 +9,7 @@ export function FigmaSection_n_3158_22607() {
       </div>
       <div data-figma-node="3158:22833" className="box-border w-[183px] h-[70px] relative gap-2.5">
         <div data-figma-node="3158:22961" className="box-border w-[183px] h-[42px] absolute left-[0px] top-[0px] gap-2.5">
-          <p data-figma-node="3158:22834" className="box-border w-[183px] h-[42px] absolute left-[0px] top-[0px] font-eb-garamond text-[32px] font-[500] leading-[42px] text-left whitespace-nowrap text-[#ffffff]">{profileName}</p>
+          <p data-figma-node="3158:22834" className="box-border w-[183px] h-[42px] absolute left-[0px] top-[0px] font-eb-garamond text-[32px] font-[500] leading-[42px] text-left whitespace-nowrap text-[#ffffff]">Joseph Stanley</p>
         </div>
         <p data-figma-node="3158:22835" className="box-border w-[183px] h-[18px] absolute left-[0px] top-[52px] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Member since March 2024</p>
       </div>
