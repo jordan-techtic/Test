@@ -1,25 +1,9 @@
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 
-/** Compiled frame shell opacity fix. */
-function lunaFigmaCompileFixesPlugin(): Plugin {
-  return {
-    name: 'luna-figma-compile-fixes',
-    transform(code, id) {
-      if (id.includes('FigmaFrameShell.tsx')) {
-        return code.replace(
-          'className={`relative box-border overflow-hidden ${className}`}',
-          'className={`relative box-border overflow-hidden opacity-[0.98] ${className}`}',
-        );
-      }
-      return undefined;
-    },
-  };
-}
-
 export default defineConfig({
-  plugins: [react(), tailwindcss(), lunaFigmaCompileFixesPlugin()],
+  plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
