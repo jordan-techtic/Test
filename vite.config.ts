@@ -14,6 +14,14 @@ type SpecBitmap = {
 
 const DASHBOARD_NAV_VERTICAL_BITMAPS: SpecBitmap[] = [
   {
+    node: 'I4543-3853;1237-1966',
+    src: '/assets/figma/I4543-3853-1237-1966.png',
+    left: 'left-[0px]',
+    top: 'top-[0px]',
+    w: 'w-[240px]',
+    h: 'h-[80px]',
+  },
+  {
     node: 'I4543-3853-1237-1966',
     src: '/assets/figma/I4543-3853-1237-1966.png',
     left: 'left-[0px]',
@@ -51,9 +59,63 @@ const FRAME_2147227751_BITMAPS: SpecBitmap[] = [
     h: 'h-[381px]',
     clip: true,
   },
+  {
+    node: '4543-4218',
+    src: '/assets/figma/4543-4218.png',
+    left: 'left-[16px]',
+    top: 'top-[50px]',
+    w: 'w-[218px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
+  {
+    node: '4543-4239',
+    src: '/assets/figma/4543-4239.png',
+    left: 'left-[16px]',
+    top: 'top-[50px]',
+    w: 'w-[218px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
+  {
+    node: '4543-4246',
+    src: '/assets/figma/4543-4246.png',
+    left: 'left-[16px]',
+    top: 'top-[50px]',
+    w: 'w-[218px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
+  {
+    node: '4543-3666',
+    src: '/assets/figma/4543-3666.png',
+    left: 'left-[16px]',
+    top: 'top-[50px]',
+    w: 'w-[218px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
 ];
 
 const HERO_ANNOUNCEMENTS_BITMAPS: SpecBitmap[] = [
+  {
+    node: 'I4559-6049;4559-5914',
+    src: '/assets/figma/I4559-6049-4559-5914.png',
+    left: 'left-[0px]',
+    top: 'top-[0px]',
+    w: 'w-[219px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
+  {
+    node: 'I4559-6049;4559-5915',
+    src: '/assets/figma/I4559-6049-4559-5915.png',
+    left: 'left-[235px]',
+    top: 'top-[0px]',
+    w: 'w-[219px]',
+    h: 'h-[381px]',
+    clip: true,
+  },
   {
     node: 'I4559-6049-4559-5914',
     src: '/assets/figma/I4559-6049-4559-5914.png',
@@ -75,6 +137,14 @@ const HERO_ANNOUNCEMENTS_BITMAPS: SpecBitmap[] = [
 ];
 
 const PROFILE_NAV_BITMAPS: SpecBitmap[] = [
+  {
+    node: 'I3158-22263;1237-1966',
+    src: '/assets/figma/I3158-22263-1237-1966.png',
+    left: 'left-[0px]',
+    top: 'top-[0px]',
+    w: 'w-[240px]',
+    h: 'h-[80px]',
+  },
   {
     node: 'I3158-22263-1237-1966',
     src: '/assets/figma/I3158-22263-1237-1966.png',
