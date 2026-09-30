@@ -1,36 +1,11 @@
 /** luna-spec-codegen: owned-layout */
-import { figmaActionProps, useFigmaScreenData } from "./useFigmaScreenData";
-
-const ANNOUNCEMENT_FALLBACKS = [
-  { title: "Spring listing template pack is live", date: "2h ago" },
-  { title: "AI Assistant now writes Reels scripts", date: "Yesterday" },
-  { title: "Live workshop · Building a luxury brand", date: "May 18" },
-  { title: "Just Listed — Modern Minimal reels scripts", date: "May 10" },
-  { title: "Spring listing template pack is live", date: "Apr 28" },
-] as const;
-
-const SUGGESTION_FALLBACKS = [
-  "What should I post this week to stand out in Austin?",
-  "Draft a positioning statement for my luxury buyer niche.",
-  "How do I price the new Travis Heights listing?",
-  "Build me a 30-day content plan around relocations.",
-] as const;
-
 export function FigmaSection_n_4543_3497() {
-  const {
-    greetingText = "Good morning, Ava.",
-    downloadsText = "312",
-    contentGeneratedText = "247",
-    announcements = [],
-    suggestionTexts = [],
-  } = useFigmaScreenData();
-
   return (
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] block z-[0]">
       <div data-figma-node="4543:3498" className="box-border w-[1190px] h-[1866px] absolute left-[0px] top-[10px] rounded-[16px_16px_0px_0px] shadow-[-3px_0px_25px_0px_rgba(0,0,0,0.1)] gap-[30px] pt-[30px] pr-[30px] pb-[30px] pl-[30px]" style={{backgroundImage: "linear-gradient(180.0deg, rgba(200, 164, 126, 0.2) 0.0%, rgba(98, 80, 62, 0) 100.0%)"}}></div>
       <div data-figma-node="4543:3507" className="box-border w-[1130px] h-[2548px] absolute left-[30px] top-[40px] gap-[30px]">
         <img data-figma-node="4644:5834" src="/assets/figma/4644-5834.png" alt="Group 33654450" className="box-border w-[1113px] h-[522px] absolute left-[8px] top-[66px] max-w-none object-cover object-top" />
-        <h1 data-figma-node="4543:3510" className="box-border w-[345px] h-[55px] absolute left-[0px] top-[0px] font-eb-garamond text-[42px] font-[500] leading-[55px] text-left whitespace-nowrap text-[#ffffff]">{greetingText}</h1>
+        <h1 data-figma-node="4543:3510" className="box-border w-[345px] h-[55px] absolute left-[0px] top-[0px] font-eb-garamond text-[42px] font-[500] leading-[55px] text-left whitespace-nowrap text-[#ffffff]">Good morning, Ava.</h1>
         <div data-figma-node="4543:3508" className="box-border w-[1130px] h-[487px] absolute left-[0px] top-[85px] rounded-[16px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(26, 26, 25, 0.5)"}}>
           <div data-figma-node="4559:6049" className="box-border w-[1106px] h-[439px] absolute left-[24px] top-[24px] gap-5">
             <div data-figma-node="I4559:6049;4559:6109" className="box-border w-[1106px] h-[415px] absolute left-[0px] top-[0px]">
@@ -45,8 +20,8 @@ export function FigmaSection_n_4543_3497() {
                       <p data-figma-node="I4559:6049;4559:5870" className="box-border w-[533px] h-[16px] absolute left-[48px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Generate captions, listing descriptions, email blasts, and Reels scripts in your brand voice.</p>
                     </div>
                     <div data-figma-node="I4559:6049;4559:5871" className="box-border w-[396px] h-[48px] absolute left-[0px] top-[74px] gap-2.5">
-                      <a data-figma-node="I4559:6049;4559:5872" href="#contact" className="box-border w-[169px] h-[48px] absolute left-[0px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}} {...figmaActionProps("post-notification")}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Plan My Week</span></a>
-                      <a data-figma-node="I4559:6049;4559:5888" href="#contact" className="box-border w-[217px] h-[48px] absolute left-[179px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(255, 255, 255, 0.3)"}} {...figmaActionProps("put-subscription")}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">My Content Calendar</span></a>
+                      <a data-figma-node="I4559:6049;4559:5872" href="#contact" className="box-border w-[169px] h-[48px] absolute left-[0px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Plan My Week</span></a>
+                      <a data-figma-node="I4559:6049;4559:5888" href="#contact" className="box-border w-[217px] h-[48px] absolute left-[179px] top-[0px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(255, 255, 255, 0.3)"}}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">My Content Calendar</span></a>
                     </div>
                   </div>
                 </div>
@@ -89,7 +64,7 @@ export function FigmaSection_n_4543_3497() {
               </div>
               <div data-figma-node="4543:3590" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]"></div>
             </div>
-            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{downloadsText}</p>
+            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">312</p>
           </div>
           <div data-figma-node="4543:3594" className="box-border w-[555px] h-[133px] absolute left-[575px] top-[0px] rounded-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3595" className="box-border w-[507px] h-[28px] absolute left-[24px] top-[24px] gap-[75px]">
@@ -105,7 +80,7 @@ export function FigmaSection_n_4543_3497() {
               </div>
               <div data-figma-node="4543:3600" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]"></div>
             </div>
-            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{contentGeneratedText}</p>
+            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] absolute left-[24px] top-[62px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">247</p>
           </div>
         </div>
         <div data-figma-node="4543:3604" className="box-border w-[1130px] h-[258px] absolute left-[0px] top-[1302px] gap-5">
@@ -125,7 +100,7 @@ export function FigmaSection_n_4543_3497() {
                   </div>
                   <p data-figma-node="4543:3626" className="box-border w-[1010px] h-[18px] absolute left-[0px] top-[41px] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Agentwise Ultimate Mind is your strategic advisor and business partner customized for your business - not just a generic chatbot.</p>
                 </div>
-                <a data-figma-node="4543:3627" href="#contact" className="box-border w-[168px] h-[48px] absolute left-[0px] top-[79px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}} {...figmaActionProps("ultimate-mind-session")}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Start a session</span></a>
+                <a data-figma-node="4543:3627" href="#contact" className="box-border w-[168px] h-[48px] absolute left-[0px] top-[79px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><span className="font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Start a session</span></a>
               </div>
             </div>
           </div>
@@ -146,7 +121,7 @@ export function FigmaSection_n_4543_3497() {
                   <div data-figma-node="4543:3811" className="box-border w-[467px] h-[24px] absolute left-[20px] top-[40px] gap-2.5">
                     <div data-figma-node="4543:3812" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                     <div data-figma-node="4543:3818" className="box-border w-[433px] h-[18px] absolute left-[34px] top-[3px] gap-2.5">
-                      <p data-figma-node="4543:3819" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{suggestionTexts[0] || SUGGESTION_FALLBACKS[0]}</p>
+                      <p data-figma-node="4543:3819" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">What should I post this week to stand out in Austin?</p>
                     </div>
                   </div>
                 </div>
@@ -155,7 +130,7 @@ export function FigmaSection_n_4543_3497() {
                   <div data-figma-node="4543:3822" className="box-border w-[467px] h-[24px] absolute left-[20px] top-[40px] gap-2.5">
                     <div data-figma-node="4543:3823" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                     <div data-figma-node="4543:3829" className="box-border w-[433px] h-[18px] absolute left-[34px] top-[3px] gap-2.5">
-                      <p data-figma-node="4543:3830" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{suggestionTexts[1] || SUGGESTION_FALLBACKS[1]}</p>
+                      <p data-figma-node="4543:3830" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Draft a positioning statement for my luxury buyer niche.</p>
                     </div>
                   </div>
                 </div>
@@ -164,7 +139,7 @@ export function FigmaSection_n_4543_3497() {
                   <div data-figma-node="4543:3833" className="box-border w-[467px] h-[24px] absolute left-[20px] top-[40px] gap-2.5">
                     <div data-figma-node="4543:3834" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                     <div data-figma-node="4543:3840" className="box-border w-[433px] h-[18px] absolute left-[34px] top-[3px] gap-2.5">
-                      <p data-figma-node="4543:3841" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{suggestionTexts[2] || SUGGESTION_FALLBACKS[2]}</p>
+                      <p data-figma-node="4543:3841" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">How do I price the new Travis Heights listing?</p>
                     </div>
                   </div>
                 </div>
@@ -173,7 +148,7 @@ export function FigmaSection_n_4543_3497() {
                   <div data-figma-node="4543:3844" className="box-border w-[467px] h-[24px] absolute left-[20px] top-[40px] gap-2.5">
                     <div data-figma-node="4543:3845" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                     <div data-figma-node="4543:3851" className="box-border w-[433px] h-[18px] absolute left-[34px] top-[3px] gap-2.5">
-                      <p data-figma-node="4543:3852" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{suggestionTexts[3] || SUGGESTION_FALLBACKS[3]}</p>
+                      <p data-figma-node="4543:3852" className="box-border w-[433px] h-[18px] absolute left-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Build me a 30-day content plan around relocations.</p>
                     </div>
                   </div>
                 </div>
@@ -189,28 +164,28 @@ export function FigmaSection_n_4543_3497() {
                   </div>
                   <p data-figma-node="4543:3708" className="box-border w-[171px] h-[34px] absolute left-[34px] top-[0px] font-eb-garamond text-[26px] font-[500] leading-[34px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
                 </div>
-                <p data-figma-node="4543:3709" className="box-border w-[53px] h-[18px] absolute left-[454px] top-[8px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]" {...figmaActionProps("delete-notification")}>View all</p>
+                <p data-figma-node="4543:3709" className="box-border w-[53px] h-[18px] absolute left-[454px] top-[8px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]">View all</p>
               </div>
               <div data-figma-node="4543:3710" className="box-border w-[507px] h-[290px] absolute left-[24px] top-[78px] gap-2.5">
                 <div data-figma-node="4543:3711" className="box-border w-[507px] h-[50px] absolute left-[0px] top-[0px] rounded-[10px] pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3712" className="box-border w-[230px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{announcements[0]?.title || ANNOUNCEMENT_FALLBACKS[0].title}</p>
-                  <p data-figma-node="4543:3713" className="box-border w-[237px] h-[16px] absolute left-[250px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">{announcements[0]?.dateLabel || ANNOUNCEMENT_FALLBACKS[0].date}</p>
+                  <p data-figma-node="4543:3712" className="box-border w-[230px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Spring listing template pack is live</p>
+                  <p data-figma-node="4543:3713" className="box-border w-[237px] h-[16px] absolute left-[250px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">2h ago</p>
                 </div>
                 <div data-figma-node="4543:3728" className="box-border w-[507px] h-[50px] absolute left-[0px] top-[60px] rounded-[10px] pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3729" className="box-border w-[251px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{announcements[1]?.title || ANNOUNCEMENT_FALLBACKS[1].title}</p>
-                  <p data-figma-node="4543:3730" className="box-border w-[216px] h-[16px] absolute left-[271px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">{announcements[1]?.dateLabel || ANNOUNCEMENT_FALLBACKS[1].date}</p>
+                  <p data-figma-node="4543:3729" className="box-border w-[251px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">AI Assistant now writes Reels scripts</p>
+                  <p data-figma-node="4543:3730" className="box-border w-[216px] h-[16px] absolute left-[271px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">Yesterday</p>
                 </div>
                 <div data-figma-node="4543:3745" className="box-border w-[507px] h-[50px] absolute left-[0px] top-[120px] rounded-[10px] pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3746" className="box-border w-[265px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{announcements[2]?.title || ANNOUNCEMENT_FALLBACKS[2].title}</p>
-                  <p data-figma-node="4543:3747" className="box-border w-[202px] h-[16px] absolute left-[285px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">{announcements[2]?.dateLabel || ANNOUNCEMENT_FALLBACKS[2].date}</p>
+                  <p data-figma-node="4543:3746" className="box-border w-[265px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Live workshop · Building a luxury brand</p>
+                  <p data-figma-node="4543:3747" className="box-border w-[202px] h-[16px] absolute left-[285px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">May 18</p>
                 </div>
                 <div data-figma-node="4543:3762" className="box-border w-[507px] h-[50px] absolute left-[0px] top-[180px] rounded-[10px] pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3763" className="box-border w-[292px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{announcements[3]?.title || ANNOUNCEMENT_FALLBACKS[3].title}</p>
-                  <p data-figma-node="4543:3764" className="box-border w-[175px] h-[16px] absolute left-[312px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">{announcements[3]?.dateLabel || ANNOUNCEMENT_FALLBACKS[3].date}</p>
+                  <p data-figma-node="4543:3763" className="box-border w-[292px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Just Listed — Modern Minimal reels scripts</p>
+                  <p data-figma-node="4543:3764" className="box-border w-[175px] h-[16px] absolute left-[312px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">May 10</p>
                 </div>
                 <div data-figma-node="4543:3779" className="box-border w-[507px] h-[50px] absolute left-[0px] top-[240px] rounded-[10px] pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3780" className="box-border w-[234px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{announcements[4]?.title || ANNOUNCEMENT_FALLBACKS[4].title}</p>
-                  <p data-figma-node="4543:3781" className="box-border w-[234px] h-[16px] absolute left-[254px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">{announcements[4]?.dateLabel || ANNOUNCEMENT_FALLBACKS[4].date}</p>
+                  <p data-figma-node="4543:3780" className="box-border w-[234px] h-[18px] absolute left-[20px] top-[16px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Spring listing template pack is live</p>
+                  <p data-figma-node="4543:3781" className="box-border w-[234px] h-[16px] absolute left-[254px] top-[17px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">Apr 28</p>
                 </div>
               </div>
             </div>

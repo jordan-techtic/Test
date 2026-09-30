@@ -1,9 +1,6 @@
 /** luna-spec-codegen: owned-layout */
-import { figmaActionProps, figmaFieldProps } from "./useFigmaScreenData";
-
+import { figmaFieldProps } from "./useFigmaScreenData";
 export function FigmaSection_n_998_1033() {
-  const submitProps = figmaActionProps("submit");
-
   return (
     <section data-figma-node="998:1033" id="contact" className="absolute box-border left-[100px] top-[152px] w-[461px] h-[545px] pr-[4px] pl-[4px] flex flex-col items-center gap-[30px] z-[3]">
       <img data-figma-node="1001:1195" src="/assets/figma/1001-1195.png" alt="Group 33654336" className="box-border w-[164px] h-[55px] max-w-none object-cover object-top" />
@@ -32,7 +29,7 @@ export function FigmaSection_n_998_1033() {
           <p data-figma-node="1001:1034" className="box-border w-[139px] h-[16px] absolute left-[322px] top-[2px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">Forgot your password?</p>
         </div>
       </div>
-      <a data-figma-node="998:1335" href="/login" className="box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}} {...submitProps}><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Sign In</span></a>
+      <a data-figma-node="998:1335" href="/login" className="box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Sign In</span></a>
       <div data-figma-node="1001:1035" className="box-border w-[461px] h-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.2)"}} />
       <p data-figma-node="1001:1036" className="box-border w-[461px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-center whitespace-nowrap text-[#ffffff]"><span className="text-[#ffffff]">Not a member yet? </span><span className="text-[#c8a47e]">Sign up here.</span></p>
     </section>
