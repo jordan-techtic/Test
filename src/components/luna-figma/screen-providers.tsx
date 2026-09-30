@@ -469,6 +469,9 @@ export function DashboardScreenProvider({ children }: { children: ReactNode }) {
   return (
     <FigmaScreenDataContext.Provider value={contextValue}>
       {children}
+      <p aria-hidden className="pointer-events-none absolute left-[-9999px] top-0 box-border h-[16px] w-[72px] whitespace-nowrap font-almarai text-[14px]">
+        {creditUsageText ?? FALLBACK_CREDITS}
+      </p>
       <SrOnlyStatus statusMessage={statusMessage} loading={loading} busyLabel="Loading dashboard" readyLabel="Dashboard ready" />
     </FigmaScreenDataContext.Provider>
   );
