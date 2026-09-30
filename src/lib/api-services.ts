@@ -1,4 +1,4 @@
-import { apiFetch } from './api-client';
+import { ApiClientError, apiFetch } from './api-client';
 import { unwrapListPayload } from './list-unwrap';
 import type {
   ApiSuccessEnvelope,
@@ -64,11 +64,22 @@ export async function getUltimateMindSuggestionTexts(): Promise<string[]> {
 }
 
 export async function postSignup(body: SignupRequest): Promise<SignupResponse> {
-  return apiFetch<SignupResponse>('/api/signup', {
-    method: 'POST',
-    auth: false,
-    body: JSON.stringify(body),
-  });
+  try {
+    return await apiFetch<SignupResponse>('/api/signup', {
+      method: 'POST',
+      auth: false,
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) {
+      return apiFetch<SignupResponse>('/api/auth/signup', {
+        method: 'POST',
+        auth: false,
+        body: JSON.stringify(body),
+      });
+    }
+    throw err;
+  }
 }
 
 export async function postAuthLogin(body: LoginRequest): Promise<LoginResponse> {

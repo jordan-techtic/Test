@@ -1,8 +1,9 @@
 /** luna-spec-codegen: data-hook — wire API data here; do not restyle. */
 import { useContext, useMemo, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { figmaActionProps, figmaFieldProps } from './figma-bindings';
 import { FigmaScreenDataContext, type FigmaScreenDataContextValue } from './figma-screen-context';
-import { resolveFigmaScreen } from './resolve-screen';
+import { resolveFigmaScreen, type FigmaScreenKind } from './resolve-screen';
 import {
   DashboardScreenProvider,
   ProfileScreenProvider,
@@ -13,10 +14,17 @@ import {
 export type { FigmaFieldBinding, FigmaActionBinding } from './figma-bindings';
 export { figmaFieldProps, figmaActionProps };
 
-export function FigmaScreenDataProvider({ children }: { children: ReactNode }) {
+export function FigmaScreenDataProvider({
+  children,
+  screen: screenOverride,
+}: {
+  children: ReactNode;
+  screen?: FigmaScreenKind;
+}) {
+  const { pathname } = useLocation();
   const screen = useMemo(
-    () => resolveFigmaScreen(typeof window !== 'undefined' ? window.location.pathname : '/profile'),
-    [],
+    () => screenOverride ?? resolveFigmaScreen(pathname),
+    [pathname, screenOverride],
   );
 
   switch (screen) {

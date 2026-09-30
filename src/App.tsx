@@ -1,5 +1,73 @@
-import { FigmaScreenPage } from "./components/luna-figma/FigmaScreenPage";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
+import { FigmaScreenDataProvider } from './components/luna-figma/useFigmaScreenData';
+import { getStoredAccessToken } from './lib/api-client';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false, refetchOnWindowFocus: false },
+  },
+});
+
+function RequireAuth({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  if (!getStoredAccessToken()) {
+    return <Navigate to="/sign-in" replace state={{ from: location.pathname }} />;
+  }
+  return children;
+}
+
+function RootRedirect() {
+  if (getStoredAccessToken()) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Navigate to="/sign-in" replace />;
+}
+
+function FigmaRoute({ screen }: { screen: 'dashboard' | 'sign-in' | 'sign-up' | 'profile' }) {
+  return (
+    <FigmaScreenDataProvider>
+      <FigmaScreenPage screen={screen} />
+    </FigmaScreenDataProvider>
+  );
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<RootRedirect />} />
+      <Route path="/sign-in" element={<FigmaRoute screen="sign-in" />} />
+      <Route path="/login" element={<Navigate to="/sign-in" replace />} />
+      <Route path="/sign-up" element={<FigmaRoute screen="sign-up" />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RequireAuth>
+            <FigmaRoute screen="dashboard" />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <RequireAuth>
+            <FigmaRoute screen="profile" />
+          </RequireAuth>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
 
 export default function App() {
-  return <FigmaScreenPage />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 }

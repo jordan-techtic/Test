@@ -1,4 +1,84 @@
 /** luna-spec-codegen: owned-layout */
+type ContentCardProps = {
+  frameNode: string;
+  dayNode: string;
+  day: string;
+  typeNode: string;
+  typeLabel: string;
+  imgNode: string;
+  imgSrc: string;
+  captionNode: string;
+  caption: string;
+  lineNode: string;
+  tagNode: string;
+  tag: string;
+  left: string;
+};
+
+function ContentWeekCard({
+  frameNode,
+  dayNode,
+  day,
+  typeNode,
+  typeLabel,
+  imgNode,
+  imgSrc,
+  captionNode,
+  caption,
+  lineNode,
+  tagNode,
+  tag,
+  left,
+}: ContentCardProps) {
+  return (
+    <div
+      data-figma-node={frameNode}
+      className={`box-border absolute ${left} top-[0px] h-[447px] w-[250px] rounded-[10px] border-[1px] border-[rgba(200,164,126,0.05)] pt-[16px] pr-[16px] pb-[16px] pl-[16px]`}
+      style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+    >
+      <div data-figma-node={`${frameNode}-hdr`} className="box-border relative h-[83px] w-[218px]">
+        <p
+          data-figma-node={dayNode}
+          className="absolute left-[0px] top-[17px] font-almarai text-[14px] font-[400] leading-[16px] text-[#828282]"
+        >
+          {day}
+        </p>
+        <p
+          data-figma-node={typeNode}
+          className="absolute right-[0px] top-[0px] font-almarai text-[16px] font-[400] leading-[18px] text-[#c8a47e]"
+        >
+          {typeLabel}
+        </p>
+      </div>
+      <div className="absolute left-[16px] top-[50px] box-border h-[381px] w-[218px]">
+        <img
+          data-figma-node={imgNode}
+          src={imgSrc}
+          alt=""
+          className="absolute left-[0px] top-[0px] h-[381px] w-[218px] max-w-none rounded-[10px] object-cover object-top"
+        />
+        <div
+          className="absolute left-[3px] top-[357px] box-border w-[211px] rounded-[4px] bg-[#ffffff] pt-[8px] pr-[7px] pb-[8px] pl-[7px]"
+        >
+          <p
+            data-figma-node={captionNode}
+            className="font-almarai text-[14px] font-[400] leading-[16px] text-[#000000]"
+          >
+            {caption}
+          </p>
+          <div
+            data-figma-node={lineNode}
+            className="box-border mt-[8px] h-[1px] w-[197px] bg-[#e0e0e0]"
+          />
+          <p data-figma-node={tagNode} className="mt-[8px] font-almarai text-[10px] font-[300] leading-[11px] text-[#000000]">
+            {tag}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function FigmaSection_n_4543_3497() {
   return (
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] block z-[0]">
@@ -48,7 +128,99 @@ export function FigmaSection_n_4543_3497() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:4207" className="box-border w-[1130px] h-[506px] absolute left-[0px] top-[602px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:4207" className="absolute left-[0px] top-[602px] box-border h-[506px] w-[1130px] overflow-hidden">
+          <div data-figma-node="4543:4208" className="relative box-border h-[83px] w-[1130px]">
+            <p
+              data-figma-node="4543:4210"
+              className="absolute left-[0px] top-[0px] font-eb-garamond text-[30px] font-[500] leading-[39px] text-[#ffffff]"
+            >
+              New Content This Week
+            </p>
+            <p
+              data-figma-node="4543:4212"
+              className="absolute left-[1058px] top-[10px] font-almarai text-[16px] font-[400] leading-[18px] text-[#ffffff]"
+            >
+              Browse all
+            </p>
+          </div>
+          <div data-figma-node="4543:4213" className="absolute left-[0px] top-[59px] box-border h-[447px] w-[1130px]">
+            <ContentWeekCard
+              frameNode="4543:4214"
+              dayNode="4543:4216"
+              day="Mon"
+              typeNode="4543:4217"
+              typeLabel="Reels"
+              imgNode="4543:4218"
+              imgSrc="/assets/figma/4543-4218.png"
+              captionNode="I4543:4219;741:2399"
+              caption="Hates to see me coming"
+              lineNode="I4543:4219;741:2400"
+              tagNode="I4543:4219;741:2402"
+              tag="Instagram Feed"
+              left="left-[0px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:4278"
+              dayNode="4543:4280"
+              day="Tue"
+              typeNode="4543:4281"
+              typeLabel="Reels"
+              imgNode="4543:4283"
+              imgSrc="/assets/figma/4543-4283.png"
+              captionNode="I4543:4284;741:2399"
+              caption="[City Name win], hallelujah | Justin Bieber Trend"
+              lineNode="I4543:4284;741:2400"
+              tagNode="I4543:4284;741:2402"
+              tag="Instagram Reel"
+              left="left-[260px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:4220"
+              dayNode="4543:4222"
+              day="Wed"
+              typeNode="4543:4223"
+              typeLabel="Story"
+              imgNode="4543:4232"
+              imgSrc="/assets/figma/4543-4232.png"
+              captionNode="I4543:4233;741:2399"
+              caption="Story"
+              lineNode="I4543:4233;741:2400"
+              tagNode="I4543:4233;741:2402"
+              tag="Instagram Stories"
+              left="left-[521px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:4234"
+              dayNode="4543:4236"
+              day="Thu"
+              typeNode="4543:4237"
+              typeLabel="Email"
+              imgNode="4543:4239"
+              imgSrc="/assets/figma/4543-4239.png"
+              captionNode="I4543:4240;741:2399"
+              caption="Things I consider perfect | [City Name] edition"
+              lineNode="I4543:4240;741:2400"
+              tagNode="I4543:4240;741:2402"
+              tag="Instagram Feed"
+              left="left-[781px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:4241"
+              dayNode="4543:4243"
+              day="Fri"
+              typeNode="4543:4244"
+              typeLabel="Story"
+              imgNode="4543:4246"
+              imgSrc="/assets/figma/4543-4246.png"
+              captionNode="I4543:4247;741:2399"
+              caption="Story"
+              lineNode="I4543:4247;741:2400"
+              tagNode="I4543:4247;741:2402"
+              tag="Instagram Stories"
+              left="left-[1042px]"
+            />
+          </div>
+        </div>
         <div data-figma-node="4543:3583" className="box-border w-[1130px] h-[133px] absolute left-[0px] top-[1138px] gap-5">
           <div data-figma-node="4543:3584" className="box-border w-[555px] h-[133px] absolute left-[0px] top-[0px] rounded-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3585" className="box-border w-[507px] h-[28px] absolute left-[24px] top-[24px] gap-[75px]">
@@ -105,7 +277,105 @@ export function FigmaSection_n_4543_3497() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:3655" className="box-border w-[1130px] h-[530px] absolute left-[0px] top-[1590px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:3655" className="absolute left-[0px] top-[1590px] box-border h-[530px] w-[1130px] overflow-hidden">
+          <div data-figma-node="4543:3656" className="relative box-border h-[83px] w-[1130px]">
+            <p
+              data-figma-node="4543:3658"
+              className="absolute left-[0px] top-[0px] font-eb-garamond text-[30px] font-[500] leading-[39px] text-[#ffffff]"
+            >
+              Your content calendar
+            </p>
+            <p
+              data-figma-node="4543:3659"
+              className="absolute left-[0px] top-[45px] font-almarai text-[16px] font-[400] leading-[18px] text-[#ffffff] opacity-[0.6]"
+            >
+              A gentle rhythm to keep your brand consistent.
+            </p>
+            <p
+              data-figma-node="4543:3660"
+              className="absolute left-[1058px] top-[22px] font-almarai text-[16px] font-[400] leading-[18px] text-[#ffffff]"
+            >
+              Browse all
+            </p>
+          </div>
+          <div data-figma-node="4543:3661" className="absolute left-[0px] top-[83px] box-border h-[447px] w-[1130px]">
+            <ContentWeekCard
+              frameNode="4543:3662"
+              dayNode="4543:3664"
+              day="Mon"
+              typeNode="4543:3665"
+              typeLabel="Reels"
+              imgNode="4543:3666"
+              imgSrc="/assets/figma/4543-3666.png"
+              captionNode="I4543:3667;741:2399"
+              caption="Hates to see me coming"
+              lineNode="I4543:3667;741:2400"
+              tagNode="I4543:3667;741:2402"
+              tag="Instagram Feed"
+              left="left-[0px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:3670"
+              dayNode="4543:3672"
+              day="Tue"
+              typeNode="4543:3673-label"
+              typeLabel="Reels"
+              imgNode="4543:3673"
+              imgSrc="/assets/figma/4543-3673.png"
+              captionNode="I4543:3674;741:2399"
+              caption="[City Name win], hallelujah | Justin Bieber Trend"
+              lineNode="I4543:3674;741:2400"
+              tagNode="I4543:3674;741:2402"
+              tag="Instagram Reel"
+              left="left-[260px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:3676"
+              dayNode="4543:3678"
+              day="Wed"
+              typeNode="4543:3679"
+              typeLabel="Story"
+              imgNode="4543:3680"
+              imgSrc="/assets/figma/4543-3680.png"
+              captionNode="I4543:3681;741:2399"
+              caption="Story"
+              lineNode="I4543:3681;741:2400"
+              tagNode="I4543:3681;741:2402"
+              tag="Instagram Stories"
+              left="left-[521px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:3683"
+              dayNode="4543:3685"
+              day="Thu"
+              typeNode="4543:3686"
+              typeLabel="Email"
+              imgNode="4543:3687"
+              imgSrc="/assets/figma/4543-3687.png"
+              captionNode="I4543:3688;741:2399"
+              caption="Things I consider perfect | [City Name] edition"
+              lineNode="I4543:3688;741:2400"
+              tagNode="I4543:3688;741:2402"
+              tag="Instagram Feed"
+              left="left-[781px]"
+            />
+            <ContentWeekCard
+              frameNode="4543:3690"
+              dayNode="4543:3691"
+              day="Fri"
+              typeNode="4543:3692"
+              typeLabel="Story"
+              imgNode="4543:3694"
+              imgSrc="/assets/figma/4543-3694.png"
+              captionNode="I4543:3695;741:2399"
+              caption="Story"
+              lineNode="I4543:3695;741:2400"
+              tagNode="I4543:3695;741:2402"
+              tag="Instagram Stories"
+              left="left-[1042px]"
+            />
+          </div>
+        </div>
         <div data-figma-node="4543:3696" className="box-border w-[1130px] h-[398px] absolute left-[0px] top-[2150px] gap-5">
           <div data-figma-node="4543:3796" className="box-border w-[555px] h-[398px] absolute left-[0px] top-[0px] gap-2.5">
             <div data-figma-node="4543:3797" className="box-border w-[555px] h-[398px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[rgba(255,255,255,0.2)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>

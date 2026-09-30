@@ -2,7 +2,7 @@
 import { figmaFieldProps } from "./useFigmaScreenData";
 export function FigmaSection_n_3158_23028() {
   return (
-    <section data-figma-node="3158:23028" id="contact" className="absolute box-border left-[272px] top-[359px] w-[1128px] h-[819px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex flex-col items-start gap-6 z-[1]">
+    <section data-figma-node="3158:23028" id="contact" className="absolute box-border left-[272px] top-[359px] mt-[30px] w-[1128px] h-[819px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex flex-col items-start gap-6 z-[1]">
       <div className="relative box-border w-[1128px] h-[819px] flex flex-col items-start gap-6" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
         <div data-figma-node="3158:23030" className="box-border w-[1080px] h-[301px] relative gap-6">
           <div data-figma-node="3158:23032" className="box-border w-[157px] h-[31px] absolute left-[0px] top-[0px] gap-3.5">
