@@ -6,10 +6,12 @@ import { FigmaScreen_n_998_1024 } from "./FigmaScreen_n_998_1024";
 import { FigmaScreen_n_3158_22053 } from "./FigmaScreen_n_3158_22053";
 
 const routes: Record<string, () => ReactElement> = {
+  dashboard: FigmaScreen_n_4543_3496,
   "updated-dashboard": FigmaScreen_n_4543_3496,
+  signup: FigmaScreen_n_1006_1333,
   "sign-up": FigmaScreen_n_1006_1333,
   "sign-in": FigmaScreen_n_998_1024,
-  "profile": FigmaScreen_n_3158_22053
+  profile: FigmaScreen_n_3158_22053,
 };
 
 export function FigmaScreenPage() {

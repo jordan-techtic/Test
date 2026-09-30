@@ -8,6 +8,11 @@
   --font-public-sans: 'Public Sans', sans-serif;
   --font-eb-garamond: 'EB Garamond', serif;
   --font-sans: 'Almarai', sans-serif;
+  --color-figma-muted-on-surface: #828282;
+}
+
+.luna-figma-field-placeholder::placeholder {
+  color: var(--color-figma-muted-on-surface);
 }
 
 .font-almarai { font-family: 'Almarai', sans-serif; }

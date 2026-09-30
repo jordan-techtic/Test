@@ -95,6 +95,15 @@ function lunaCompiledSpecDomPlugin(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), lunaCompiledSpecDomPlugin()],
   server: {
+    proxy: {
+      '/api': {
+        target:
+          (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env
+            ?.LUNA_VALIDATION_API_PROXY_TARGET || 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
     port: 5173,
   },
 });
