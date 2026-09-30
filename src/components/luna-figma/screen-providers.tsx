@@ -29,6 +29,12 @@ import type {
   SignupRequest,
   UpdateProfileRequest,
 } from '../../types/api';
+import {
+  figmaAuthClearLabelOnFocus,
+  figmaAuthDisplayValue,
+  figmaAuthSubmitValue,
+  type FigmaAuthFieldKey,
+} from '../../lib/figma-field-labels';
 import { actionBindingsRef, fieldBindingsRef } from './figma-bindings';
 import { FigmaScreenDataContext, type FigmaScreenDataContextValue } from './figma-screen-context';
 
@@ -512,7 +518,10 @@ export function SignInScreenProvider({ children }: { children: ReactNode }) {
     setStatusMessage('Signing in');
     setFieldInvalid({});
     try {
-      const res = await postAuthLogin({ email: values.email.trim(), password: values.password });
+      const res = await postAuthLogin({
+        email: figmaAuthSubmitValue('email', values.email),
+        password: figmaAuthSubmitValue('password', values.password),
+      });
       const token = res.data?.accessToken || res.data?.token;
       if (!token) {
         setStatusMessage('Login succeeded but no token was returned');
@@ -549,9 +558,30 @@ export function SignInScreenProvider({ children }: { children: ReactNode }) {
     setFieldInvalid((prev) => ({ ...prev, [field]: false }));
   };
 
+  const makeFocusHandler = (field: FigmaAuthFieldKey) => () => {
+    setValues((prev) => {
+      const key = field as 'email' | 'password';
+      const next = figmaAuthClearLabelOnFocus(field, prev[key]);
+      if (next === prev[key]) return prev;
+      return { ...prev, [key]: next };
+    });
+  };
+
   fieldBindingsRef.current = {
-    email: { value: values.email, onChange: makeChangeHandler('email'), disabled: loading, 'aria-invalid': fieldInvalid.email || undefined },
-    password: { value: values.password, onChange: makeChangeHandler('password'), disabled: loading, 'aria-invalid': fieldInvalid.password || undefined },
+    email: {
+      value: figmaAuthDisplayValue('email', values.email),
+      onChange: makeChangeHandler('email'),
+      onFocus: makeFocusHandler('email'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid.email || undefined,
+    },
+    password: {
+      value: figmaAuthDisplayValue('password', values.password),
+      onChange: makeChangeHandler('password'),
+      onFocus: makeFocusHandler('password'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid.password || undefined,
+    },
   };
 
   actionBindingsRef.current = {
@@ -597,10 +627,10 @@ export function SignUpScreenProvider({ children }: { children: ReactNode }) {
     setStatusMessage('Creating account');
     setFieldInvalid({});
     const body: SignupRequest = {
-      first_name: values['first-name'].trim(),
-      last_name: values['last-name'].trim(),
-      email: values.email.trim(),
-      password: values['create-a-password'],
+      first_name: figmaAuthSubmitValue('first-name', values['first-name']),
+      last_name: figmaAuthSubmitValue('last-name', values['last-name']),
+      email: figmaAuthSubmitValue('email', values.email),
+      password: figmaAuthSubmitValue('create-a-password', values['create-a-password']),
       terms_accepted: termsAccepted,
     };
     try {
@@ -631,11 +661,43 @@ export function SignUpScreenProvider({ children }: { children: ReactNode }) {
     setFieldInvalid((prev) => ({ ...prev, [field]: false }));
   };
 
+  const makeFocusHandler = (field: SignupFieldKey) => () => {
+    setValues((prev) => {
+      const next = figmaAuthClearLabelOnFocus(field, prev[field]);
+      if (next === prev[field]) return prev;
+      return { ...prev, [field]: next };
+    });
+  };
+
   fieldBindingsRef.current = {
-    'first-name': { value: values['first-name'], onChange: makeChangeHandler('first-name'), disabled: loading, 'aria-invalid': fieldInvalid['first-name'] || undefined },
-    'last-name': { value: values['last-name'], onChange: makeChangeHandler('last-name'), disabled: loading, 'aria-invalid': fieldInvalid['last-name'] || undefined },
-    email: { value: values.email, onChange: makeChangeHandler('email'), disabled: loading, 'aria-invalid': fieldInvalid.email || undefined },
-    'create-a-password': { value: values['create-a-password'], onChange: makeChangeHandler('create-a-password'), disabled: loading, 'aria-invalid': fieldInvalid['create-a-password'] || undefined },
+    'first-name': {
+      value: figmaAuthDisplayValue('first-name', values['first-name']),
+      onChange: makeChangeHandler('first-name'),
+      onFocus: makeFocusHandler('first-name'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid['first-name'] || undefined,
+    },
+    'last-name': {
+      value: figmaAuthDisplayValue('last-name', values['last-name']),
+      onChange: makeChangeHandler('last-name'),
+      onFocus: makeFocusHandler('last-name'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid['last-name'] || undefined,
+    },
+    email: {
+      value: figmaAuthDisplayValue('email', values.email),
+      onChange: makeChangeHandler('email'),
+      onFocus: makeFocusHandler('email'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid.email || undefined,
+    },
+    'create-a-password': {
+      value: figmaAuthDisplayValue('create-a-password', values['create-a-password']),
+      onChange: makeChangeHandler('create-a-password'),
+      onFocus: makeFocusHandler('create-a-password'),
+      disabled: loading,
+      'aria-invalid': fieldInvalid['create-a-password'] || undefined,
+    },
   };
 
   actionBindingsRef.current = {

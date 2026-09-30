@@ -432,7 +432,7 @@ export function FigmaSection_n_4543_3497() {
                   <div data-figma-node="4543:3701" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[5px]">
                     <div data-figma-node="4543:3707" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                   </div>
-                  <p data-figma-node="4543:3708" className="box-border w-[171px] h-[34px] absolute left-[34px] top-[0px] [font-family:'EB_Garamond',serif] font-medium text-[26px] leading-[34px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
+                  <p data-figma-node="4543:3708" className="box-border w-[171px] h-[34px] absolute left-[34px] top-[0px] font-eb-garamond text-[26px] font-[500] leading-[34px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
                 </div>
                 <p data-figma-node="4543:3709" className="box-border w-[53px] h-[18px] absolute left-[454px] top-[8px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]">View all</p>
               </div>

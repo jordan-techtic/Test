@@ -1,8 +1,9 @@
-import type { ChangeEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 
 export type FigmaFieldBinding = {
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   'aria-invalid'?: boolean;
 };

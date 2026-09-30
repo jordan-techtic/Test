@@ -292,10 +292,10 @@ function DashboardNavVertical({ displayName, creditUsageText, creditProgressPx, 
 function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, logoutProps }: NavOverlayProps) {
   const progressWidth = creditProgressPx ?? 77;
   return (
-    <div data-figma-node="3158:22263" className="pointer-events-auto absolute left-[0px] top-[0px] box-border h-[840px] w-[240px]">
+    <div data-figma-node="3158:22263" className="pointer-events-auto absolute left-[0px] top-[0px] z-[8] box-border h-[840px] w-[240px]">
       <img
         data-figma-node="I3158:22263;1237:1966"
-        src="/assets/figma/I3158-22263-1237-1966.png"
+        src="/assets/figma/I4543-3853-1237-1966.png"
         alt="stack"
         className="box-border absolute left-[0px] top-[0px] h-[80px] w-[240px] max-w-none object-cover object-top"
       />

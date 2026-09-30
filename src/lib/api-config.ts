@@ -3,6 +3,9 @@ const DEFAULT_API_BASE = 'http://127.0.0.1:3000/api';
 
 function normalizeApiBase(raw: string): string {
   let base = raw.trim().replace(/\/$/, '');
+  if (!/^https?:\/\//i.test(base)) {
+    return DEFAULT_API_BASE;
+  }
   if (/:(41000|5173)(\/|$)/.test(base)) {
     base = 'http://127.0.0.1:3000';
   }
