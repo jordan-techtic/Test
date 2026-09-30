@@ -63,7 +63,12 @@ function DashboardNavVertical({ displayName, creditUsageText, creditProgressPx, 
               <div data-figma-node="I4543:3853;1237:2084" className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] pr-[16px] opacity-[0.6]">
                 <div data-figma-node="I4543:3853;1656:2137" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]">
                   <div data-figma-node="I4543:3853;1656:2137;7:30534" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]">
-                    <div data-figma-node="I4543:3853;1656:2137;7:30535" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]" />
+                    <img
+                      data-figma-node="I4543:3853;1656:2137;7:30535"
+                      src="/assets/figma/I4543-3853-1656-2137-7-30535.png"
+                      alt=""
+                      className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px] max-w-none object-cover object-top"
+                    />
                   </div>
                 </div>
               </div>
@@ -155,7 +160,12 @@ function DashboardNavVertical({ displayName, creditUsageText, creditProgressPx, 
               </div>
             </div>
             <div data-figma-node="I4543:3853;1589:4789" className={`absolute left-[0px] top-[68px] ${NAV_ITEM_CLASS}`}>
-              <div data-figma-node="I4543:3853;1589:4790" className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] max-w-none object-cover object-top" />
+              <img
+                data-figma-node="I4543:3853;1589:4790"
+                src="/assets/figma/I4543-3853-1589-4790.png"
+                alt=""
+                className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] max-w-none object-cover object-top"
+              />
               <div data-figma-node="I4543:3853;1589:4797" className="box-border absolute left-[52px] top-[13px] h-[18px] w-[148px] pr-[16px]">
                 <p
                   data-figma-node="I4543:3853;1589:4798"
@@ -189,7 +199,7 @@ function DashboardNavVertical({ displayName, creditUsageText, creditProgressPx, 
           data-figma-node="I4543:3853;1237:2189"
           className="absolute left-[16px] top-[548px] box-border h-[82px] w-[208px] rounded-[10px] border-[1px] border-[rgba(255,255,255,0.2)] bg-[#14100d] pt-[16px] pr-[12px] pb-[16px] pl-[12px]"
         >
-          <div data-figma-node="I4543:3853;1237:2190" className={`absolute left-[12px] top-[16px] ${CREDIT_STACK_CLASS} relative`}>
+          <div data-figma-node="I4543:3853;1237:2190" className={`absolute left-[12px] top-[16px] ${CREDIT_STACK_CLASS}`}>
             <div data-figma-node="I4543:3853;1237:2191" className="box-border absolute left-[0px] top-[0px] h-[14px] w-[89px] gap-2">
               <p
                 data-figma-node="I4543:3853;1237:2192"
@@ -236,9 +246,12 @@ function DashboardNavVertical({ displayName, creditUsageText, creditProgressPx, 
                 data-figma-node="I4543:3853;1226:1590"
                 className="box-border absolute left-[2px] top-[2px] h-[26px] w-[26px] overflow-hidden rounded-[500px]"
               >
-                <div data-figma-node="I4543:3853;1226:1591" className="box-border absolute left-[-7px] top-[-7px] h-[40px] w-[40px] rounded-[500px]">
-                  <div data-figma-node="I4543:3853;1226:1592" className="box-border absolute left-[0px] top-[0px] h-[40px] w-[40px] rounded-[500px]" />
-                </div>
+                <img
+                  data-figma-node="I4543:3853;1226:1592"
+                  src="/assets/figma/I4543-3853-1226-1592.png"
+                  alt=""
+                  className="box-border absolute left-[-7px] top-[-7px] h-[40px] w-[40px] max-w-none rounded-[500px] object-cover object-top"
+                />
               </div>
             </div>
             <p
@@ -302,7 +315,12 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
               <div data-figma-node="I3158:22263;1237:2084" className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] pr-[16px] opacity-[0.6]">
                 <div data-figma-node="I3158:22263;1656:2137" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]">
                   <div data-figma-node="I3158:22263;1656:2137;7:30534" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]">
-                    <div data-figma-node="I3158:22263;1656:2137;7:30535" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]" />
+                    <img
+                      data-figma-node="I3158:22263;1656:2137;7:30535"
+                      src="/assets/figma/I3158-22263-1656-2137-7-30535.png"
+                      alt=""
+                      className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px] max-w-none object-cover object-top"
+                    />
                   </div>
                 </div>
               </div>
@@ -394,7 +412,12 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
               </div>
             </div>
             <div data-figma-node="I3158:22263;1589:4789" className={`absolute left-[0px] top-[68px] ${NAV_ITEM_CLASS}`}>
-              <div data-figma-node="I3158:22263;1589:4790" className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] max-w-none object-cover object-top" />
+              <img
+                data-figma-node="I3158:22263;1589:4790"
+                src="/assets/figma/I3158-22263-1589-4790.png"
+                alt=""
+                className="box-border absolute left-[12px] top-[10px] h-[24px] w-[40px] max-w-none object-cover object-top"
+              />
               <div data-figma-node="I3158:22263;1589:4797" className="box-border absolute left-[52px] top-[13px] h-[18px] w-[148px] pr-[16px]">
                 <p
                   data-figma-node="I3158:22263;1589:4798"
@@ -428,7 +451,7 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
           data-figma-node="I3158:22263;1237:2189"
           className="absolute left-[16px] top-[548px] box-border h-[82px] w-[208px] rounded-[10px] border-[1px] border-[rgba(255,255,255,0.2)] bg-[#14100d] pt-[16px] pr-[12px] pb-[16px] pl-[12px]"
         >
-          <div data-figma-node="I3158:22263;1237:2190" className={`absolute left-[12px] top-[16px] ${CREDIT_STACK_CLASS} relative`}>
+          <div data-figma-node="I3158:22263;1237:2190" className={`absolute left-[12px] top-[16px] ${CREDIT_STACK_CLASS}`}>
             <div data-figma-node="I3158:22263;1237:2191" className="box-border absolute left-[0px] top-[0px] h-[14px] w-[89px] gap-2">
               <p
                 data-figma-node="I3158:22263;1237:2192"
@@ -475,9 +498,12 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
                 data-figma-node="I3158:22263;1226:1590"
                 className="box-border absolute left-[2px] top-[2px] h-[26px] w-[26px] overflow-hidden rounded-[500px]"
               >
-                <div data-figma-node="I3158:22263;1226:1591" className="box-border absolute left-[-7px] top-[-7px] h-[40px] w-[40px] rounded-[500px]">
-                  <div data-figma-node="I3158:22263;1226:1592" className="box-border absolute left-[0px] top-[0px] h-[40px] w-[40px] rounded-[500px]" />
-                </div>
+                <img
+                  data-figma-node="I3158:22263;1226:1592"
+                  src="/assets/figma/I3158-22263-1226-1592.png"
+                  alt=""
+                  className="box-border absolute left-[-7px] top-[-7px] h-[40px] w-[40px] max-w-none rounded-[500px] object-cover object-top"
+                />
               </div>
             </div>
             <p

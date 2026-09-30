@@ -1,10 +1,9 @@
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
 import { FigmaScreenDataProvider } from './components/luna-figma/useFigmaScreenData';
 import { getStoredAccessToken } from './lib/api-client';
-import { getDashboard, getProfile } from './lib/api-services';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,56 +42,33 @@ function PlaceholderScreen({ title }: { title: string }) {
   );
 }
 
-function AuthenticatedScreenQueries() {
-  const { pathname } = useLocation();
-  const authed = Boolean(getStoredAccessToken());
-
-  useQuery({
-    queryKey: ['dashboard', 'overview'],
-    queryFn: getDashboard,
-    enabled: authed && pathname.startsWith('/dashboard'),
-    staleTime: 30_000,
-  });
-
-  useQuery({
-    queryKey: ['profile', 'me'],
-    queryFn: getProfile,
-    enabled: authed && pathname.startsWith('/profile'),
-  });
-
-  return null;
-}
-
 function AppRoutes() {
   return (
-    <>
-      <AuthenticatedScreenQueries />
-      <Routes>
-        <Route path="/" element={<RootRedirect />} />
-        <Route path="/sign-in" element={<FigmaRoute screen="sign-in" />} />
-        <Route path="/login" element={<Navigate to="/sign-in" replace />} />
-        <Route path="/sign-up" element={<FigmaRoute screen="sign-up" />} />
-        <Route path="/forgot-password" element={<PlaceholderScreen title="Forgot password — coming soon" />} />
-        <Route path="/ultimate-mind" element={<PlaceholderScreen title="Ultimate Mind — coming soon" />} />
-        <Route
-          path="/dashboard"
-          element={
-            <RequireAuth>
-              <FigmaRoute screen="dashboard" />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <FigmaRoute screen="profile" />
-            </RequireAuth>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<RootRedirect />} />
+      <Route path="/sign-in" element={<FigmaRoute screen="sign-in" />} />
+      <Route path="/login" element={<Navigate to="/sign-in" replace />} />
+      <Route path="/sign-up" element={<FigmaRoute screen="sign-up" />} />
+      <Route path="/forgot-password" element={<PlaceholderScreen title="Forgot password — coming soon" />} />
+      <Route path="/ultimate-mind" element={<PlaceholderScreen title="Ultimate Mind — coming soon" />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RequireAuth>
+            <FigmaRoute screen="dashboard" />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <RequireAuth>
+            <FigmaRoute screen="profile" />
+          </RequireAuth>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
