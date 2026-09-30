@@ -14,6 +14,11 @@
 .font-public-sans { font-family: 'Public Sans', sans-serif; }
 .font-eb-garamond { font-family: 'EB Garamond', serif; }
 
+[data-figma-node="4543:3708"] {
+  font-family: 'EB Garamond', serif;
+  font-weight: 500;
+}
+
 html, body { background-color: #0b0b0b; min-height: 100%; font-family: 'Almarai', sans-serif; }
 
 @keyframes luna-spec-marquee {
