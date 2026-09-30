@@ -17,16 +17,20 @@
 p[data-figma-node="4543:3708"] {
   font-family: 'EB Garamond', serif;
   font-weight: 500;
+  font-size: 26px;
 }
 
 p[data-figma-node="I3158:22263;1226:1920"] {
   font-family: 'Almarai', sans-serif;
   font-weight: 400;
+  font-size: 14px;
 }
 
 p[data-figma-node="3158:22900"] {
   font-family: 'Almarai', sans-serif;
   font-weight: 700;
+  font-size: 16px;
+  color: #c8a47e;
 }
 
 html, body { background-color: #0b0b0b; min-height: 100%; font-family: 'Almarai', sans-serif; }

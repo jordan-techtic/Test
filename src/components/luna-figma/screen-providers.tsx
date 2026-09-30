@@ -33,7 +33,11 @@ import {
   figmaAuthClearLabelOnFocus,
   figmaAuthDisplayValue,
   figmaAuthSubmitValue,
+  figmaProfileClearLabelOnFocus,
+  figmaProfileDisplayValue,
+  figmaProfileSubmitValue,
   type FigmaAuthFieldKey,
+  type FigmaProfileFieldKey,
 } from '../../lib/figma-field-labels';
 import { actionBindingsRef, fieldBindingsRef } from './figma-bindings';
 import { FigmaScreenDataContext, type FigmaScreenDataContextValue } from './figma-screen-context';
@@ -127,17 +131,17 @@ export function ProfileScreenProvider({ children }: { children: ReactNode }) {
   };
 
   const valuesToUpdateBody = (vals: Record<ProfileFieldKey, string>): UpdateProfileRequest => ({
-    first_name: vals['first-name'].trim(),
-    last_name: vals['last-name'].trim(),
-    email: vals.email.trim(),
-    mobile_number: vals['mobile-number'].trim() || null,
-    bio: vals.bio.trim() || null,
-    time_zone: vals['time-zone-in-washington-dc-usa-gmt-4'].trim() || null,
-    street: vals.street.trim() || null,
-    country: vals.country.trim() || null,
-    state: vals.state.trim() || null,
-    city: vals.city.trim() || null,
-    zip: vals.zip.trim() || null,
+    first_name: figmaProfileSubmitValue('first-name', vals['first-name']),
+    last_name: figmaProfileSubmitValue('last-name', vals['last-name']),
+    email: figmaProfileSubmitValue('email', vals.email),
+    mobile_number: figmaProfileSubmitValue('mobile-number', vals['mobile-number']) || null,
+    bio: figmaProfileSubmitValue('bio', vals.bio) || null,
+    time_zone: figmaProfileSubmitValue('time-zone-in-washington-dc-usa-gmt-4', vals['time-zone-in-washington-dc-usa-gmt-4']) || null,
+    street: figmaProfileSubmitValue('street', vals.street) || null,
+    country: figmaProfileSubmitValue('country', vals.country) || null,
+    state: figmaProfileSubmitValue('state', vals.state) || null,
+    city: figmaProfileSubmitValue('city', vals.city) || null,
+    zip: figmaProfileSubmitValue('zip', vals.zip) || null,
   });
 
   const [values, setValues] = useState(emptyValues);
@@ -232,18 +236,35 @@ export function ProfileScreenProvider({ children }: { children: ReactNode }) {
     setField(field, event.target.value);
   };
 
+  const makeProfileFocusHandler = (field: FigmaProfileFieldKey) => () => {
+    setValues((prev) => {
+      const key = field as ProfileFieldKey;
+      const next = figmaProfileClearLabelOnFocus(field, prev[key]);
+      if (next === prev[key]) return prev;
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const profileFieldBinding = (field: FigmaProfileFieldKey) => ({
+    value: figmaProfileDisplayValue(field, values[field as ProfileFieldKey]),
+    onChange: makeChangeHandler(field as ProfileFieldKey),
+    onFocus: makeProfileFocusHandler(field),
+    disabled: loading,
+    'aria-invalid': fieldInvalid[field as ProfileFieldKey] || undefined,
+  });
+
   fieldBindingsRef.current = {
-    'first-name': { value: values['first-name'], onChange: makeChangeHandler('first-name'), disabled: loading, 'aria-invalid': fieldInvalid['first-name'] || undefined },
-    'last-name': { value: values['last-name'], onChange: makeChangeHandler('last-name'), disabled: loading, 'aria-invalid': fieldInvalid['last-name'] || undefined },
-    email: { value: values.email, onChange: makeChangeHandler('email'), disabled: loading, 'aria-invalid': fieldInvalid.email || undefined },
-    'mobile-number': { value: values['mobile-number'], onChange: makeChangeHandler('mobile-number'), disabled: loading, 'aria-invalid': fieldInvalid['mobile-number'] || undefined },
-    bio: { value: values.bio, onChange: makeChangeHandler('bio'), disabled: loading, 'aria-invalid': fieldInvalid.bio || undefined },
-    'time-zone-in-washington-dc-usa-gmt-4': { value: values['time-zone-in-washington-dc-usa-gmt-4'], onChange: makeChangeHandler('time-zone-in-washington-dc-usa-gmt-4'), disabled: loading, 'aria-invalid': fieldInvalid['time-zone-in-washington-dc-usa-gmt-4'] || undefined },
-    street: { value: values.street, onChange: makeChangeHandler('street'), disabled: loading, 'aria-invalid': fieldInvalid.street || undefined },
-    country: { value: values.country, onChange: makeChangeHandler('country'), disabled: loading, 'aria-invalid': fieldInvalid.country || undefined },
-    state: { value: values.state, onChange: makeChangeHandler('state'), disabled: loading, 'aria-invalid': fieldInvalid.state || undefined },
-    city: { value: values.city, onChange: makeChangeHandler('city'), disabled: loading, 'aria-invalid': fieldInvalid.city || undefined },
-    zip: { value: values.zip, onChange: makeChangeHandler('zip'), disabled: loading, 'aria-invalid': fieldInvalid.zip || undefined },
+    'first-name': profileFieldBinding('first-name'),
+    'last-name': profileFieldBinding('last-name'),
+    email: profileFieldBinding('email'),
+    'mobile-number': profileFieldBinding('mobile-number'),
+    bio: profileFieldBinding('bio'),
+    'time-zone-in-washington-dc-usa-gmt-4': profileFieldBinding('time-zone-in-washington-dc-usa-gmt-4'),
+    street: profileFieldBinding('street'),
+    country: profileFieldBinding('country'),
+    state: profileFieldBinding('state'),
+    city: profileFieldBinding('city'),
+    zip: profileFieldBinding('zip'),
   };
 
   actionBindingsRef.current = {

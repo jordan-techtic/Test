@@ -425,14 +425,14 @@ export function FigmaSection_n_4543_3497() {
               </div>
             </div>
           </div>
-          <div data-figma-node="4543:3697" className="box-border w-[555px] h-[398px] absolute left-[575px] top-[0px] gap-2.5">
+          <div data-figma-node="4543:3697" className="relative z-[10] box-border w-[555px] h-[398px] absolute left-[575px] top-[0px] gap-2.5">
             <div data-figma-node="4543:3698" className="box-border w-[555px] h-[398px] absolute left-[0px] top-[0px] rounded-[16px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[rgba(255,255,255,0.2)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
               <div data-figma-node="4543:3699" className="box-border w-[507px] h-[34px] absolute left-[24px] top-[24px] gap-[815px]">
                 <div data-figma-node="4543:3700" className="box-border w-[324px] h-[34px] absolute left-[0px] top-[0px] gap-2.5">
                   <div data-figma-node="4543:3701" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[5px]">
                     <div data-figma-node="4543:3707" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden"></div>
                   </div>
-                  <p data-figma-node="4543:3708" className="box-border w-[171px] h-[34px] absolute left-[34px] top-[0px] font-eb-garamond text-[26px] font-[500] leading-[34px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
+                  <p data-figma-node="4543:3708" className="relative z-[30] box-border w-[171px] h-[34px] absolute left-[34px] top-[0px] font-eb-garamond text-[26px] font-[500] leading-[34px] text-left whitespace-nowrap text-[#ffffff]">Announcements</p>
                 </div>
                 <p data-figma-node="4543:3709" className="box-border w-[53px] h-[18px] absolute left-[454px] top-[8px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]">View all</p>
               </div>

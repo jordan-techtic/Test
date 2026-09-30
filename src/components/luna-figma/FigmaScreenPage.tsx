@@ -317,7 +317,7 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
                   <div data-figma-node="I3158:22263;1656:2137;7:30534" className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px]">
                     <img
                       data-figma-node="I3158:22263;1656:2137;7:30535"
-                      src="/assets/figma/I3158-22263-1656-2137-7-30535.png"
+                      src="/assets/figma/I4543-3853-1656-2137-7-30535.png"
                       alt=""
                       className="box-border absolute left-[0px] top-[0px] h-[24px] w-[24px] max-w-none object-cover object-top"
                     />
@@ -508,7 +508,7 @@ function ProfileNavVertical({ displayName, creditUsageText, creditProgressPx, lo
             </div>
             <p
               data-figma-node="I3158:22263;1226:1920"
-              className="box-border absolute left-[38px] top-[7px] h-[16px] w-[94px] whitespace-nowrap font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#ffffff]"
+              className="relative z-[10] box-border absolute left-[38px] top-[7px] h-[16px] w-[94px] whitespace-nowrap font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#ffffff]"
             >
               {displayName}
             </p>
