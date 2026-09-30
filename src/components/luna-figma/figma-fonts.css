@@ -11,8 +11,18 @@
   --color-figma-muted-on-surface: #828282;
 }
 
+.luna-figma-field-placeholder {
+  color: var(--color-figma-muted-on-surface);
+  caret-color: #ffffff;
+}
+
+.luna-figma-field-placeholder:not(:placeholder-shown) {
+  color: #ffffff;
+}
+
 .luna-figma-field-placeholder::placeholder {
   color: var(--color-figma-muted-on-surface);
+  opacity: 1;
 }
 
 .font-almarai { font-family: 'Almarai', sans-serif; }
