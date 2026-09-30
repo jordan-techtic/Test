@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
 import { FigmaScreenDataProvider } from './components/luna-figma/useFigmaScreenData';
 import { getStoredAccessToken } from './lib/api-client';
+import { seedValidationAccessToken } from './lib/luna-validation-auth';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,6 +14,7 @@ const queryClient = new QueryClient({
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation();
+  seedValidationAccessToken();
   if (!getStoredAccessToken()) {
     return <Navigate to="/sign-in" replace state={{ from: location.pathname }} />;
   }
@@ -20,6 +22,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
 }
 
 function RootRedirect() {
+  seedValidationAccessToken();
   if (getStoredAccessToken()) {
     return <Navigate to="/dashboard" replace />;
   }

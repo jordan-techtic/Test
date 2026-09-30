@@ -1,4 +1,5 @@
 import { buildApiUrl } from './api-config';
+import { isValidationAccessToken } from './luna-validation-auth';
 import type { ApiErrorEnvelope } from '../types/api';
 import { AUTH_TOKEN_KEY } from '../types/api';
 
@@ -72,7 +73,7 @@ export async function apiFetch<T>(
       (typeof parsed === 'object' && parsed && 'message' in parsed && typeof (parsed as { message: unknown }).message === 'string'
         ? (parsed as { message: string }).message
         : response.statusText);
-    if (response.status === 401) {
+    if (response.status === 401 && !isValidationAccessToken(getStoredAccessToken())) {
       setStoredAccessToken(null);
     }
     throw new ApiClientError(message, response.status, envelope);

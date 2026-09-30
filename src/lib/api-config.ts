@@ -4,11 +4,17 @@ export function getApiBaseUrl(): string {
   if (typeof fromEnv === 'string' && fromEnv.trim().length > 0) {
     return fromEnv.replace(/\/$/, '');
   }
+  if (import.meta.env.DEV) {
+    return '';
+  }
   return 'http://127.0.0.1:3000/api';
 }
 
 export function buildApiUrl(path: string): string {
   const base = getApiBaseUrl();
+  if (!base) {
+    return path.startsWith('/') ? path : `/${path}`;
+  }
   if (base.endsWith('/api') && path.startsWith('/api/')) {
     return `${base.slice(0, -4)}${path}`;
   }

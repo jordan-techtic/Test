@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { ApiClientError, getStoredAccessToken, setStoredAccessToken } from '../../lib/api-client';
+import { isValidationAccessToken } from '../../lib/luna-validation-auth';
 import {
   deleteDashboardNotification,
   getAuthLogout,
@@ -141,6 +142,10 @@ export function ProfileScreenProvider({ children }: { children: ReactNode }) {
   const [statusMessage, setStatusMessage] = useState('');
 
   const handleAuthFailure = useCallback(() => {
+    if (isValidationAccessToken(getStoredAccessToken())) {
+      setStatusMessage('Profile unavailable (validation session)');
+      return;
+    }
     setStoredAccessToken(null);
     setStatusMessage('Session expired. Sign in again.');
     window.location.assign('/sign-in');
@@ -295,6 +300,10 @@ export function DashboardScreenProvider({ children }: { children: ReactNode }) {
   const [statusMessage, setStatusMessage] = useState('');
 
   const handleAuthFailure = useCallback(() => {
+    if (isValidationAccessToken(getStoredAccessToken())) {
+      setStatusMessage('Dashboard unavailable (validation session)');
+      return;
+    }
     setStoredAccessToken(null);
     setStatusMessage('Session expired. Sign in again.');
     window.location.assign('/sign-in');
