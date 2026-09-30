@@ -6,6 +6,12 @@ import { FigmaSection_n_3158_22054 } from "./FigmaSection_n_3158_22054";
 import { FigmaSection_n_3158_22259 } from "./FigmaSection_n_3158_22259";
 import { FigmaSection_n_3158_22262 } from "./FigmaSection_n_3158_22262";
 import { FigmaSection_n_3158_22607 } from "./FigmaSection_n_3158_22607";
+import { FigmaComponent_HeroiconsOutlineMegaphone_887ab813 } from "./FigmaComponent_HeroiconsOutlineMegaphone_887ab813";
+import { FigmaComponent_Property1Linear_ae6502a4 } from "./FigmaComponent_Property1Linear_ae6502a4";
+import { FigmaComponent_Property1Linear_d47dea33 } from "./FigmaComponent_Property1Linear_d47dea33";
+import { FigmaComponent_Property1Linear_df3182a2 } from "./FigmaComponent_Property1Linear_df3182a2";
+import { FigmaComponent_Property1Linear_620d53ed } from "./FigmaComponent_Property1Linear_620d53ed";
+import { FigmaComponent_Property1Linear_724f25e8 } from "./FigmaComponent_Property1Linear_724f25e8";
 import { FigmaSection_n_3158_22895 } from "./FigmaSection_n_3158_22895";
 import { FigmaSection_n_3158_23028 } from "./FigmaSection_n_3158_23028";
 
@@ -73,7 +79,7 @@ export function FigmaScreen_n_3158_22053() {
                   <p data-figma-node="I3158:22263;1678:7477" className="box-border w-[208px] h-[16px] absolute left-[0px] top-[0px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Account</p>
                   <div data-figma-node="I3158:22263;1237:2144" className="box-border w-[208px] h-[44px] absolute left-[0px] top-[20px] rounded-[8px] pr-[8px] pl-[12px]">
                     <div data-figma-node="I3158:22263;1237:2145" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] pr-[16px]">
-                      <div data-figma-node="I3158:22263;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px]">
+                      <div data-figma-node="I3158:22263;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] overflow-hidden rounded-[4px]">
                         <FigmaComponent_HeroiconsOutlineMegaphone_887ab813 data-figma-node="I3158:22263;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px]" />
                       </div>
                     </div>
