@@ -61,7 +61,7 @@ export function FigmaSection_n_4543_3497() {
               <div data-figma-node="4543:4215" className="box-border w-[218px] h-[18px] absolute left-[16px] top-[16px] gap-2.5">
                 <p data-figma-node="4543:4216" className="box-border w-[33px] h-[16px] absolute left-[0px] top-[1px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">Mon</p>
               </div>
-              <img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
+              <img data-figma-node="4543:4218" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
               <FigmaComponent_Property1Frame1618873471_076c906a data-figma-node="4543:4219" className="box-border w-[219px] h-[381px] absolute left-[16.3px] top-[50px] overflow-hidden rounded-[6.07px]" />
             </div>
             <div data-figma-node="4543:4220" className="box-border w-[250px] h-[447px] absolute left-[260px] top-[0px] rounded-[10px] gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
@@ -81,13 +81,13 @@ export function FigmaSection_n_4543_3497() {
             </div>
             <div data-figma-node="4543:4241" className="box-border w-[250px] h-[447px] absolute left-[780px] top-[0px] rounded-[10px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
               <p data-figma-node="4543:4242" className="box-border w-[33px] h-[16px] absolute left-[16px] top-[17px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">Thu</p>
-              <img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
+              <img data-figma-node="4543:4239" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
               <FigmaComponent_Property1Frame1618873471_076c906a data-figma-node="4543:4240" className="box-border w-[219px] h-[381px] absolute left-[16.3px] top-[50px] overflow-hidden rounded-[6.07px]" />
               <p data-figma-node="4543:4244" className="box-border w-[218px] h-[36px] absolute left-[16px] top-[83px] font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#ffffff]">Things I consider perfect | [City Name] edition</p>
             </div>
             <div className="box-border w-[250px] h-[447px] absolute left-[1040px] top-[0px] rounded-[10px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
               <p data-figma-node="4543:4248" className="box-border w-[33px] h-[16px] absolute left-[16px] top-[17px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">Fri</p>
-              <img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
+              <img data-figma-node="4543:4246" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
               <FigmaComponent_Property1Frame1618873471_076c906a data-figma-node="4543:4247" className="box-border w-[219px] h-[381px] absolute left-[16.3px] top-[50px] overflow-hidden rounded-[6.07px]" />
             </div>
           </div>
@@ -159,7 +159,7 @@ export function FigmaSection_n_4543_3497() {
           <div data-figma-node="4543:3661" className="box-border w-[1130px] h-[447px] absolute left-[0px] top-[83px] gap-2.5 overflow-hidden">
             <div data-figma-node="4543:3662" className="box-border w-[250px] h-[447px] absolute left-[0px] top-[0px] rounded-[10px] gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
               <p data-figma-node="4543:3664" className="box-border w-[33px] h-[16px] absolute left-[16px] top-[17px] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">Mon</p>
-              <img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
+              <img data-figma-node="4543:3666" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top overflow-hidden" />
               <FigmaComponent_Property1Frame1618873471_076c906a data-figma-node="4543:3667" className="box-border w-[219px] h-[381px] absolute left-[16.3px] top-[50px] overflow-hidden rounded-[6.07px]" />
             </div>
             <div data-figma-node="4543:3668" className="box-border w-[250px] h-[447px] absolute left-[260px] top-[0px] rounded-[10px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>

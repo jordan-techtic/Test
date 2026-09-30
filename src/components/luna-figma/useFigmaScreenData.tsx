@@ -672,6 +672,7 @@ export function FigmaScreenStatusAnnouncer() {
 export function figmaFieldProps(field: string): FigmaFieldBinding {
   const ctx = useFigmaScreenContext();
   const extras = useContext(FigmaExtrasContext);
+  const resolvedField = field === 'frame-386' ? 'bio' : field;
 
   if (field === 'profile' && extras) {
     return {
@@ -684,7 +685,7 @@ export function figmaFieldProps(field: string): FigmaFieldBinding {
     };
   }
 
-  const value = ctx.values[field] ?? '';
+  const value = ctx.values[resolvedField] ?? '';
   if (field === 'start-a-session') {
     return {
       value,
@@ -701,7 +702,7 @@ export function figmaFieldProps(field: string): FigmaFieldBinding {
   return {
     value,
     onChange: (event) => {
-      ctx.setField(field, event.target.value);
+      ctx.setField(resolvedField, event.target.value);
     },
     disabled: ctx.loading,
   };

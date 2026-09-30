@@ -12,13 +12,17 @@ export function apiUrl(path: string): string {
 export const TOKEN_STORAGE_KEY = 'agentwise_access_token';
 
 export function getStoredAccessToken(): string | null {
-  return sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  return (
+    localStorage.getItem(TOKEN_STORAGE_KEY) ?? sessionStorage.getItem(TOKEN_STORAGE_KEY)
+  );
 }
 
 export function setStoredAccessToken(token: string): void {
+  localStorage.setItem(TOKEN_STORAGE_KEY, token);
   sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
 }
 
 export function clearStoredAccessToken(): void {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
   sessionStorage.removeItem(TOKEN_STORAGE_KEY);
 }
