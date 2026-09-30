@@ -1,0 +1,50 @@
+/** luna-spec-codegen: owned-layout */
+@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&display=swap");
+
+@theme {
+  --font-almarai: 'Almarai', sans-serif;
+  --font-public-sans: 'Public Sans', sans-serif;
+  --font-eb-garamond: 'EB Garamond', serif;
+  --font-sans: 'Almarai', sans-serif;
+}
+
+.font-almarai { font-family: 'Almarai', sans-serif; }
+.font-public-sans { font-family: 'Public Sans', sans-serif; }
+.font-eb-garamond { font-family: 'EB Garamond', serif; }
+
+p[data-figma-node="4543:3708"] {
+  font-family: 'EB Garamond', serif;
+  font-weight: 500;
+  font-size: 26px;
+}
+
+p[data-figma-node="I3158:22263;1226:1920"] {
+  font-family: 'Almarai', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+p[data-figma-node="3158:22900"] {
+  font-family: 'Almarai', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #c8a47e;
+}
+
+html, body { background-color: #0b0b0b; min-height: 100%; font-family: 'Almarai', sans-serif; }
+
+@keyframes luna-spec-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.luna-spec-marquee-track {
+  animation: luna-spec-marquee 40s linear infinite;
+}
+.luna-spec-marquee-track:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .luna-spec-marquee-track { animation: none; }
+}
