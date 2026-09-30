@@ -14,7 +14,7 @@
 .font-public-sans { font-family: 'Public Sans', sans-serif; }
 .font-eb-garamond { font-family: 'EB Garamond', serif; }
 
-[data-figma-node="4543:3708"] {
+p[data-figma-node="4543:3708"] {
   font-family: 'EB Garamond', serif;
   font-weight: 500;
 }
