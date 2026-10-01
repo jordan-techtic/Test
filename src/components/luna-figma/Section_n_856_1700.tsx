@@ -7,11 +7,11 @@ export function Section_n_856_1700() {
         <div data-figma-node="856:1703" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px]">
           <img data-figma-node="856:1704" src="/assets/figma/856-1704.png" alt="a" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
           <div data-figma-node="856:1706" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px]">
-            <img data-figma-node="856:1707" src="/assets/figma/856-1707.png" alt="Vector" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+            <img data-figma-node="856:1707" src="/assets/figma/856-1704.png" alt="Vector" className="box-border w-[3424px] h-[1715px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
             <img data-figma-node="856:1708" src="/assets/figma/856-1708.png" alt="Group" className="box-border w-[1179px] h-[1178px] absolute left-[1123px] top-[348px] max-w-none object-cover object-top" />
           </div>
         </div>
-        <span data-figma-node="856:1710" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[3421px] h-[1712px] absolute left-[2px] top-[2px] inline-block pointer-events-none" />
+        <img data-figma-node="856:1710" src="/assets/figma/856-1704.png" alt="" aria-hidden="true" className="box-border w-[3421px] h-[1712px] absolute left-[2px] top-[2px] max-w-none object-cover object-top pointer-events-none" />
       </div>
       <p data-figma-node="863:4305" className="box-border w-[465px] h-[157px] absolute left-[728px] top-[30px] font-eb-garamond text-[120px] font-[400] leading-[157px] text-center whitespace-nowrap text-[#ffffff]">Our Story</p>
       <div data-figma-node="856:1755" className="box-border w-[740px] h-[1345px] absolute left-[210px] top-[258px] flex flex-col items-center gap-[30px]">
