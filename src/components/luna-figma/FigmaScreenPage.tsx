@@ -11,6 +11,7 @@ const routes: Record<string, () => ReactElement> = {
   "dashboard": DashboardPage,
   "updated-dashboard": DashboardPage,
   "sign-in": SignInPage,
+  "signin": SignInPage,
   "profile": ProfilePage,
   "about-us": AboutUsPage
 };
