@@ -9,7 +9,7 @@ export function Section_n_1091_231() {
         <img data-figma-node="1001:1185" src="/assets/figma/1001-1185.png" alt="VERSION 1 (6) 3" className="box-border w-[320px] h-[401px] max-w-none object-cover object-top" />
         <img data-figma-node="1001:1186" src="/assets/figma/1001-1186.png" alt="VERSION 1 (6) 4" className="box-border w-[320px] h-[401px] max-w-none object-cover object-top" />
       </div>
-      <div data-figma-node="1001:1187" className="box-border w-[320px] h-[2035px] absolute left-[0px] top-[0px] flex flex-col items-center gap-[8px] gap-[8.15px]">
+      <div data-figma-node="1001:1187" className="pointer-events-none box-border w-[320px] h-[2035px] absolute left-[0px] top-[0px] flex flex-col items-center gap-[8px] gap-[8.15px]">
         <img data-figma-node="1001:1188" src="/assets/figma/1001-1188.png" alt="VERSION 1 (2) 3" className="box-border w-[320px] h-[401px] max-w-none object-cover object-top" />
         <img data-figma-node="1001:1189" src="/assets/figma/1001-1189.png" alt="VERSION 1 (6) 5" className="box-border w-[320px] h-[401px] max-w-none object-cover object-top" />
         <img data-figma-node="1001:1190" src="/assets/figma/1001-1190.png" alt="VERSION 1 (6) 6" className="pointer-events-none box-border w-[320px] h-[401px] max-w-none object-cover object-top" />
