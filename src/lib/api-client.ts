@@ -134,7 +134,7 @@ export function unwrapPayload(payload: unknown, unwrapKey: string | null): unkno
 }
 
 export async function login(request: LoginRequest): Promise<LoginResponse> {
-  const body = await apiRequest("POST", "/api/auth/login", {
+  const body = await apiRequest("POST", "/auth/login", {
     body: request,
     auth: false,
   });

@@ -301,7 +301,7 @@ export const FIGMA_OPERATIONS: Readonly<Record<string, readonly FigmaOperation[]
   "998:1024": [
     {
       method: "POST",
-      path: "/api/auth/login",
+      path: "/auth/login",
       role: "write",
       fields: [
         {

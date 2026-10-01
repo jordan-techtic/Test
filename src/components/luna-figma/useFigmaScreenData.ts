@@ -13,6 +13,7 @@ import {
 import {
   ApiError,
   apiRequest,
+  getStoredAccessToken,
   login,
   logout,
   setStoredAccessToken,
@@ -60,6 +61,7 @@ const ROUTE_TO_FRAME: Readonly<Record<string, string>> = {
   dashboard: "4543:3496",
   "updated-dashboard": "4543:3496",
   "sign-in": "998:1024",
+  signin: "998:1024",
   profile: "3158:22053",
   "about-us": "572:2518",
 };
@@ -157,7 +159,7 @@ async function fetchContractWrite(
     default:
       return apiRequest(op.method, resolvedPath, {
         body: payload,
-        auth: op.path !== "/api/auth/login",
+        auth: op.path !== "/auth/login" && op.path !== "/api/auth/login",
       });
   }
 }
@@ -318,9 +320,13 @@ export function FigmaScreenDataProvider({
           document.documentElement.removeAttribute("data-luna-about-us-loaded");
           return false;
         }
-        setStatusMessage("Session expired.");
-        redirectToSignIn();
-        return false;
+        if (getStoredAccessToken()) {
+          setStatusMessage("Session expired.");
+          redirectToSignIn();
+          return false;
+        }
+        setStatusMessage("");
+        return true;
       }
       if (frameId === ABOUT_US_FRAME) {
         setStatusMessage("Could not load About Us content.");
@@ -362,7 +368,9 @@ export function FigmaScreenDataProvider({
         setStatusMessage(`${op.method} ${op.path} cannot run: design is missing id.`);
         return;
       }
-      const isSignIn = frameId === SIGN_IN_FRAME && op.path === "/api/auth/login";
+      const isSignIn =
+        frameId === SIGN_IN_FRAME &&
+        (op.path === "/auth/login" || op.path === "/api/auth/login");
       setLoading(true);
       setStatusMessage(isSignIn ? "Signing in…" : "Saving…");
       setFieldErrors({});
