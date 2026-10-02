@@ -12,8 +12,6 @@ import { DashboardPage } from "./DashboardPage";
 import { SignInPage } from "./SignInPage";
 import { ProfilePage } from "./ProfilePage";
 import { AboutUsPage } from "./AboutUsPage";
-import { SignUpPage } from "./SignUpPage";
-
 const routes: Record<string, () => ReactElement> = {
   "": DashboardPage,
   "dashboard": DashboardPage,
@@ -21,7 +19,7 @@ const routes: Record<string, () => ReactElement> = {
   "signin": SignInPage,
   "sign-in": SignInPage,
   "login": SignInPage,
-  "sign-up": SignUpPage,
+  "sign-up": SignInPage,
   "profile": ProfilePage,
   "about-us": AboutUsPage
 };
@@ -53,9 +51,6 @@ export function FigmaScreenPage() {
   const Screen = routes[path];
   if (!Screen) {
     return <FigmaRouteNotFound path={path} />;
-  }
-  if (path === "sign-up") {
-    return <Screen />;
   }
   return (
     <FigmaScreenDataProvider routePath={path}>

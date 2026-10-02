@@ -60,10 +60,17 @@ function frameIdFromRoute(routePath: string | undefined): string {
   if (path === "profile") {
     return "3158:22053";
   }
-  if (path === "sign-in" || path === "signin" || path === "login") {
+  if (path === "sign-in" || path === "signin" || path === "login" || path === "sign-up") {
     return "998:1024";
   }
+  if (path === "about-us") {
+    return "572:2518";
+  }
   return "4543:3496";
+}
+
+function shouldRedirectToSignInOnAuthFailure(frameId: string): boolean {
+  return frameId === "4543:3496" || frameId === "3158:22053";
 }
 
 type ScreenDataContextValue = {
@@ -250,7 +257,7 @@ export function FigmaScreenDataProvider({
       }
     } catch (error) {
       if (error instanceof ApiClientError) {
-        if (isAuthFailure(error.status, error.body)) {
+        if (isAuthFailure(error.status, error.body) && shouldRedirectToSignInOnAuthFailure(frameId)) {
           redirectToSignIn();
           return;
         }
@@ -263,7 +270,7 @@ export function FigmaScreenDataProvider({
     } finally {
       setLoading(false);
     }
-  }, [readOp]);
+  }, [frameId, readOp]);
 
   useEffect(() => {
     void refetchRead();
