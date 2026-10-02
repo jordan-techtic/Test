@@ -6,7 +6,7 @@
  */
 import { useEffect, useState, type RefObject } from "react";
 
-export const FRAME_WIDTH = 1920;
+export const FRAME_WIDTH = 1440;
 
 /** Below this width, drop canvas scale and use fluid horizontal geometry. */
 export const NARROW_FIT_MAX_WIDTH = 480;
