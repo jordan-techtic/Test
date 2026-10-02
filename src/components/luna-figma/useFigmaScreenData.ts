@@ -15,6 +15,7 @@ import {
   ApiClientError,
   apiRequest,
   clearStoredAccessToken,
+  getStoredAccessToken,
   setStoredAccessToken,
 } from "../../lib/api-client";
 import type {
@@ -257,7 +258,11 @@ export function FigmaScreenDataProvider({
       }
     } catch (error) {
       if (error instanceof ApiClientError) {
-        if (isAuthFailure(error.status, error.body) && shouldRedirectToSignInOnAuthFailure(frameId)) {
+        if (
+          isAuthFailure(error.status, error.body) &&
+          shouldRedirectToSignInOnAuthFailure(frameId) &&
+          getStoredAccessToken()
+        ) {
           redirectToSignIn();
           return;
         }
