@@ -83,7 +83,6 @@ export function GoodMorningAvaSection() {
                 <p data-figma-node="4543:4217" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Reels</p>
               </div>
               <div className="box-border w-[218px] h-[381px] relative">
-                <img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
                 <Shared_076c906a data-figma-node="4543:4219" className="absolute left-[16px] top-[50px]" />
                 <p data-figma-node="I4543:4219;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Feed</p>
               </div>
@@ -93,7 +92,7 @@ export function GoodMorningAvaSection() {
                 <p data-figma-node="4543:4281" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Reels</p>
               </div>
               <div className="box-border w-[218px] h-[381px] relative">
-                <img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <Shared_076c906a data-figma-node="4543:4284" className="absolute left-[16px] top-[50px]" />
                 <p data-figma-node="4543:4282" className="box-border w-[218px] h-[32px] absolute left-[16px] top-[400px] font-almarai text-[13px] font-[400] leading-[16px] text-left text-[#ffffff]">[City Name win], hallelujah | Justin Bieber Trend</p>
                 <p data-figma-node="I4543:4284;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Reel</p>
               </div>
