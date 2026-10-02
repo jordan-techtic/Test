@@ -23,9 +23,13 @@ import { Linear_724f25e8 } from "./Linear_724f25e8";
 import { Linear_ae6502a4 } from "./Linear_ae6502a4";
 import { Linear_d47dea33 } from "./Linear_d47dea33";
 import { Linear_df3182a2 } from "./Linear_df3182a2";
+import { useEffect } from "react";
 
 export function ProfilePage() {
   const screenData = useFigmaScreenData();
+  useEffect(() => {
+    void screenData.refetchRead();
+  }, [screenData.refetchRead]);
   return (
     <div
       data-figma-bound={screenData.bound}

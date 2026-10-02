@@ -60,7 +60,7 @@ function frameIdFromRoute(routePath: string | undefined): string {
   if (path === "profile") {
     return "3158:22053";
   }
-  if (path === "sign-in" || path === "signin") {
+  if (path === "sign-in" || path === "signin" || path === "login") {
     return "998:1024";
   }
   return "4543:3496";

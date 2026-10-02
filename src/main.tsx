@@ -49,6 +49,8 @@ createRoot(rootElement).render(
         />
         <Route path="/signin" element={<App />} />
         <Route path="/sign-in" element={<App />} />
+        <Route path="/login" element={<App />} />
+        <Route path="/sign-up" element={<App />} />
         <Route
           path="/profile"
           element={
