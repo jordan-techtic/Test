@@ -34,7 +34,7 @@ export function FigmaFrameShell({
     <div
       ref={outerRef}
       id={id}
-      className="w-full overflow-x-hidden"
+      className="w-full overflow-hidden"
       style={{
         height: narrow ? frameHeight : frameHeight * scale,
         marginTop: marginTopPx * (narrow ? 1 : scale),

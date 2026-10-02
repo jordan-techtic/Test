@@ -6,6 +6,7 @@
  * luna-spec-codegen: owned-layout
  */
 import type { ReactElement } from "react";
+import { useLocation } from "react-router-dom";
 import { FigmaScreenDataProvider } from "./useFigmaScreenData";
 import { DashboardPage } from "./DashboardPage";
 import { SignInPage } from "./SignInPage";
@@ -44,7 +45,8 @@ function FigmaRouteNotFound({ path }: { path: string }) {
 }
 
 export function FigmaScreenPage() {
-  const path = window.location.pathname.replace(/^\/+|\/+$/g, "");
+  const location = useLocation();
+  const path = location.pathname.replace(/^\/+|\/+$/g, "");
   const Screen = routes[path];
   if (!Screen) {
     return <FigmaRouteNotFound path={path} />;

@@ -35,7 +35,7 @@ export function WelcomeToAgentwiseSection() {
       </div>
       <button data-figma-node="998:1335" type="button" data-figma-action="act_90fcde8a6c8d" data-figma-submit="POST /api/auth/login" {...figmaActionProps("act_90fcde8a6c8d")} className="box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{backgroundColor: "rgba(200, 164, 126, 0.5)"}}><span className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Sign In</span></button>
       <div data-figma-node="1001:1035" className="box-border w-[461px] h-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.2)"}} />
-      <p data-figma-node="1001:1036" className="box-border w-[461px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-center whitespace-nowrap text-[#ffffff]"><span className="text-[#ffffff]">Not a member yet? </span><a href="/signup" data-figma-route-pending="true" className="text-[#c8a47e]">Sign up here.</a></p>
+      <p data-figma-node="1001:1036" className="box-border w-[461px] h-[16px] mt-[24px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-center whitespace-nowrap text-[#ffffff]"><span className="text-[#ffffff]">Not a member yet? </span><a href="/signup" data-figma-route-pending="true" className="text-[#c8a47e]">Sign up here.</a></p>
     </section>
   );
 }

@@ -8,6 +8,7 @@
  * luna-spec-codegen: owned-layout
  */
 import { figmaFieldProps } from "./useFigmaScreenData";
+import { Shared_076c906a } from "./Shared_076c906a";
 export function GoodMorningAvaSection() {
   return (
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] [--fx:240] [--fww:1190] block z-[0]">
@@ -70,12 +71,68 @@ export function GoodMorningAvaSection() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:4207" className="box-border w-[1130px] h-[506px] absolute left-[0px] top-[602px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:4207" className="box-border w-[1130px] h-[506px] absolute left-[0px] top-[602px] overflow-hidden">
+          <div data-figma-node="4543:4208" className="box-border w-[1130px] h-[83px] relative flex items-center justify-between gap-5">
+            <p data-figma-node="4543:4210" className="box-border font-eb-garamond text-[30px] font-[500] leading-[39px] text-left whitespace-nowrap text-[#ffffff]">New Content This Week</p>
+            <p data-figma-node="4543:4212" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Browse all</p>
+          </div>
+          <div data-figma-node="4543:4213" className="box-border w-[1130px] h-[447px] absolute left-[0px] top-[59px] flex items-start gap-2.5 overflow-hidden">
+            <div data-figma-node="4543:4214" className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <div data-figma-node="4543:4215" className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
+                <p data-figma-node="4543:4216" className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#828282]">Mon</p>
+                <p data-figma-node="4543:4217" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Reels</p>
+              </div>
+              <div className="box-border w-[218px] h-[381px] relative">
+                <img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <Shared_076c906a data-figma-node="4543:4219" className="absolute left-[16px] top-[50px]" />
+                <p data-figma-node="I4543:4219;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Feed</p>
+              </div>
+            </div><div data-figma-node="4543:4278" className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <div data-figma-node="4543:4279" className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
+                <p data-figma-node="4543:4280" className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#828282]">Tue</p>
+                <p data-figma-node="4543:4281" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Reels</p>
+              </div>
+              <div className="box-border w-[218px] h-[381px] relative">
+                <img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <p data-figma-node="4543:4282" className="box-border w-[218px] h-[32px] absolute left-[16px] top-[400px] font-almarai text-[13px] font-[400] leading-[16px] text-left text-[#ffffff]">[City Name win], hallelujah | Justin Bieber Trend</p>
+                <p data-figma-node="I4543:4284;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Reel</p>
+              </div>
+            </div><div data-figma-node="4543:4228" className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <div data-figma-node="4543:4229" className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
+                <p data-figma-node="4543:4231" className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#828282]">Wed</p>
+                <p data-figma-node="4543:4230" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Story</p>
+              </div>
+              <div className="box-border w-[218px] h-[381px] relative">
+                <img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <p data-figma-node="I4543:4233;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Stories</p>
+              </div>
+            </div><div data-figma-node="4543:4235" className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <div data-figma-node="4543:4236" className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
+                <p data-figma-node="4543:4237" className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#828282]">Thu</p>
+                <p data-figma-node="4543:4238" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Email</p>
+              </div>
+              <div className="box-border w-[218px] h-[381px] relative">
+                <img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <p data-figma-node="4543:4241" className="box-border w-[218px] h-[32px] absolute left-[16px] top-[400px] font-almarai text-[13px] font-[400] leading-[16px] text-left text-[#ffffff]">Things I consider perfect | [City Name] edition</p>
+                <p data-figma-node="I4543:4219;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Feed</p>
+              </div>
+            </div><div data-figma-node="4543:4242" className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative gap-4 pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <div data-figma-node="4543:4243" className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
+                <p data-figma-node="4543:4244" className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left text-[#828282]">Fri</p>
+                <p data-figma-node="4543:4245" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left text-[#c8a47e]">Story</p>
+              </div>
+              <div className="box-border w-[218px] h-[381px] relative">
+                <img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" />
+                <p data-figma-node="I4543:4233;741:2402" className="box-border absolute left-[16px] top-[430px] font-almarai text-[10px] font-[300] leading-[11px] text-left text-[#000000]">Instagram Stories</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div data-figma-node="4543:3583" className="box-border w-[1130px] h-[133px] absolute left-[0px] top-[1138px] flex items-center gap-[20px] gap-5">
           <div data-figma-node="4543:3584" className="box-border w-[555px] h-[133px] rounded-[10px] relative flex flex-col items-center gap-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3585" className="box-border w-[507px] h-[28px] relative gap-[75px]">
               <div data-figma-node="4543:3586" className="box-border w-[412px] h-[28px] absolute left-[0px] top-[0px] flex items-center gap-[10px] gap-2.5">
-                <div data-figma-node="4543:3587" data-figma-component="1039:1108" className="box-border w-[24px] h-[24px] opacity-[0.6] relative">
+                <div data-figma-node="4543:3587" data-figma-component="1039:1108" className="box-border w-[24px] h-[24px] opacity-[0.6] relative overflow-hidden rounded-[8px]">
                   <div data-figma-node="I4543:3587;7:11114" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px]">
                     <div data-figma-node="I4543:3587;7:11115" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px]">
                       <svg data-figma-node="I4543:3587;7:11116" viewBox="0 0 19.03 12.6" preserveAspectRatio="none" aria-hidden="true" className="box-border w-[19px] h-[13px] absolute left-[2px] top-[9px] pointer-events-none overflow-visible"><path d="M14.0243 -0.747235C13.6117 -0.782772 13.2483 -0.477032 13.2128 -0.0643452C13.1772 0.348341 13.483 0.711698 13.8957 0.747235L13.96 0L14.0243 -0.747235ZM5.05961 0.756763C5.47204 0.718316 5.77521 0.352812 5.73676 -0.0596132C5.69832 -0.472039 5.33281 -0.775209 4.92039 -0.736762L4.99 0.0100002L5.05961 0.756763ZM13.96 0L13.8957 0.747235C15.5837 0.892594 16.6213 1.38465 17.2626 2.17506C17.9208 2.98618 18.28 4.25368 18.28 6.21L19.03 6.21L19.78 6.21C19.78 4.11632 19.4042 2.43382 18.4274 1.22994C17.4338 0.00534996 15.9363 -0.582594 14.0243 -0.747235L13.96 0ZM19.03 6.21L18.28 6.21L18.28 6.34L19.03 6.34L19.78 6.34L19.78 6.21L19.03 6.21ZM19.03 6.34L18.28 6.34C18.28 8.50082 17.8428 9.81905 17.0459 10.6159C16.2491 11.4128 14.9308 11.85 12.77 11.85L12.77 12.6L12.77 13.35C15.0792 13.35 16.891 12.8922 18.1066 11.6766C19.3222 10.4609 19.78 8.64918 19.78 6.34L19.03 6.34ZM12.77 12.6L12.77 11.85L6.26 11.85L6.26 12.6L6.26 13.35L12.77 13.35L12.77 12.6ZM6.26 12.6L6.26 11.85C4.09918 11.85 2.78095 11.4128 1.98408 10.6159C1.18721 9.81905 0.75 8.50082 0.75 6.34L0 6.34L-0.75 6.34C-0.75 8.64918 -0.292212 10.4609 0.92342 11.6766C2.13905 12.8922 3.95082 13.35 6.26 13.35L6.26 12.6ZM0 6.34L0.75 6.34L0.75 6.21L0 6.21L-0.75 6.21L-0.75 6.34L0 6.34ZM0 6.21L0.75 6.21C0.75 4.26847 1.10429 3.00584 1.75315 2.19477C2.38467 1.40538 3.40407 0.911093 5.05961 0.756763L4.99 0.0100002L4.92039 -0.736762C3.03593 -0.561093 1.56033 0.0346246 0.581848 1.25773C-0.379294 2.45916 -0.75 4.13153 -0.75 6.21L0 6.21Z" fill="#ffffff" /></svg>
@@ -88,7 +145,7 @@ export function GoodMorningAvaSection() {
                 </div>
               </div>
               <div data-figma-node="4543:3590" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]">
-                <span data-figma-node="4543:3592" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] inline-block pointer-events-none" />
+                <img data-figma-node="4543:3592" src="/assets/figma/4543-3592.png" alt="primary-shape" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] max-w-none object-cover object-top pointer-events-none" />
               </div>
             </div>
             <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">312</p>
@@ -110,7 +167,7 @@ export function GoodMorningAvaSection() {
                 </div>
               </div>
               <div data-figma-node="4543:3600" className="box-border w-[20px] h-[20px] absolute left-[487px] top-[4px] opacity-[0.98]">
-                <span data-figma-node="4543:3602" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] inline-block pointer-events-none" />
+                <img data-figma-node="4543:3602" src="/assets/figma/4543-3592.png" alt="primary-shape" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] max-w-none object-cover object-top pointer-events-none" />
               </div>
             </div>
             <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">247</p>
@@ -140,7 +197,16 @@ export function GoodMorningAvaSection() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:3655" className="box-border w-[1130px] h-[530px] absolute left-[0px] top-[1590px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:3655" className="box-border w-[1130px] h-[530px] absolute left-[0px] top-[1590px] overflow-hidden">
+          <div data-figma-node="4543:3656" className="box-border w-[1130px] h-[83px] relative flex items-center justify-between gap-5">
+            <div data-figma-node="4543:3657" className="box-border flex flex-col items-start gap-1.5">
+              <p data-figma-node="4543:3658" className="box-border font-eb-garamond text-[30px] font-[500] leading-[39px] text-left whitespace-nowrap text-[#ffffff]">Your content calendar</p>
+              <p data-figma-node="4543:3659" className="box-border opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">A gentle rhythm to keep your brand consistent.</p>
+            </div>
+            <p data-figma-node="4543:3660" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Browse all</p>
+          </div>
+          <div className="box-border w-[1130px] h-[447px] absolute left-[0px] top-[83px] overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        </div>
         <div data-figma-node="4543:3696" className="box-border w-[1130px] h-[398px] absolute left-[0px] top-[2150px] flex items-center gap-[20px] gap-5">
           <div data-figma-node="4543:3796" className="box-border w-[555px] h-[398px] relative gap-2.5">
             <div data-figma-node="4543:3797" className="box-border w-[555px] h-[398px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] flex flex-col items-center gap-[20px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[rgba(255,255,255,0.2)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>

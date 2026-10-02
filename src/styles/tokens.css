@@ -1,0 +1,10 @@
+:root {
+  --color-brand-gold: #c8a47e;
+  --color-surface-dark: #0b0b0b;
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-border-subtle: rgba(200, 164, 126, 0.05);
+  --space-section: 30px;
+  --space-stack-sm: 16px;
+  --space-stack-md: 24px;
+}
