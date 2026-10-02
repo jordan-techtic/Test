@@ -6,6 +6,7 @@ declare const process: { env: Record<string, string | undefined> };
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  publicDir: 'public',
   server: {
     proxy: {
       '/api': {

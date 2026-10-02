@@ -4,6 +4,12 @@
   --color-text-primary: #ffffff;
   --color-text-muted: rgba(255, 255, 255, 0.6);
   --color-border-subtle: rgba(200, 164, 126, 0.05);
+  /* DesignLanguage — text on surface */
+  --color-text-on-surface: #ffffff;
+  --color-text-on-light-surface: #000000;
+  --color-text-on-brand: #0b0b0b;
+  --color-surface-light: #ffffff;
+  --color-surface-input: rgba(255, 255, 255, 0.12);
   --space-section: 30px;
   --space-stack-sm: 16px;
   --space-stack-md: 24px;

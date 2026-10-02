@@ -47,7 +47,9 @@ export function ProfilePage() {
         <AddressSection />
         <div className="pointer-events-none absolute inset-0 z-[8]">
           <div data-figma-node="3158:22263" data-figma-component="1666:5362" className="pointer-events-auto box-border w-[240px] h-[840px] absolute left-[0px] top-[0px] [--fx:0] [--fww:240] flex flex-col items-center">
-            <img data-figma-node="I3158:22263;1237:1966" src="/assets/figma/I3158-22263-1237-1966.png" alt="stack" className="box-border w-[240px] h-[80px] max-w-none object-cover object-top" />
+            <div data-figma-node="I3158:22263;1237:1966" className="box-border relative w-[240px] h-[80px] overflow-hidden">
+              <img data-figma-node="I3158:22263;1237:1966" src="/assets/figma/I3158-22263-1237-1966.png" alt="stack" className="box-border w-[240px] h-[80px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+            </div>
             <div data-figma-node="I3158:22263;1237:2080" className="box-border w-[240px] h-[736px] relative flex flex-col items-start gap-[16px] gap-4 pt-[16px] pr-[16px] pl-[16px]">
               <div data-figma-node="I3158:22263;1237:2081" className="box-border w-[208px] h-[404px] relative flex flex-col items-center gap-[10px] gap-2.5">
                 <div data-figma-node="I3158:22263;1678:7481" className="box-border w-[208px] h-[160px] relative flex flex-col items-center gap-[4px] gap-1">
@@ -144,7 +146,7 @@ export function ProfilePage() {
                       </div>
                     </div>
                   </div>
-                  <p data-figma-node="I3158:22263;1226:1920" className="box-border w-[94px] h-[16px] absolute left-[38px] top-[7px] [--fx:38] [--fww:94] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Joseph Stanley</p>
+                  <p data-figma-node="I3158:22263;1226:1920" className="box-border w-[94px] h-[16px] absolute left-[38px] top-[7px] [--fx:38] [--fww:94] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-on-surface" style={{ fontFamily: "'Almarai', sans-serif", fontWeight: 400, fontSize: "14px" }}>Joseph Stanley</p>
                 </div>
                 <div data-figma-node="I3158:22263;1226:1598" className="box-border w-[20px] h-[20px] absolute left-[190px] top-[5px] [--fx:190] [--fww:20] opacity-[0.6]">
                   <svg data-figma-node="I3158:22263;1226:1600" viewBox="0 0 11.69 5.84" preserveAspectRatio="none" aria-hidden="true" className="box-border w-[6px] h-[12px] absolute left-[7px] top-[4px] [--fx:7] [--fww:6] pointer-events-none overflow-visible"><path d="M5.8344 5.8344C5.63969 5.83478 5.45099 5.76696 5.30106 5.64273L0.301063 1.47606C-0.0533202 1.18151 -0.101823 0.655445 0.192729 0.301062C0.487281 -0.0533202 1.01335 -0.101823 1.36773 0.192729L5.8344 3.92606L10.3011 0.326063C10.4732 0.186254 10.694 0.120838 10.9145 0.1443C11.1351 0.167761 11.3372 0.278163 11.4761 0.451063C11.6303 0.624279 11.7054 0.85396 11.6833 1.08486C11.6612 1.31576 11.5438 1.52699 11.3594 1.66773L6.3594 5.69273C6.20516 5.79733 6.02031 5.8472 5.8344 5.8344Z" fill="#ffffff" /></svg>

@@ -67,6 +67,9 @@ function frameIdFromRoute(routePath: string | undefined): string {
   if (path === "about-us") {
     return "572:2518";
   }
+  if (path === "ultimate-mind") {
+    return "4543:3496";
+  }
   return "4543:3496";
 }
 
@@ -160,11 +163,13 @@ function applyProfileHeaderBindings(data: ProfileData): void {
   if (!displayName) {
     return;
   }
-  for (const selector of ['[data-figma-node="3158:22834"]', '[data-figma-node="I3158:22263;1226:1920"]']) {
-    const node = document.querySelector(selector);
-    if (node) {
-      node.textContent = displayName;
-    }
+  const headerName = document.querySelector('[data-figma-node="3158:22834"]');
+  if (headerName) {
+    headerName.textContent = displayName;
+  }
+  const sidebarName = document.querySelector('[data-figma-node="I3158:22263;1226:1920"]');
+  if (sidebarName) {
+    sidebarName.textContent = displayName;
   }
 }
 

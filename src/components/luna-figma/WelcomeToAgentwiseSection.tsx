@@ -10,7 +10,7 @@
 import { figmaFieldProps, figmaActionProps } from "./useFigmaScreenData";
 export function WelcomeToAgentwiseSection() {
   return (
-    <section data-figma-node="998:1033" id="contact" className="absolute box-border left-[100px] top-[152px] w-[461px] h-[545px] [--fx:100] [--fww:461] pr-[4px] pl-[4px] flex flex-col items-center gap-[30px] z-[5]">
+    <section data-figma-node="998:1033" id="contact" className="absolute box-border left-[100px] top-[152px] mt-[24px] w-[461px] h-[545px] [--fx:100] [--fww:461] pr-[4px] pl-[4px] flex flex-col items-center gap-[30px] z-[5]">
       <img data-figma-node="1001:1195" src="/assets/figma/1001-1195.png" alt="Group 33654336" className="box-border w-[164px] h-[55px] max-w-none object-cover object-top" />
       <p data-figma-node="1001:1194" className="box-border w-[351px] h-[50px] font-eb-garamond text-[38px] font-[500] leading-[50px] text-center whitespace-nowrap text-[#ffffff]">Welcome to Agentwise</p>
       <p data-figma-node="1018:1276" className="box-border w-[453px] h-[28px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-center whitespace-nowrap text-[#ffffff]">Everything you need to create standout real estate content.</p>
@@ -33,7 +33,7 @@ export function WelcomeToAgentwiseSection() {
           <a data-figma-node="1001:1034" href="/forgot-password" data-figma-route-pending="true" className="box-border w-[139px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">Forgot your password?</a>
         </div>
       </div>
-      <button data-figma-node="998:1335" type="button" data-figma-action="act_90fcde8a6c8d" data-figma-submit="POST /api/auth/login" {...figmaActionProps("act_90fcde8a6c8d")} className="box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer bg-[#a8845f]"><span data-figma-node="998:1336" className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Sign In</span></button>
+      <button data-figma-node="998:1335" type="button" data-figma-action="act_90fcde8a6c8d" data-figma-submit="POST /api/auth/login" {...figmaActionProps("act_90fcde8a6c8d")} className="box-border w-[461px] h-[52px] rounded-full inline-flex items-center justify-center whitespace-nowrap hover:opacity-90 cursor-pointer" style={{ backgroundColor: "rgba(200, 164, 126, 0.5)" }}><span data-figma-node="998:1336" className="font-almarai text-[18px] font-[400] leading-[20px] text-left whitespace-nowrap text-[#ffffff] whitespace-nowrap">Sign In</span></button>
       <div data-figma-node="1001:1035" className="box-border w-[461px] h-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.2)"}} />
       <p data-figma-node="1001:1036" className="box-border w-[461px] h-[16px] mt-[24px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-center whitespace-nowrap text-[#ffffff]"><span className="text-[#ffffff]">Not a member yet? </span><a href="/signup" data-figma-route-pending="true" className="text-[#c8a47e]">Sign up here.</a></p>
     </section>

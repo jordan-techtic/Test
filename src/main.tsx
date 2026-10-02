@@ -30,6 +30,7 @@ createRoot(rootElement).render(
         <Route path="/sign-up" element={<App />} />
         <Route path="/profile" element={<App />} />
         <Route path="/about-us" element={<App />} />
+        <Route path="/ultimate-mind" element={<App />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

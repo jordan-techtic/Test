@@ -19,7 +19,7 @@ export function OurStorySection() {
             <img data-figma-node="856:1708" src="/assets/figma/856-1708.png" alt="Group" className="box-border w-[1179px] h-[1178px] absolute left-[1123px] top-[348px] max-w-none object-cover object-top" />
           </div>
         </div>
-        <span data-figma-node="856:1710" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[3421px] h-[1712px] absolute left-[2px] top-[2px] inline-block pointer-events-none" />
+        <svg data-figma-node="856:1710" viewBox="0 0 3421 1712" preserveAspectRatio="none" aria-hidden="true" className="box-border w-[3421px] h-[1712px] absolute left-[2px] top-[2px] pointer-events-none overflow-visible"><rect width="3421" height="1712" fill="transparent" /></svg>
       </div>
       <p data-figma-node="863:4305" className="box-border w-[465px] h-[157px] absolute left-[728px] top-[30px] font-eb-garamond text-[120px] font-[400] leading-[157px] text-center whitespace-nowrap text-[#ffffff]">Our Story</p>
       <div data-figma-node="856:1755" className="box-border w-[740px] h-[1345px] absolute left-[210px] top-[258px] flex flex-col items-center gap-[30px]">

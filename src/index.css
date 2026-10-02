@@ -11,6 +11,26 @@ body {
   color: var(--color-text-primary);
 }
 
+.text-on-surface {
+  color: var(--color-text-on-surface);
+}
+
+.text-on-light-surface {
+  color: var(--color-text-on-light-surface);
+}
+
+.text-on-brand {
+  color: var(--color-text-on-brand);
+}
+
+.bg-surface-light {
+  background-color: var(--color-surface-light);
+}
+
+.bg-surface-input {
+  background-color: var(--color-surface-input);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
