@@ -48,7 +48,7 @@ export function ProfilePage() {
         <div className="pointer-events-none absolute inset-0 z-[8]">
           <div data-figma-node="3158:22263" data-figma-component="1666:5362" className="pointer-events-auto box-border w-[240px] h-[840px] absolute left-[0px] top-[0px] [--fx:0] [--fww:240] flex flex-col items-center">
             <div data-figma-node="I3158:22263;1237:1966" className="box-border relative w-[240px] h-[80px] overflow-hidden">
-              <img data-figma-node="I3158:22263;1237:1966" src="/assets/figma/I3158-22263-1237-1966.png" alt="stack" className="box-border w-[240px] h-[80px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+              <img src="/assets/figma/I3158-22263-1237-1966.png" alt="stack" className="box-border w-[240px] h-[80px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
             </div>
             <div data-figma-node="I3158:22263;1237:2080" className="box-border w-[240px] h-[736px] relative flex flex-col items-start gap-[16px] gap-4 pt-[16px] pr-[16px] pl-[16px]">
               <div data-figma-node="I3158:22263;1237:2081" className="box-border w-[208px] h-[404px] relative flex flex-col items-center gap-[10px] gap-2.5">
@@ -106,7 +106,9 @@ export function ProfilePage() {
                     </div>
                   </div>
                   <div data-figma-node="I3158:22263;1589:4789" className="box-border w-[208px] h-[44px] rounded-[8px] relative pr-[8px] pl-[12px]">
-                    <img data-figma-node="I3158:22263;1589:4790" src="/assets/figma/I3158-22263-1589-4790.png" alt="icon container" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] [--fx:12] [--fww:40] max-w-none object-cover object-top" />
+                    <div data-figma-node="I3158:22263;1589:4790" className="box-border relative w-[40px] h-[24px] absolute left-[12px] top-[10px] [--fx:12] [--fww:40] overflow-hidden">
+                      <img src="/assets/figma/I3158-22263-1589-4790.png" alt="icon container" className="box-border w-[40px] h-[24px] absolute left-[0px] top-[0px] max-w-none object-cover object-top" />
+                    </div>
                     <div data-figma-node="I3158:22263;1589:4797" className="box-border w-[148px] h-[18px] absolute left-[52px] top-[13px] [--fx:52] [--fww:148] pr-[16px]">
                       <p data-figma-node="I3158:22263;1589:4798" className="box-border w-[132px] h-[18px] absolute left-[0px] top-[0px] [--fx:0] [--fww:132] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">New Features</p>
                     </div>
@@ -142,7 +144,7 @@ export function ProfilePage() {
                   <div data-figma-node="I3158:22263;1226:1589" className="box-border w-[30px] h-[30px] absolute left-[0px] top-[0px] [--fx:0] [--fww:30] rounded-[50px] pt-[2px] pr-[2px] pb-[2px] pl-[2px] border-[#333333] border-[1px]">
                     <div data-figma-node="I3158:22263;1226:1590" className="box-border w-[26px] h-[26px] absolute left-[2px] top-[2px] [--fx:2] [--fww:26] overflow-hidden rounded-[500px]">
                       <div data-figma-node="I3158:22263;1226:1591" className="box-border w-[40px] h-[40px] absolute left-[-7px] top-[-7px] [--fx:-7] [--fww:40] rounded-[500px]">
-                        <div data-figma-node="I3158:22263;1226:1592" className="box-border w-[40px] h-[40px] absolute left-[0px] top-[0px] [--fx:0] [--fww:40] rounded-[500px]"></div>
+                        <img data-figma-node="I3158:22263;1226:1592" src="/assets/figma/3158-22611.png" alt="#Img_Avatar.25" className="box-border w-[40px] h-[40px] absolute left-[0px] top-[0px] [--fx:0] [--fww:40] rounded-[500px] max-w-none object-cover object-top" />
                       </div>
                     </div>
                   </div>

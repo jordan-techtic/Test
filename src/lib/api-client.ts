@@ -14,7 +14,7 @@ export class ApiClientError extends Error {
 const DEFAULT_API_BASE_URL = "http://127.0.0.1:3000";
 
 export function getApiBaseUrl(): string {
-  const raw = import.meta.env.VITE_API_BASE_URL ?? "";
+  const raw = import.meta.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL;
   const trimmed = String(raw).trim();
   const base = trimmed || DEFAULT_API_BASE_URL;
   return base.replace(/\/$/, "");
