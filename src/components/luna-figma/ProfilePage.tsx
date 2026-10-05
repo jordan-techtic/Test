@@ -91,7 +91,7 @@ export function ProfilePage() {
                   <p data-figma-node="I3158:22263;1678:7477" className="box-border w-[208px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Account</p>
                   <div data-figma-node="I3158:22263;1237:2144" className="box-border w-[208px] h-[44px] rounded-[8px] relative pr-[8px] pl-[12px]">
                     <div data-figma-node="I3158:22263;1237:2145" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] [--fx:12] [--fww:40] pr-[16px]">
-                      <div data-figma-node="I3158:22263;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] [--fx:0] [--fww:24]">
+                      <div data-figma-node="I3158:22263;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] [--fx:0] [--fww:24] overflow-hidden rounded-[8px]">
                         <HeroiconsOutlineMegaphone_887ab813 data-figma-node="I3158:22263;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px]" />
                       </div>
                     </div>

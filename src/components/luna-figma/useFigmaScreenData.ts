@@ -398,7 +398,7 @@ export function figmaFieldProps(field: string): FigmaFieldBinding {
     "aria-describedby": describedBy,
     title: error,
     style: error
-      ? { outline: "1px solid #ffb132", outlineOffset: "1px" }
+      ? { outline: "1px solid #c8a47e", outlineOffset: "1px" }
       : undefined,
   };
 

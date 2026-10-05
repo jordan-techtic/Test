@@ -3,7 +3,7 @@ export function getApiBaseUrl(): string {
   if (typeof raw === "string" && raw.trim() !== "") {
     return raw.trim().replace(/\/+$/, "");
   }
-  return "http://127.0.0.1:3000";
+  return "";
 }
 
 export function joinApiUrl(path: string): string {

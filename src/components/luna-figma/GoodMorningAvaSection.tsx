@@ -8,6 +8,58 @@
  * luna-spec-codegen: owned-layout
  */
 import { figmaFieldProps, figmaTextContent } from "./useFigmaScreenData";
+import { Shared_076c906a } from "./Shared_076c906a";
+function CalendarDayCard({
+  frameNode,
+  dayNode,
+  dayLabel,
+  typeNode,
+  typeLabel,
+  groupNode,
+  imageNode,
+  imageSrc,
+  sharedNode,
+  captionNode,
+  caption,
+  badgeNode,
+  badge,
+}: {
+  frameNode: string;
+  dayNode: string;
+  dayLabel: string;
+  typeNode: string;
+  typeLabel: string;
+  groupNode: string;
+  imageNode: string;
+  imageSrc: string;
+  sharedNode: string;
+  captionNode: string;
+  caption: string;
+  badgeNode: string;
+  badge: string;
+}) {
+  return (
+    <div data-figma-node={frameNode} className="box-border w-[250px] h-[447px] shrink-0 rounded-[10px] relative pt-[16px] pr-[16px] pb-[16px] pl-[16px] border-[rgba(200,164,126,0.05)] border-[1px]" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
+      <div data-figma-node={`${frameNode}-hdr`} className="box-border w-[218px] h-[18px] relative flex items-center justify-between gap-2.5">
+        <p data-figma-node={dayNode} className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">{dayLabel}</p>
+        <p data-figma-node={typeNode} className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]">{typeLabel}</p>
+      </div>
+      <div data-figma-node={groupNode} className="box-border w-[219px] h-[381px] absolute left-[16px] top-[50px] overflow-hidden rounded-[10px]">
+        <img data-figma-node={imageNode} src={imageSrc} alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+        <Shared_076c906a
+          data-figma-node={sharedNode}
+          data-figma-component="741:2411"
+          className="absolute left-[0px] top-[0px] pointer-events-none"
+          captionNode={captionNode}
+          badgeNode={badgeNode}
+          caption={caption}
+          badge={badge}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function GoodMorningAvaSection() {
   return (
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] [--fx:240] [--fww:1190] block z-[0]">
@@ -57,8 +109,8 @@ export function GoodMorningAvaSection() {
                   </div>
                 </div>
                 <div data-figma-node="I4559:6049;4559:5913" className="box-border w-[326px] h-[381px] absolute left-[0px] top-[34px] overflow-hidden flex items-center gap-[16px] gap-4">
-                  <img data-figma-node="I4559:6049;4559:5914" src="/assets/figma/I4559-6049-4559-5914.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[219px] h-[381px] rounded-[10px] max-w-none object-cover object-top" />
-                  <img data-figma-node="I4559:6049;4559:5915" src="/assets/figma/I4559-6049-4559-5915.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[219px] h-[381px] rounded-[10px] max-w-none object-cover object-top" />
+                  <div data-figma-node="I4559:6049;4559:5913-inner" className="box-border w-[219px] h-[381px] relative shrink-0"><img data-figma-node="I4559:6049;4559:5914" src="/assets/figma/I4559-6049-4559-5914.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[219px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" /></div>
+                  <div className="box-border w-[219px] h-[381px] relative shrink-0"><img data-figma-node="I4559:6049;4559:5915" src="/assets/figma/I4559-6049-4559-5915.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[219px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top" /></div>
                 </div>
                 <div data-figma-node="I4559:6049;4559:5916" className="box-border w-[71px] h-[451px] absolute left-[286px] top-[-4px] blur-[25px] pointer-events-none bg-[#1b1b1b]"></div>
               </div>
@@ -70,7 +122,19 @@ export function GoodMorningAvaSection() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:4207" className="box-border w-[1130px] h-[506px] absolute left-[0px] top-[602px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:4218" src="/assets/figma/4543-4218.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4283" src="/assets/figma/4543-4283.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4232" src="/assets/figma/4543-4232.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4239" src="/assets/figma/4543-4239.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:4246" src="/assets/figma/4543-4246.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:4207" className="box-border w-[1130px] h-[506px] absolute left-[0px] top-[602px] flex flex-col gap-5 overflow-hidden">
+          <div data-figma-node="4543:4208" className="box-border w-[1130px] h-[39px] relative flex items-center justify-between gap-5">
+            <p data-figma-node="4543:4210" className="box-border font-eb-garamond text-[30px] font-[500] leading-[39px] text-left whitespace-nowrap text-[#ffffff]">New Content This Week</p>
+            <p data-figma-node="4543:4212" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Browse all</p>
+          </div>
+          <div data-figma-node="4543:4213" className="box-border w-[1130px] h-[447px] relative flex gap-2.5 overflow-x-auto overflow-y-hidden">
+            <CalendarDayCard frameNode="4543:4214" dayNode="4543:4216" dayLabel="Mon" typeNode="4543:4217" typeLabel="Reels" groupNode="4543:4215" imageNode="4543:4218" imageSrc="/assets/figma/4543-4218.png" sharedNode="4543:4219" captionNode="I4543:4219;741:2399" badgeNode="I4543:4219;741:2402" caption="Hates to see me coming" badge="Instagram Feed" />
+            <CalendarDayCard frameNode="4543:4278" dayNode="4543:4280" dayLabel="Tue" typeNode="4543:4281" typeLabel="Reels" groupNode="4543:4282" imageNode="4543:4283" imageSrc="/assets/figma/4543-4283.png" sharedNode="4543:4284" captionNode="I4543:4284;741:2399" badgeNode="I4543:4284;741:2402" caption="[City Name win], hallelujah | Justin Bieber Trend" badge="Instagram Reel" />
+            <CalendarDayCard frameNode="4543:4228" dayNode="4543:4229" dayLabel="Wed" typeNode="4543:4230" typeLabel="Story" groupNode="4543:4231" imageNode="4543:4232" imageSrc="/assets/figma/4543-4232.png" sharedNode="4543:4233" captionNode="I4543:4233;741:2399" badgeNode="I4543:4233;741:2402" caption="Hates to see me coming" badge="Instagram Stories" />
+            <CalendarDayCard frameNode="4543:4234" dayNode="4543:4236" dayLabel="Thu" typeNode="4543:4237" typeLabel="Story" groupNode="4543:4238" imageNode="4543:4239" imageSrc="/assets/figma/4543-4239.png" sharedNode="4543:4240" captionNode="I4543:4240;741:2399" badgeNode="I4543:4240;741:2402" caption="Things I consider perfect | [City Name] edition" badge="Instagram Feed" />
+            <CalendarDayCard frameNode="4543:4243" dayNode="4543:4244" dayLabel="Fri" typeNode="4543:4245" typeLabel="Story" groupNode="4543:4246" imageNode="4543:4246" imageSrc="/assets/figma/4543-4246.png" sharedNode="4543:4247" captionNode="I4543:4247;741:2399" badgeNode="I4543:4247;741:2402" caption="Hates to see me coming" badge="Instagram Feed" />
+          </div>
+        </div>
         <div data-figma-node="4543:3583" className="box-border w-[1130px] h-[133px] absolute left-[0px] top-[1138px] flex items-center gap-[20px] gap-5">
           <div data-figma-node="4543:3584" className="box-border w-[555px] h-[133px] rounded-[10px] relative flex flex-col items-center gap-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3585" className="box-border w-[507px] h-[28px] relative gap-[75px]">
@@ -140,7 +204,22 @@ export function GoodMorningAvaSection() {
             </div>
           </div>
         </div>
-        <div data-figma-node="4543:3655" className="box-border w-[1130px] h-[530px] absolute left-[0px] top-[1590px] overflow-hidden overflow-hidden"><div className="luna-spec-marquee-track flex w-max"><div className="flex shrink-0"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div><div className="flex shrink-0" aria-hidden="true"><img data-figma-node="4543:3666" src="/assets/figma/4543-3666.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3673" src="/assets/figma/4543-3673.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 6" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3680" src="/assets/figma/4543-3680.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3687" src="/assets/figma/4543-3687.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 8" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /><img data-figma-node="4543:3694" src="/assets/figma/4543-3694.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[218px] h-[381px] rounded-[10px] max-w-none object-cover object-top" /></div></div></div>
+        <div data-figma-node="4543:3655" className="box-border w-[1130px] h-[530px] absolute left-[0px] top-[1590px] flex flex-col gap-5 overflow-hidden">
+          <div data-figma-node="4543:3656" className="box-border w-[1130px] h-[83px] relative flex items-center justify-between gap-5">
+            <div data-figma-node="4543:3657" className="box-border w-[1058px] h-[63px] relative flex flex-col gap-1.5">
+              <p data-figma-node="4543:3658" className="box-border font-eb-garamond text-[30px] font-[500] leading-[39px] text-left whitespace-nowrap text-[#ffffff]">Your content calendar</p>
+              <p data-figma-node="4543:3659" className="box-border opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">A gentle rhythm to keep your brand consistent.</p>
+            </div>
+            <p data-figma-node="4543:3660" className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Browse all</p>
+          </div>
+          <div data-figma-node="4543:3661" className="box-border w-[1130px] h-[447px] relative flex gap-2.5 overflow-x-auto overflow-y-hidden">
+            <CalendarDayCard frameNode="4543:3662" dayNode="4543:3664" dayLabel="Mon" typeNode="4543:3665" typeLabel="Reels" groupNode="4543:3663" imageNode="4543:3666" imageSrc="/assets/figma/4543-3666.png" sharedNode="4543:3667" captionNode="I4543:3667;741:2399" badgeNode="I4543:3667;741:2402" caption="Hates to see me coming" badge="Instagram Feed" />
+            <CalendarDayCard frameNode="4543:3670" dayNode="4543:3672" dayLabel="Tue" typeNode="4543:3673-label" typeLabel="Reels" groupNode="4543:3671" imageNode="4543:3673" imageSrc="/assets/figma/4543-3673.png" sharedNode="4543:3674" captionNode="I4543:3674;741:2399" badgeNode="I4543:3674;741:2402" caption="[City Name win], hallelujah | Justin Bieber Trend" badge="Instagram Reel" />
+            <CalendarDayCard frameNode="4543:3677" dayNode="4543:3679" dayLabel="Wed" typeNode="4543:3680-label" typeLabel="Story" groupNode="4543:3678" imageNode="4543:3680" imageSrc="/assets/figma/4543-3680.png" sharedNode="4543:3681" captionNode="I4543:3681;741:2399" badgeNode="I4543:3681;741:2402" caption="Hates to see me coming" badge="Instagram Stories" />
+            <CalendarDayCard frameNode="4543:3684" dayNode="4543:3686" dayLabel="Thu" typeNode="4543:3687-label" typeLabel="Story" groupNode="4543:3685" imageNode="4543:3687" imageSrc="/assets/figma/4543-3687.png" sharedNode="4543:3688" captionNode="I4543:3688;741:2399" badgeNode="I4543:3688;741:2402" caption="Things I consider perfect | [City Name] edition" badge="Instagram Feed" />
+            <CalendarDayCard frameNode="4543:3691" dayNode="4543:3693" dayLabel="Fri" typeNode="4543:3694-label" typeLabel="Story" groupNode="4543:3692" imageNode="4543:3694" imageSrc="/assets/figma/4543-3694.png" sharedNode="4543:3695" captionNode="I4543:3695;741:2399" badgeNode="I4543:3695;741:2402" caption="Hates to see me coming" badge="Instagram Feed" />
+          </div>
+        </div>
         <div data-figma-node="4543:3696" className="box-border w-[1130px] h-[398px] absolute left-[0px] top-[2150px] flex items-center gap-[20px] gap-5">
           <div data-figma-node="4543:3796" className="box-border w-[555px] h-[398px] relative gap-2.5">
             <div data-figma-node="4543:3797" className="box-border w-[555px] h-[398px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] flex flex-col items-center gap-[20px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[rgba(255,255,255,0.2)] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
