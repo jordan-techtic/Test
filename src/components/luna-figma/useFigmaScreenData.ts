@@ -10,6 +10,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
   type CSSProperties,
@@ -107,11 +108,18 @@ function isAuthFailure(error: unknown): boolean {
   return err?.code === "INVALID_TOKEN";
 }
 
-function handleAuthFailure(): void {
-  clearStoredAccessToken();
-  if (typeof window !== "undefined" && window.location.pathname !== "/sign-in") {
-    window.location.assign("/sign-in");
+function scheduleSignInRedirect(): void {
+  if (typeof window === "undefined") {
+    return;
   }
+  if (window.location.pathname === "/sign-in") {
+    return;
+  }
+  window.setTimeout(() => {
+    if (window.location.pathname !== "/sign-in") {
+      window.location.assign("/sign-in");
+    }
+  }, 0);
 }
 
 function formatMetricNumber(value: number): string {
@@ -146,15 +154,6 @@ const FIGMA_TEXT_RESOLVERS: Readonly<
       return null;
     }
     return `${formatMetricNumber(current)} / ${formatMetricNumber(total)}`;
-  },
-  "4543:3510": (data) => {
-    const profile = asRecord(data.profile);
-    const name = profile?.full_name;
-    if (typeof name !== "string" || name.trim() === "") {
-      return null;
-    }
-    const first = name.trim().split(/\s+/)[0];
-    return `Good morning, ${first}.`;
   },
 };
 
@@ -191,6 +190,18 @@ export function FigmaScreenDataProvider({
   const [submitting, setSubmitting] = useState(false);
   const [readPayload, setReadPayload] = useState<DashboardReadPayload | null>(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const authFailureHandledRef = useRef(false);
+  const loadReadsGenerationRef = useRef(0);
+
+  const handleAuthFailure = useCallback(() => {
+    if (authFailureHandledRef.current) {
+      return;
+    }
+    authFailureHandledRef.current = true;
+    loadReadsGenerationRef.current += 1;
+    clearStoredAccessToken();
+    scheduleSignInRedirect();
+  }, []);
 
   const bound = writeOp
     ? `${writeOp.method} ${writeOp.path}`
@@ -211,9 +222,10 @@ export function FigmaScreenDataProvider({
   }, []);
 
   const loadReads = useCallback(async () => {
-    if (!readOp) {
+    if (!readOp || authFailureHandledRef.current) {
       return;
     }
+    const generation = loadReadsGenerationRef.current;
     if (readOp.role === "read" && readOp.fields.length > 0) {
       const resolution = resolveBoundRead(readOp);
       if (resolution.mode === "missing") {
@@ -235,6 +247,9 @@ export function FigmaScreenDataProvider({
     try {
       const token = getStoredAccessToken();
       const payload = await apiRequest(readOp.method, readOp.path, { token });
+      if (authFailureHandledRef.current || generation !== loadReadsGenerationRef.current) {
+        return;
+      }
       setValues((prev) => ({
         ...prev,
         ...valuesFromResponse(readOp, payload),
@@ -250,9 +265,11 @@ export function FigmaScreenDataProvider({
         error instanceof ApiRequestError ? error.message : "Could not load data.";
       setStatusMessage(message);
     } finally {
-      setSubmitting(false);
+      if (!authFailureHandledRef.current) {
+        setSubmitting(false);
+      }
     }
-  }, [readOp]);
+  }, [readOp, handleAuthFailure]);
 
   useEffect(() => {
     void loadReads();
@@ -339,7 +356,7 @@ export function FigmaScreenDataProvider({
     } finally {
       setSubmitting(false);
     }
-  }, [values, writeOp, readOp]);
+  }, [values, writeOp, readOp, handleAuthFailure]);
 
   const contextValue = useMemo<ScreenDataContextValue>(
     () => ({
