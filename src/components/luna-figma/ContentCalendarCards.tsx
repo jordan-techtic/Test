@@ -39,35 +39,17 @@ type BoundCard = {
   highlighted?: boolean;
 };
 
-function CalendarCardMedia({
+function CalendarCardImage({
   imgNodeId,
   imgSrc,
-  compNodeId,
-  overlayTitle,
-  overlayTag,
-  titleNodeId,
-  tagNodeId,
-}: Pick<
-  StaticCard,
-  "imgNodeId" | "imgSrc" | "compNodeId" | "overlayTitle" | "overlayTag" | "titleNodeId" | "tagNodeId"
->) {
+}: Pick<StaticCard, "imgNodeId" | "imgSrc">) {
   return (
-    <div className="box-border w-[218px] h-[381px] relative">
-      <img
-        data-figma-node={imgNodeId}
-        src={imgSrc}
-        alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5"
-        className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top"
-      />
-      <Shared_076c906a
-        data-figma-node={compNodeId}
-        title={overlayTitle}
-        tagText={overlayTag}
-        titleNodeId={titleNodeId}
-        tagNodeId={tagNodeId}
-        className="absolute left-[16px] top-[50px]"
-      />
-    </div>
+    <img
+      data-figma-node={imgNodeId}
+      src={imgSrc}
+      alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5"
+      className="box-border w-[218px] h-[381px] absolute left-[16px] top-[50px] rounded-[10px] max-w-none object-cover object-top"
+    />
   );
 }
 
@@ -86,13 +68,55 @@ function StaticCalendarCard(card: StaticCard) {
           {card.typeLabel}
         </p>
       </div>
-      <CalendarCardMedia {...card} />
+      <div className="box-border w-[218px] h-[381px] relative">
+        <CalendarCardImage imgNodeId={card.imgNodeId} imgSrc={card.imgSrc} />
+        <Shared_076c906a
+          data-figma-node={card.compNodeId}
+          title={card.overlayTitle}
+          tagText={card.overlayTag}
+          titleNodeId={card.titleNodeId}
+          tagNodeId={card.tagNodeId}
+          className="absolute left-[16px] top-[50px]"
+        />
+      </div>
     </div>
   );
 }
 
 function BoundCalendarCard(card: BoundCard) {
-  const itemProps = figmaItemProps(card.frameNodeId);
+  const itemProps4543_3662 = figmaItemProps("4543:3662");
+  const itemProps4543_3668 = figmaItemProps("4543:3668");
+  const itemProps4543_3675 = figmaItemProps("4543:3675");
+  const itemProps4543_3682 = figmaItemProps("4543:3682");
+  const itemProps4543_3689 = figmaItemProps("4543:3689");
+  const itemPropsByFrame: Record<string, ReturnType<typeof figmaItemProps>> = {
+    "4543:3662": itemProps4543_3662,
+    "4543:3668": itemProps4543_3668,
+    "4543:3675": itemProps4543_3675,
+    "4543:3682": itemProps4543_3682,
+    "4543:3689": itemProps4543_3689,
+  };
+  const dayText =
+    card.frameNodeId === "4543:3662"
+      ? figmaTextContent("4543:3664", card.dayFallback)
+      : card.frameNodeId === "4543:3668"
+        ? figmaTextContent("4543:3670", card.dayFallback)
+        : card.frameNodeId === "4543:3675"
+          ? figmaTextContent("4543:3677", card.dayFallback)
+          : card.frameNodeId === "4543:3682"
+            ? figmaTextContent("4543:3684", card.dayFallback)
+            : figmaTextContent("4543:3691", card.dayFallback);
+  const typeText =
+    card.frameNodeId === "4543:3662"
+      ? figmaTextContent("4543:3665", card.typeFallback)
+      : card.frameNodeId === "4543:3668"
+        ? figmaTextContent("4543:3671", card.typeFallback)
+        : card.frameNodeId === "4543:3675"
+          ? figmaTextContent("4543:3678", card.typeFallback)
+          : card.frameNodeId === "4543:3682"
+            ? figmaTextContent("4543:3685", card.typeFallback)
+            : figmaTextContent("4543:3692", card.typeFallback);
+  const itemProps = itemPropsByFrame[card.frameNodeId] ?? {};
   return (
     <div
       data-figma-node={card.frameNodeId}
@@ -102,13 +126,23 @@ function BoundCalendarCard(card: BoundCard) {
     >
       <div data-figma-node={card.headerNodeId} className="box-border w-[218px] h-[18px] relative flex items-center justify-between">
         <p data-figma-node={card.dayNodeId} className="box-border font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#828282]">
-          {figmaTextContent(card.dayNodeId, card.dayFallback)}
+          {dayText}
         </p>
         <p data-figma-node={card.typeNodeId} className="box-border font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#c8a47e]">
-          {figmaTextContent(card.typeNodeId, card.typeFallback)}
+          {typeText}
         </p>
       </div>
-      <CalendarCardMedia {...card} />
+      <div className="box-border w-[218px] h-[381px] relative">
+        <CalendarCardImage imgNodeId={card.imgNodeId} imgSrc={card.imgSrc} />
+        <Shared_076c906a
+          data-figma-node={card.compNodeId}
+          title={card.overlayTitle}
+          tagText={card.overlayTag}
+          titleNodeId={card.titleNodeId}
+          tagNodeId={card.tagNodeId}
+          className="absolute left-[16px] top-[50px]"
+        />
+      </div>
     </div>
   );
 }
