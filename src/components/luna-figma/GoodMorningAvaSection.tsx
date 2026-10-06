@@ -93,7 +93,7 @@ export function GoodMorningAvaSection() {
                 <span data-figma-node="4543:3592" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] inline-block pointer-events-none" />
               </div>
             </div>
-            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{figmaTextContent("4543:3593", "312") || "312"}</p>
+            <p data-figma-node="4543:3593" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">312</p>
           </div>
           <div data-figma-node="4543:3594" className="box-border w-[555px] h-[133px] rounded-[10px] relative flex flex-col items-center gap-[10px] gap-2.5 pt-[24px] pr-[24px] pb-[24px] pl-[24px] border-[#383838] border-[1px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             <div data-figma-node="4543:3595" className="box-border w-[507px] h-[28px] relative gap-[75px]">
@@ -115,7 +115,7 @@ export function GoodMorningAvaSection() {
                 <span data-figma-node="4543:3602" data-figma-unrendered="vector" data-figma-diagnostic="vector_geometry_unavailable" aria-hidden="true" className="box-border w-[18px] h-[18px] absolute left-[1px] top-[1px] inline-block pointer-events-none" />
               </div>
             </div>
-            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">{figmaTextContent("4543:3603", "247") || "247"}</p>
+            <p data-figma-node="4543:3603" className="box-border w-[507px] h-[47px] font-eb-garamond text-[36px] font-[600] leading-[47px] text-left whitespace-nowrap text-[#c8a47e]">247</p>
           </div>
         </div>
         <div data-figma-node="4543:3604" className="box-border w-[1130px] h-[258px] absolute left-[0px] top-[1302px] flex flex-col items-center gap-[20px] gap-5">
@@ -221,16 +221,16 @@ export function GoodMorningAvaSection() {
                   <p data-figma-node="4543:3712" className="box-border w-[230px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{figmaTextContent("4543:3712", "Spring listing template pack is live") || "Spring listing template pack is live"}</p>
                   <p data-figma-node="4543:3713" className="box-border w-[237px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">2h ago</p>
                 </div>
-                <div data-figma-node="4543:3728" {...figmaItemProps("4543:3728")} className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3729" className="box-border w-[251px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{figmaTextContent("4543:3729", "AI Assistant now writes Reels scripts") || "AI Assistant now writes Reels scripts"}</p>
+                <div data-figma-node="4543:3728" className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
+                  <p data-figma-node="4543:3729" className="box-border w-[251px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">AI Assistant now writes Reels scripts</p>
                   <p data-figma-node="4543:3730" className="box-border w-[216px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">Yesterday</p>
                 </div>
-                <div data-figma-node="4543:3745" {...figmaItemProps("4543:3745")} className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3746" className="box-border w-[265px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{figmaTextContent("4543:3746", "Live workshop · Building a luxury brand") || "Live workshop · Building a luxury brand"}</p>
+                <div data-figma-node="4543:3745" className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
+                  <p data-figma-node="4543:3746" className="box-border w-[265px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Live workshop · Building a luxury brand</p>
                   <p data-figma-node="4543:3747" className="box-border w-[202px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">May 18</p>
                 </div>
-                <div data-figma-node="4543:3762" {...figmaItemProps("4543:3762")} className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
-                  <p data-figma-node="4543:3763" className="box-border w-[292px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">{figmaTextContent("4543:3763", "Just Listed — Modern Minimal reels scripts") || "Just Listed — Modern Minimal reels scripts"}</p>
+                <div data-figma-node="4543:3762" className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
+                  <p data-figma-node="4543:3763" className="box-border w-[292px] h-[18px] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Just Listed — Modern Minimal reels scripts</p>
                   <p data-figma-node="4543:3764" className="box-border w-[175px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-right whitespace-nowrap text-[#ffffff]">May 10</p>
                 </div>
                 <div data-figma-node="4543:3779" {...figmaItemProps("4543:3779")} className="box-border w-[507px] h-[50px] rounded-[10px] relative flex items-center pr-[20px] pl-[20px] border-[rgba(200,164,126,0.1)] border-[1px]" style={{backgroundColor: "rgba(200, 164, 126, 0.1)"}}>
