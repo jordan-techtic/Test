@@ -1,9 +1,20 @@
+declare const process: { env: Record<string, string | undefined> };
+
 import { defineConfig } from 'vite';
+import tailwindcss from "@tailwindcss/vite";
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
+  publicDir: 'public',
   server: {
     port: 5173,
+    proxy: {
+      '/api': {
+        target: process.env.LUNA_VALIDATION_API_PROXY_TARGET || 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });
