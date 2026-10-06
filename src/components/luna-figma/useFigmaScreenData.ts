@@ -65,7 +65,6 @@ type ScreenDataContextValue = {
   loading: boolean;
   submitting: boolean;
   submit: () => Promise<void>;
-  runAction: (actionId: string) => Promise<void>;
   setFieldValue: (field: string, value: string | boolean) => void;
 };
 
@@ -127,7 +126,6 @@ function useScreenDataContext(): ScreenDataContextValue {
       loading: false,
       submitting: false,
       submit: noop,
-      runAction: noop,
       setFieldValue: () => {},
     };
   }
@@ -419,10 +417,9 @@ export function FigmaScreenDataProvider({
       loading,
       submitting,
       submit,
-      runAction,
       setFieldValue,
     }),
-    [bound, values, fieldErrors, loading, submitting, submit, runAction, setFieldValue],
+    [bound, values, fieldErrors, loading, submitting, submit, setFieldValue],
   );
 
   const errorDescriptions = Object.entries(fieldErrors).map(([field, message]) =>
@@ -513,10 +510,7 @@ export function figmaActionProps(action: string): FigmaActionBinding {
   };
 }
 
-export function useFigmaScreenData(): Omit<
-  ScreenDataContextValue,
-  "setFieldValue" | "runAction"
-> {
+export function useFigmaScreenData(): Omit<ScreenDataContextValue, "setFieldValue"> {
   const { bound, values, fieldErrors, loading, submitting, submit } =
     useScreenDataContext();
   return { bound, values, fieldErrors, loading, submitting, submit };
