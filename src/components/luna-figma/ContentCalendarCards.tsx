@@ -92,11 +92,12 @@ function StaticCalendarCard(card: StaticCard) {
 }
 
 function BoundCalendarCard(card: BoundCard) {
+  const itemProps = figmaItemProps(card.frameNodeId);
   return (
     <div
       data-figma-node={card.frameNodeId}
-      {...figmaItemProps(card.frameNodeId)}
-      className={`box-border h-[447px] rounded-[10px] relative overflow-hidden pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex flex-col gap-4 shrink-0 border-[1px] ${card.highlighted ? "border-[rgba(200,164,126,0.6)]" : "border-[rgba(200,164,126,0.05)]"}`}
+      {...itemProps}
+      className={`box-border h-[447px] rounded-[10px] relative overflow-hidden pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex flex-col gap-4 shrink-0 border-[1px] ${itemProps.hidden ? "hidden" : ""} ${card.highlighted ? "border-[rgba(200,164,126,0.6)]" : "border-[rgba(200,164,126,0.05)]"}`}
       style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
     >
       <div data-figma-node={card.headerNodeId} className="box-border w-[218px] h-[18px] relative flex items-center justify-between">

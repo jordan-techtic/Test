@@ -15,7 +15,7 @@ export function GoodMorningAvaSection() {
     <section data-figma-node="4543:3497" id="content" className="absolute box-border left-[240px] top-[0px] w-[1190px] h-[2628px] [--fx:240] [--fww:1190] block z-[0]">
       <div data-figma-node="4543:3498" className="box-border w-[1190px] h-[1866px] absolute left-[0px] top-[10px] rounded-[16px_16px_0px_0px] shadow-[-3px_0px_25px_0px_rgba(0,0,0,0.1)] gap-[30px] pt-[30px] pr-[30px] pb-[30px] pl-[30px]" style={{backgroundImage: "linear-gradient(180.0deg, rgba(200, 164, 126, 0.2) 0.0%, rgba(98, 80, 62, 0) 100.0%)"}}></div>
       <div data-figma-node="4543:3507" className="box-border w-[1130px] h-[2548px] absolute left-[30px] top-[40px] gap-[30px]">
-        <img data-figma-node="4644:5834" src="/assets/figma/4644-5834.png" alt="Group 33654450" className="box-border w-[1113px] h-[522px] absolute left-[8px] top-[66px] max-w-none object-cover object-top" />
+        <img data-figma-node="4644:5834" src="/assets/figma/4644-5834.png" alt="Group 33654450" className="box-border w-[1113px] h-[522px] absolute left-[8px] top-[66px] max-w-none object-cover object-top pointer-events-none" />
         <h1 data-figma-node="4543:3510" className="box-border w-[345px] h-[55px] absolute left-[0px] top-[0px] font-eb-garamond text-[42px] font-[500] leading-[55px] text-left whitespace-nowrap text-[#ffffff]">Good morning, Ava.</h1>
         <div data-figma-node="4543:3508" className="box-border w-[1130px] h-[487px] absolute left-[0px] top-[85px] rounded-[16px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(26, 26, 25, 0.5)"}}>
           <div data-figma-node="4559:6049" data-figma-component="4559:6044" className="box-border w-[1106px] h-[439px] absolute left-[24px] top-[24px] flex flex-col items-center gap-[20px] gap-5">
@@ -58,9 +58,9 @@ export function GoodMorningAvaSection() {
                     </div>
                   </div>
                 </div>
-                <div data-figma-node="I4559:6049;4559:5913" className="box-border w-[326px] h-[381px] absolute left-[0px] top-[34px] overflow-hidden flex items-center gap-[16px] gap-4">
-                  <img data-figma-node="I4559:6049;4559:5914" src="/assets/figma/I4559-6049-4559-5914.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[219px] h-[381px] rounded-[10px] max-w-none object-cover object-top" />
-                  <img data-figma-node="I4559:6049;4559:5915" src="/assets/figma/I4559-6049-4559-5915.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[219px] h-[381px] rounded-[10px] max-w-none object-cover object-top" />
+                <div data-figma-node="I4559:6049;4559:5913" className="box-border w-[326px] h-[381px] absolute left-[0px] top-[34px] overflow-hidden">
+                  <img data-figma-node="I4559:6049;4559:5914" src="/assets/figma/I4559-6049-4559-5914.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 5" className="box-border w-[219px] h-[381px] absolute left-[0px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
+                  <img data-figma-node="I4559:6049;4559:5915" src="/assets/figma/I4559-6049-4559-5915.png" alt="attLgjgQKNGEFOHWZ-large-IMG_6232 7" className="box-border w-[219px] h-[381px] absolute left-[235px] top-[0px] rounded-[10px] max-w-none object-cover object-top" />
                 </div>
                 <div data-figma-node="I4559:6049;4559:5916" className="box-border w-[71px] h-[451px] absolute left-[286px] top-[-4px] blur-[25px] pointer-events-none bg-[#1b1b1b]"></div>
               </div>
@@ -127,7 +127,7 @@ export function GoodMorningAvaSection() {
           </div>
           <div data-figma-node="4543:3609" className="box-border w-[1130px] h-[175px] relative gap-5">
             <div data-figma-node="4543:3610" className="box-border w-[1130px] h-[175px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] flex items-start gap-[20px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <img data-figma-node="4543:3611" src="/assets/figma/4543-3611.png" alt="Group 33654420" className="box-border w-[52px] h-[52px] max-w-none object-cover object-top" />
+              <img data-figma-node="4543:3611" src="/assets/figma/4543-3611.png" alt="Group 33654420" className="box-border w-[52px] h-[52px] absolute left-[24px] top-[24px] max-w-none object-cover object-top" />
               <div data-figma-node="4543:3621" className="box-border w-[1010px] h-[127px] relative flex flex-col items-start gap-[20px] gap-5">
                 <div data-figma-node="4543:3622" className="box-border w-[1010px] h-[59px] relative flex flex-col items-center gap-[10px] gap-2.5">
                   <div data-figma-node="4543:3623" className="box-border w-[1010px] h-[31px] relative gap-[815px]">

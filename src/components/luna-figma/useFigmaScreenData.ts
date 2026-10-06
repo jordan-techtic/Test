@@ -23,10 +23,10 @@ import {
   setStoredAccessToken,
 } from "../../lib/api/token";
 import {
+  buildFigmaRequest,
   figmaActionReady,
   figmaApiAction,
   figmaLoadOperations,
-  runFigmaAction,
   type FigmaApiSend,
 } from "./figmaApiInteractions";
 import { clearReadPayloads, publishReadPayload } from "./figmaDisplay";
@@ -34,6 +34,7 @@ import {
   fieldErrorsFromResponse,
   figmaReadOperations,
   figmaWriteOperation,
+  requestBodyFor,
   validateValues,
   valuesFromResponse,
   type FigmaFieldValues,
@@ -65,6 +66,7 @@ type ScreenDataContextValue = {
   loading: boolean;
   submitting: boolean;
   submit: () => Promise<void>;
+  runAction: (actionId: string) => Promise<void>;
   setFieldValue: (field: string, value: string | boolean) => void;
 };
 
@@ -126,6 +128,7 @@ function useScreenDataContext(): ScreenDataContextValue {
       loading: false,
       submitting: false,
       submit: noop,
+      runAction: noop,
       setFieldValue: () => {},
     };
   }
@@ -195,7 +198,11 @@ export function FigmaScreenDataProvider({
 
   const readsToLoad = useMemo(() => {
     const allowed = new Set(loadOps);
-    return readOps.filter((op) => allowed.has(`${op.method.toUpperCase()} ${op.path}`));
+    return readOps.filter(
+      (op) =>
+        op.method.toUpperCase() === "GET" &&
+        allowed.has(`${op.method.toUpperCase()} ${op.path}`),
+    );
   }, [readOps, loadOps]);
 
   const loadReads = useCallback(async () => {
@@ -320,21 +327,40 @@ export function FigmaScreenDataProvider({
       setStatusMessage(`Submitting ${apiAction.operation}.`);
 
       try {
-        const result = await runFigmaAction(actionId, makeSend(), {
+        const request = buildFigmaRequest(actionId, {
           values,
           initial: initialValuesRef.current,
         });
 
-        if (!result.ok) {
-          if (result.reason === "invalid" && result.errors) {
-            setFieldErrors(result.errors);
+        if (!request.ok) {
+          if (request.reason === "invalid" && request.errors) {
+            setFieldErrors(request.errors);
           }
-          setStatusMessage(result.detail);
+          setStatusMessage(request.detail);
           return;
         }
 
+        const send = makeSend();
+        const body =
+          writeOperation && matchesWrite
+            ? requestBodyFor(writeOperation, values, initialValuesRef.current)
+            : request.body;
+        const response = await send(request.method, request.path, body);
+
+        let refreshedProfile: unknown;
+        for (const operation of request.action.refreshReads) {
+          const space = operation.indexOf(" ");
+          const refreshMethod = operation.slice(0, space);
+          const refreshPath = operation.slice(space + 1);
+          const refreshed = await send(refreshMethod, refreshPath);
+          publishReadPayload(refreshMethod, refreshPath, refreshed);
+          if (refreshPath === "/api/profile") {
+            refreshedProfile = refreshed;
+          }
+        }
+
         if (actionId === "act_90fcde8a6c8d") {
-          const envelope = asRecord(result.response);
+          const envelope = asRecord(response);
           const data = envelope ? asRecord(envelope.data) : null;
           const accessToken =
             (typeof data?.accessToken === "string" && data.accessToken) ||
@@ -352,18 +378,18 @@ export function FigmaScreenDataProvider({
         }
 
         if (actionId === "act_e036a19a67f8") {
-          const envelope = asRecord(result.response);
+          const envelope = asRecord(response);
           setStatusMessage(
             typeof envelope?.message === "string"
               ? envelope.message
               : "Profile saved.",
           );
           const profileRead = readsToLoad.find((op) => op.path === "/api/profile");
-          if (profileRead) {
+          if (profileRead && refreshedProfile !== undefined) {
             setValues((prev) => {
               const next = {
                 ...prev,
-                ...valuesFromResponse(profileRead, result.response),
+                ...valuesFromResponse(profileRead, refreshedProfile),
               };
               initialValuesRef.current = next;
               return next;
@@ -417,9 +443,10 @@ export function FigmaScreenDataProvider({
       loading,
       submitting,
       submit,
+      runAction,
       setFieldValue,
     }),
-    [bound, values, fieldErrors, loading, submitting, submit, setFieldValue],
+    [bound, values, fieldErrors, loading, submitting, submit, runAction, setFieldValue],
   );
 
   const errorDescriptions = Object.entries(fieldErrors).map(([field, message]) =>
@@ -496,7 +523,7 @@ export function figmaFieldProps(field: string): FigmaFieldBinding {
 }
 
 export function figmaActionProps(action: string): FigmaActionBinding {
-  const { submit, loading, submitting } = useScreenDataContext();
+  const { runAction, loading, submitting } = useScreenDataContext();
   if (!SUBMIT_ACTION_IDS.has(action)) {
     return {};
   }
@@ -505,12 +532,15 @@ export function figmaActionProps(action: string): FigmaActionBinding {
     disabled: loading || submitting || !ready,
     onClick: (event) => {
       event.preventDefault();
-      void submit();
+      void runAction(action);
     },
   };
 }
 
-export function useFigmaScreenData(): Omit<ScreenDataContextValue, "setFieldValue"> {
+export function useFigmaScreenData(): Omit<
+  ScreenDataContextValue,
+  "setFieldValue" | "runAction"
+> {
   const { bound, values, fieldErrors, loading, submitting, submit } =
     useScreenDataContext();
   return { bound, values, fieldErrors, loading, submitting, submit };

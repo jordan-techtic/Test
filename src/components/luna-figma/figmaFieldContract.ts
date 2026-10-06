@@ -326,6 +326,26 @@ function asRecord(value: unknown): Record<string, unknown> | null {
  * never sent. PATCH with `initial` (values loaded from the read) sends only the
  * fields the user changed; POST/PUT send every bound field.
  */
+function frameIdForOperation(op: FigmaOperation): string | undefined {
+  for (const [frameId, operations] of Object.entries(FIGMA_OPERATIONS)) {
+    if (
+      operations.some(
+        (candidate) =>
+          candidate.method === op.method &&
+          candidate.path === op.path &&
+          candidate.role === op.role,
+      )
+    ) {
+      return frameId;
+    }
+  }
+  return undefined;
+}
+
+export function isUnresolvedFigmaField(frameId: string, figmaField: string): boolean {
+  return UNRESOLVED_FIGMA_FIELDS[frameId]?.includes(figmaField) ?? false;
+}
+
 export function requestBodyFor(
   op: FigmaOperation,
   values: FigmaFieldValues,
@@ -333,7 +353,11 @@ export function requestBodyFor(
 ): Record<string, string | boolean> {
   const body: Record<string, string | boolean> = {};
   const partial = op.method.toUpperCase() === "PATCH" && initial !== undefined;
+  const frameId = frameIdForOperation(op);
   for (const field of op.fields) {
+    if (frameId && isUnresolvedFigmaField(frameId, field.figmaField)) {
+      continue;
+    }
     const value = values[field.figmaField];
     if (partial && value === initial[field.figmaField]) {
       continue;
