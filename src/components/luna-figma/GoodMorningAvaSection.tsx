@@ -252,9 +252,9 @@ export function GoodMorningAvaSection() {
             </div>
           </div>
           <div data-figma-node="4543:3609" className="box-border w-[1130px] h-[175px] relative gap-5">
-            <div data-figma-node="4543:3610" className="box-border w-[1130px] h-[175px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] flex items-start gap-[20px] gap-5 pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              <img data-figma-node="4543:3611" src="/assets/figma/4543-3611.png" alt="Group 33654420" className="box-border w-[52px] h-[52px] max-w-none object-cover object-top" />
-              <div data-figma-node="4543:3621" className="box-border w-[1010px] h-[127px] relative flex flex-col items-start gap-[20px] gap-5">
+            <div data-figma-node="4543:3610" className="box-border w-[1130px] h-[175px] absolute left-[0px] top-[0px] overflow-hidden rounded-[16px] relative pt-[24px] pr-[24px] pb-[24px] pl-[24px]" style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+              <img data-figma-node="4543:3611" src="/assets/figma/4543-3611.png" alt="Group 33654420" className="box-border w-[52px] h-[52px] absolute left-[24px] top-[24px] max-w-none object-cover object-top" />
+              <div data-figma-node="4543:3621" className="box-border w-[1010px] h-[127px] absolute left-[96px] top-[24px] flex flex-col items-start gap-[20px] gap-5">
                 <div data-figma-node="4543:3622" className="box-border w-[1010px] h-[59px] relative flex flex-col items-center gap-[10px] gap-2.5">
                   <div data-figma-node="4543:3623" className="box-border w-[1010px] h-[31px] relative gap-[815px]">
                     <p data-figma-node="4543:3624" className="box-border w-[248px] h-[31px] absolute left-[0px] top-[0px] font-eb-garamond text-[24px] font-[500] leading-[31px] text-left whitespace-nowrap text-[#ffffff]">Agentwise Ultimate Mind</p>

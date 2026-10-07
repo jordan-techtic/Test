@@ -1,28 +1,14 @@
-import { StrictMode, type ReactNode } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HomeRedirect, ProtectedRoute } from './components/auth/ProtectedRoute';
 import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
-import { getStoredAccessToken } from './lib/api/token';
 import './components/luna-figma/figma-fonts.css';
 import './index.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error('Root element not found');
-}
-
-function ProtectedRoute({ children }: { children: ReactNode }) {
-  if (!getStoredAccessToken()) {
-    return <Navigate to="/sign-in" replace />;
-  }
-  return children;
-}
-
-function HomeRedirect() {
-  if (getStoredAccessToken()) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return <Navigate to="/sign-in" replace />;
 }
 
 createRoot(rootElement).render(

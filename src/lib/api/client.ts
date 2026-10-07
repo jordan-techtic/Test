@@ -9,14 +9,12 @@ import type {
   UpdateProfileRequest,
 } from "../../types/api";
 
-const DEFAULT_API_BASE_URL = "http://127.0.0.1:3000";
-
 export function getApiBaseUrl(): string {
   const raw = import.meta.env.VITE_API_BASE_URL;
   if (typeof raw === "string" && raw.trim() !== "") {
     return raw.trim().replace(/\/+$/, "");
   }
-  return DEFAULT_API_BASE_URL;
+  return "";
 }
 
 export function joinApiUrl(path: string): string {
