@@ -10,7 +10,7 @@
 import { figmaActionProps, figmaFieldProps } from "./useFigmaScreenData";
 export function WelcomeToAgentwiseSection() {
   return (
-    <section data-figma-node="998:1033" id="contact" className="absolute box-border left-[100px] top-[152px] w-[461px] h-[545px] [--fx:100] [--fww:461] pr-[4px] pl-[4px] flex flex-col items-center gap-[30px] z-[3]">
+    <section data-figma-node="998:1033" id="contact" className="absolute box-border left-[100px] top-[152px] w-[461px] h-[545px] [--fx:100] [--fww:461] pr-[4px] pl-[4px] flex flex-col items-center gap-[30px] z-[3] mt-[24px]">
       <img data-figma-node="1001:1195" src="/assets/figma/1001-1195.png" alt="Group 33654336" className="box-border w-[164px] h-[55px] max-w-none object-cover object-top" />
       <p data-figma-node="1001:1194" className="box-border w-[351px] h-[50px] font-eb-garamond text-[38px] font-[500] leading-[50px] text-center whitespace-nowrap text-[#ffffff]">Welcome to Agentwise</p>
       <p data-figma-node="1018:1276" className="box-border w-[453px] h-[28px] opacity-[0.6] font-almarai text-[18px] font-[400] leading-[28px] text-center whitespace-nowrap text-[#ffffff]">Everything you need to create standout real estate content.</p>

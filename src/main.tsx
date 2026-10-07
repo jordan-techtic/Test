@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { FigmaScreenPage } from './components/luna-figma/FigmaScreenPage';
 import './components/luna-figma/figma-fonts.css';
 import './index.css';
 
@@ -11,6 +12,15 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/sign-in" element={<FigmaScreenPage />} />
+        <Route path="/login" element={<Navigate to="/sign-in" replace />} />
+        <Route path="/dashboard" element={<FigmaScreenPage />} />
+        <Route path="/profile" element={<FigmaScreenPage />} />
+        <Route path="*" element={<Navigate to="/sign-in" replace />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 );

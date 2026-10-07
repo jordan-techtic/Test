@@ -9,14 +9,12 @@ import type {
   UpdateProfileRequest,
 } from "../../types/api";
 
-const DEFAULT_API_BASE_URL = "http://127.0.0.1:3000";
-
 export function getApiBaseUrl(): string {
   const raw = import.meta.env.VITE_API_BASE_URL;
   if (typeof raw === "string" && raw.trim() !== "") {
     return raw.trim().replace(/\/+$/, "");
   }
-  return DEFAULT_API_BASE_URL;
+  return "";
 }
 
 export function joinApiUrl(path: string): string {
@@ -76,8 +74,20 @@ export async function apiRequest<T = unknown, B = undefined>(
   return parsed as T;
 }
 
-export function loginRequest(body: LoginRequest): Promise<LoginResponse> {
-  return apiRequest<LoginResponse, LoginRequest>("POST", "/auth/login", { body });
+export async function loginRequest(body: LoginRequest): Promise<LoginResponse> {
+  try {
+    return await apiRequest<LoginResponse, LoginRequest>("POST", "/api/auth/login", {
+      body,
+    });
+  } catch (error) {
+    if (
+      error instanceof ApiRequestError &&
+      (error.status === 404 || error.status === 405)
+    ) {
+      return apiRequest<LoginResponse, LoginRequest>("POST", "/auth/login", { body });
+    }
+    throw error;
+  }
 }
 
 export function logoutRequest(token: string): Promise<unknown> {

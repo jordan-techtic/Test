@@ -1,3 +1,28 @@
 @import "tailwindcss";
-html { scroll-behavior: smooth; }
-body { margin: 0; }
+
+@theme {
+  --color-bg-page: #0b0b0b;
+  --color-accent: #c8a47e;
+  --color-surface-glass: rgba(255, 255, 255, 0.05);
+  --font-body: "Almarai", sans-serif;
+  --font-display: "EB Garamond", serif;
+}
+
+:root {
+  --color-bg-page: #0b0b0b;
+  --color-accent: #c8a47e;
+  --color-surface-glass: rgba(255, 255, 255, 0.05);
+  --font-body: "Almarai", sans-serif;
+  --font-display: "EB Garamond", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-page);
+  color: #ffffff;
+  font-family: var(--font-body);
+}
