@@ -70,7 +70,9 @@ export function DashboardPage() {
                   <p data-figma-node="I4543:3853;1678:7473" className="box-border w-[208px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Tools</p>
                   <div data-figma-node="I4543:3853;1237:2121" className="box-border w-[208px] h-[44px] rounded-[8px] relative pr-[8px] pl-[12px]">
                     <div data-figma-node="I4543:3853;1237:2122" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] [--fx:12] [--fww:40] pr-[16px]">
-                      <UltimateMindIcon_1700_3240 data-figma-node="I4543:3853;1237:2123" className="absolute left-[0px] top-[0px]" />
+                      <div data-figma-node="I4543:3853;1237:2123" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] [--fx:0] [--fww:24] overflow-hidden">
+                        <UltimateMindIcon_1700_3240 className="absolute left-[0px] top-[0px]" />
+                      </div>
                     </div>
                     <div data-figma-node="I4543:3853;1237:2128" className="box-border w-[148px] h-[18px] absolute left-[52px] top-[13px] [--fx:52] [--fww:148] pr-[16px]">
                       <p data-figma-node="I4543:3853;1237:2129" className="box-border w-[132px] h-[18px] absolute left-[0px] top-[0px] [--fx:0] [--fww:132] opacity-[0.6] font-almarai text-[16px] font-[400] leading-[18px] text-left whitespace-nowrap text-[#ffffff]">Ultimate Mind</p>
@@ -81,8 +83,8 @@ export function DashboardPage() {
                   <p data-figma-node="I4543:3853;1678:7477" className="box-border w-[208px] h-[16px] opacity-[0.6] font-almarai text-[14px] font-[400] leading-[16px] text-left whitespace-nowrap text-[#ffffff]">Account</p>
                   <div data-figma-node="I4543:3853;1237:2144" className="box-border w-[208px] h-[44px] rounded-[8px] relative pr-[8px] pl-[12px]">
                     <div data-figma-node="I4543:3853;1237:2145" className="box-border w-[40px] h-[24px] absolute left-[12px] top-[10px] [--fx:12] [--fww:40] pr-[16px]">
-                      <div data-figma-node="I4543:3853;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] [--fx:0] [--fww:24] overflow-hidden rounded-[500px]">
-                        <HeroiconsOutlineMegaphone_887ab813 data-figma-node="I4543:3853;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px]" />
+                      <div data-figma-node="I4543:3853;1237:2146" className="box-border w-[24px] h-[24px] absolute left-[0px] top-[0px] [--fx:0] [--fww:24]">
+                        <HeroiconsOutlineMegaphone_887ab813 data-figma-node="I4543:3853;1660:2149" data-figma-component="1660:2146" className="absolute left-[0px] top-[0px] overflow-hidden" />
                       </div>
                     </div>
                     <div data-figma-node="I4543:3853;1237:2152" className="box-border w-[148px] h-[18px] absolute left-[52px] top-[13px] [--fx:52] [--fww:148] pr-[16px]">
