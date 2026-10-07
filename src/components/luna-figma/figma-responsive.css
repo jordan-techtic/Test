@@ -1,0 +1,17 @@
+/**
+ * Luna generated support file
+ * Role: responsive geometry
+ * Ownership: Figma-owned layout
+ * luna-spec-codegen: owned-layout
+ */
+/* Narrow viewports: do not scale the artboard like a screenshot.
+   Absolute nodes carry --fx/--fww (Figma px); remap against --fw. */
+@media (max-width: 480px) {
+  [data-figma-fluid="true"] [class*="[--fx:"] {
+    left: calc(var(--fx) * 100% / var(--fw)) !important;
+  }
+  [data-figma-fluid="true"] [class*="[--fww:"] {
+    width: calc(var(--fww) * 100% / var(--fw)) !important;
+    max-width: 100%;
+  }
+}

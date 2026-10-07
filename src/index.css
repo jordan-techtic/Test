@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-bg-page: #0b0b0b;
+  --color-accent: #c8a47e;
+  --color-accent-muted: rgba(200, 164, 126, 0.5);
+  --color-surface-glass: rgba(255, 255, 255, 0.05);
+  --color-border-accent: rgba(200, 164, 126, 0.05);
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-progress-track: rgba(255, 255, 255, 0.2);
+  --font-body: "Almarai", sans-serif;
+  --font-display: "EB Garamond", serif;
+  --font-label: "Public Sans", sans-serif;
+}
+
+:root {
+  --color-bg-page: #0b0b0b;
+  --color-accent: #c8a47e;
+  --color-accent-muted: rgba(200, 164, 126, 0.5);
+  --color-surface-glass: rgba(255, 255, 255, 0.05);
+  --color-border-accent: rgba(200, 164, 126, 0.05);
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-progress-track: rgba(255, 255, 255, 0.2);
+  --font-body: "Almarai", sans-serif;
+  --font-display: "EB Garamond", serif;
+  --font-label: "Public Sans", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
