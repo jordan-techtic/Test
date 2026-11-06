@@ -1,0 +1,157 @@
+{
+  "name": "Bootstrap — project setup placeholder",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodes": [
+    {
+      "id": "11111111-1111-4111-8111-111111111101",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "bootstrap-project-setup-placeholder",
+      "parameters": {
+        "path": "bootstrap/project-setup-placeholder",
+        "httpMethod": "GET",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "bootstrap-webhook-header-auth"
+        }
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222202",
+      "name": "Prepare OK",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "status",
+              "type": "string",
+              "value": "ok"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333303",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        520,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"branch\": \"success\" } }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444404",
+      "name": "Prepare Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        260,
+        220
+      ],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a2",
+              "name": "status",
+              "type": "string",
+              "value": "error"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555505",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        520,
+        220
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": false, \"branch\": \"error\" } }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Prepare Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare OK": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error": {
+      "main": [
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
