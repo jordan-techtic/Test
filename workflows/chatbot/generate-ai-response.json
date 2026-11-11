@@ -1,0 +1,167 @@
+{
+  "name": "Chatbot - Generate AI Response",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "userText",
+              "type": "string"
+            },
+            {
+              "name": "chatId",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "11111111-2222-4333-8444-555555555501",
+      "name": "Sub-Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "modelId": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.userText }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11111111-2222-4333-8444-555555555502",
+      "name": "OpenAI Chat",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        260,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI API Key"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21111111-2222-4333-8444-555555555503",
+              "name": "replyText",
+              "value": "={{ $json.message?.content ?? $json.text ?? $json.choices?.[0]?.message?.content ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "21111111-2222-4333-8444-555555555504",
+              "name": "chatId",
+              "value": "={{ $('Sub-Workflow Trigger').item.json.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "21111111-2222-4333-8444-555555555505",
+              "name": "userText",
+              "value": "={{ $('Sub-Workflow Trigger').item.json.userText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11111111-2222-4333-8444-555555555503",
+      "name": "Format Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "31111111-2222-4333-8444-555555555506",
+              "name": "stage",
+              "value": "generate-ai-response",
+              "type": "string"
+            },
+            {
+              "id": "31111111-2222-4333-8444-555555555507",
+              "name": "errorMessage",
+              "value": "={{ $json.error?.message ?? $json.error ?? 'AI response generation failed' }}",
+              "type": "string"
+            },
+            {
+              "id": "31111111-2222-4333-8444-555555555508",
+              "name": "chatId",
+              "value": "={{ $('Sub-Workflow Trigger').item.json.chatId ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11111111-2222-4333-8444-555555555504",
+      "name": "Handle Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Sub-Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat": {
+      "main": [
+        [
+          {
+            "node": "Format Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Handle Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}
