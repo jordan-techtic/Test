@@ -1,0 +1,126 @@
+{
+  "name": "Chatbot - Receive User Message",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-inbound",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "f8e3c2a1-9b4d-4e6f-a1c2-3d4e5f6a7b8c",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Webhook Header Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+              "name": "userText",
+              "value": "={{ $json.body?.message?.text ?? $json.message?.text ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+              "name": "chatId",
+              "value": "={{ $json.body?.message?.chat?.id ?? $json.message?.chat?.id ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+              "name": "source",
+              "value": "telegram",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-4123-e456-789abcdef012",
+      "name": "Normalize Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f6a7b8c9-d0e1-4234-f567-89abcdef0123",
+              "name": "stage",
+              "value": "receive-user-message",
+              "type": "string"
+            },
+            {
+              "id": "a7b8c9d0-e1f2-4345-a678-9abcdef01234",
+              "name": "errorMessage",
+              "value": "={{ $json.error?.message ?? $json.error ?? 'Webhook message reception failed' }}",
+              "type": "string"
+            },
+            {
+              "id": "b8c9d0e1-f2a3-4456-b789-abcdef012345",
+              "name": "raw",
+              "value": "={{ JSON.stringify($json) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c9d0e1f2-a3b4-4567-c890-abcdef012345",
+      "name": "Handle Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Handle Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}
