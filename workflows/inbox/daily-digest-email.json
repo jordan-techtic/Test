@@ -1,0 +1,381 @@
+{
+  "name": "Daily Digest Email",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        },
+        "options": {
+          "timezone": "={{ $env.TIMEZONE || 'UTC' }}"
+        }
+      },
+      "id": "dd000001-0001-4001-8001-000000000001",
+      "name": "Every Morning",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "q": "label:AI-Needs-Human newer_than:1d"
+        }
+      },
+      "id": "dd000002-0002-4002-8002-000000000002",
+      "name": "Find Needs Human",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "q": "label:AI-Drafted newer_than:1d"
+        }
+      },
+      "id": "dd000003-0003-4003-8003-000000000003",
+      "name": "Count Drafted",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "q": "label:AI-Sent newer_than:1d"
+        }
+      },
+      "id": "dd000004-0004-4004-8004-000000000004",
+      "name": "Count Sent",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const threadHasId = (item) => item.json && (item.json.id || item.json.threadId);\nconst needsHuman = $('Find Needs Human').all().filter(threadHasId);\nconst drafted = $('Count Drafted').all().filter(threadHasId);\nconst sent = $('Count Sent').all().filter(threadHasId);\nconst samples = needsHuman.slice(0, 10).map((item) => {\n  const j = item.json;\n  const subject = String(j.subject || j.snippet || '').trim().slice(0, 200);\n  const snippet = String(j.snippet || j.message?.snippet || j.text || '').trim().slice(0, 300);\n  return { subject, snippet };\n});\nconst needsHumanLines = samples\n  .map((s) => `- ${s.subject || '(no subject)'}: ${s.snippet || ''}`.trim())\n  .join('\\n');\nreturn {\n  json: {\n    needsHumanCount: needsHuman.length,\n    draftedCount: drafted.length,\n    sentCount: sent.length,\n    needsHumanSamples: samples,\n    needsHumanLines\n  }\n};"
+      },
+      "id": "dd000005-0005-4005-8005-000000000005",
+      "name": "Build Stats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dd000006-0006-4006-8006-000000000006",
+              "leftValue": "={{ $json.needsHumanCount }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dd000007-0007-4007-8007-000000000007",
+      "name": "Any Needs Human",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "chatModel": "={{ $env.OPENAI_MODEL }}",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You summarize support email threads for an internal team digest. Write at most 80 words. Be factual. Do not include email addresses or links. Do not invent details."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Summarize what these threads need from a human:\\n\\n' + String($('Build Stats').item.json.needsHumanLines || '').slice(0, 6000) }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 200,
+          "timeout": 30000
+        },
+        "requestOptions": {}
+      },
+      "id": "dd000008-0008-4008-8008-000000000008",
+      "name": "Summarize",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        -80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4",
+          "name": "OpenAI API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dd000009-0009-4009-8009-000000000009",
+              "name": "emailSubject",
+              "value": "={{ 'Support digest ' + $now.toFormat('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "dd00000a-000a-400a-800a-00000000000a",
+              "name": "emailBody",
+              "value": "={{ (() => { const stats = $('Build Stats').item.json; const header = ['Support digest (last 24 hours)', '', 'AI-Drafted: ' + stats.draftedCount, 'AI-Sent: ' + stats.sentCount, 'AI-Needs-Human: ' + stats.needsHumanCount, '']; let summary = ''; if (stats.needsHumanCount === 0) { summary = 'Nothing needs a human today.'; } else if ($('Summarize').isExecuted) { const sItem = $('Summarize').item.json; summary = String(sItem.message?.content ?? sItem.text ?? sItem.content ?? sItem.choices?.[0]?.message?.content ?? '').trim(); if (!summary) { summary = 'Summary unavailable. Threads:\\n' + String(stats.needsHumanLines || ''); } } else { summary = 'Summary unavailable. Threads:\\n' + String(stats.needsHumanLines || ''); } return header.concat(['', summary]).join('\\n'); })() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dd00000b-000b-400b-800b-00000000000b",
+      "name": "Build Digest",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $env.DIGEST_RECIPIENT }}",
+        "subject": "={{ $json.emailSubject }}",
+        "message": "={{ $json.emailBody }}",
+        "options": {}
+      },
+      "id": "dd00000c-000c-400c-800c-00000000000c",
+      "name": "Send Digest",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "Every Morning": {
+      "main": [
+        [
+          {
+            "node": "Find Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Needs Human": {
+      "main": [
+        [
+          {
+            "node": "Count Drafted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Count Drafted": {
+      "main": [
+        [
+          {
+            "node": "Count Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Count Sent": {
+      "main": [
+        [
+          {
+            "node": "Build Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Stats": {
+      "main": [
+        [
+          {
+            "node": "Any Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any Needs Human": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Build Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Build Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Digest": {
+      "main": [
+        [
+          {
+            "node": "Send Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Inbox Failure Alert"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "dd00000d-000d-400d-800d-00000000000d",
+  "tags": []
+}
