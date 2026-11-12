@@ -1,0 +1,312 @@
+{
+  "name": "Planning Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a10b20c3-0d4e-4f5a-8b9c-1d2e3f4a5b6c",
+      "name": "Ready Request Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst requestId = input.requestId;\nconst qaResult = input.qaResult;\nconst payloadOk =\n  typeof requestId === 'string' &&\n  requestId.trim().length > 0 &&\n  typeof qaResult === 'string' &&\n  qaResult.trim().length > 0;\nreturn [\n  {\n    json: {\n      requestId: typeof requestId === 'string' ? requestId.trim() : requestId,\n      qaResult: typeof qaResult === 'string' ? qaResult.trim() : qaResult,\n      payloadOk,\n      raw: input,\n    },\n  },\n];"
+      },
+      "id": "b21c30d4-1e5f-4a6b-9c0d-2e3f4a5b6c7d",
+      "name": "Prepare Ready Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-planning-payload",
+              "leftValue": "={{ $json.payloadOk }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c32d41e5-2f6a-4b7c-0d1e-3f4a5b6c7d8e",
+      "name": "Payload Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.raw;\nconsole.log('Invalid planning request ignored', JSON.stringify(raw));\nreturn [];"
+      },
+      "id": "d43e52f6-3a7b-4c8d-1e2f-4a5b6c7d8e9f",
+      "name": "Log Invalid Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nif (!staticData.requestIds) {\n  staticData.requestIds = {};\n}\nconst requestId = $input.first().json.requestId;\nconst isDuplicate = Object.prototype.hasOwnProperty.call(staticData.requestIds, requestId);\nif (!isDuplicate) {\n  staticData.requestIds[requestId] = new Date().toISOString();\n}\nreturn [\n  {\n    json: {\n      ...$input.first().json,\n      isDuplicate,\n    },\n  },\n];"
+      },
+      "id": "e54f63a7-4b8c-4d9e-2f3a-5b6c7d8e9f0a",
+      "name": "Dedupe Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-planning-dup",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f65a74b8-5c9d-4e0f-3a4b-6c7d8e9f0a1b",
+      "name": "Is Duplicate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const requestId = $input.first().json.requestId;\nconsole.log('Duplicate requestId ignored', requestId);\nreturn [];"
+      },
+      "id": "a76b85c9-6d0e-4f1a-4b5c-7d8e9f0a1b2c",
+      "name": "Log Duplicate Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/planning/notify' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ requestId: $json.requestId, qaResult: $json.qaResult }) }}",
+        "options": {}
+      },
+      "id": "b87c96d0-7e1f-4a2b-5c6d-8e9f0a1b2c3d",
+      "name": "Notify Personnel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\nconsole.error('Planning workflow error', JSON.stringify(err));\nreturn [{ json: err }];"
+      },
+      "id": "c98da7e1-8f2a-4b3c-6d7e-9f0a1b2c3d4e",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.PLANNING_NOTIFY_FROM || 'planning-automation@example.com' }}",
+        "toEmail": "={{ $env.PLANNING_TEAM_EMAIL || 'planning-team@example.com' }}",
+        "subject": "Planning workflow failure",
+        "emailFormat": "text",
+        "text": "={{ 'A planning workflow step failed. Details: ' + JSON.stringify($json) }}"
+      },
+      "id": "d09eb8f2-9a3b-4c4d-7e8f-0a1b2c3d4e5f",
+      "name": "Notify Planning Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1540,
+        520
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "smtp": {
+          "id": "planning-team-email",
+          "name": "Planning Team Email"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Ready Request Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Ready Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Ready Request": {
+      "main": [
+        [
+          {
+            "node": "Payload Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payload Valid": {
+      "main": [
+        [
+          {
+            "node": "Dedupe Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dedupe Request": {
+      "main": [
+        [
+          {
+            "node": "Is Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Duplicate": {
+      "main": [
+        [
+          {
+            "node": "Log Duplicate Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Personnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Personnel": {
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Planning Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "active": false
+}
