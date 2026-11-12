@@ -1,0 +1,198 @@
+{
+  "name": "Chatbot - Send Answer to User",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions\n- **Sub-workflow trigger:** Acceptance criteria require **Execute Workflow Trigger** (not a webhook).\n- **Input contract:** Caller passes `chatId` and `aiResponseText` (matches **Chatbot - Generate AI Response** output).\n- **Telegram only:** Sends via **Telegram API** credential; no backend HTTP calls.",
+        "height": 220,
+        "width": 420
+      },
+      "id": "10111213-1415-1617-1819-1a1b1c1d1e1f",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "21222324-2526-2728-2930-313233343536",
+      "name": "Sub-Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst chatId = item.chatId;\nconst text = item.aiResponseText;\n\nif (chatId === null || chatId === undefined || chatId === '') {\n  throw new Error('chatId is required to send a Telegram answer');\n}\nif (typeof text !== 'string' || !text.trim()) {\n  throw new Error('aiResponseText is required to send a Telegram answer');\n}\n\nreturn [\n  {\n    json: {\n      chatId,\n      aiResponseText: text.trim(),\n    },\n  },\n];"
+      },
+      "id": "32333435-3637-3839-3a3b-3c3d3e3f4041",
+      "name": "Prepare Outbound Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.aiResponseText }}",
+        "additionalFields": {}
+      },
+      "id": "42434445-4647-4849-4a4b-4c4d4e4f5051",
+      "name": "Send Telegram Answer",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s1",
+              "name": "sent",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "s2",
+              "name": "chatId",
+              "value": "={{ $('Prepare Outbound Message').item.json.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "s3",
+              "name": "aiResponseText",
+              "value": "={{ $('Prepare Outbound Message').item.json.aiResponseText }}",
+              "type": "string"
+            },
+            {
+              "id": "s4",
+              "name": "telegramMessageId",
+              "value": "={{ $json.result && $json.result.message_id ? $json.result.message_id : null }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "52535455-5657-5859-5a5b-5c5d5e5f6061",
+      "name": "Message Delivered",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "send-answer-to-user",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "error",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "e3",
+              "name": "errorMessage",
+              "value": "={{ $json.error && $json.error.message ? $json.error.message : 'Telegram message send failed' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "62636465-6667-6869-6a6b-6c6d6e6f7071",
+      "name": "Handle Send Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Sub-Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Outbound Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Outbound Message": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Send Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Answer": {
+      "main": [
+        [
+          {
+            "node": "Message Delivered",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Send Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

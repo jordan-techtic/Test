@@ -1,0 +1,220 @@
+{
+  "name": "Chatbot - Generate AI Response",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions\n- **Sub-workflow trigger:** Acceptance criteria require **Execute Workflow Trigger** (not a webhook), matching the workflow step list.\n- **Minimal AI graph:** **AI Agent** + **OpenAI Chat Model** only (no tools/memory). Input: `userMessageText`; output: `aiResponseText` plus passthrough `chatId` when present.\n- **No downstream workflow:** Does not call **Chatbot - Send Answer to User** in this file.",
+        "height": 260,
+        "width": 440
+      },
+      "id": "f1e2d3c4-b5a6-9780-1234-567890abcdef",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        -80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a2b3c4d5-e6f7-8901-2345-67890abcde01",
+      "name": "Sub-Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst text = item.userMessageText;\nif (typeof text !== 'string' || !text.trim()) {\n  throw new Error('userMessageText is required for AI processing');\n}\nreturn [\n  {\n    json: {\n      userMessageText: text.trim(),\n      chatId: item.chatId ?? null,\n    },\n  },\n];"
+      },
+      "id": "b3c4d5e6-f7a8-9012-3456-7890abcdef02",
+      "name": "Prepare User Question",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "id": "c4d5e6f7-a8b9-0123-4567-890abcdef103",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.userMessageText }}",
+        "options": {}
+      },
+      "id": "d5e6f7a8-b9c0-1234-5678-90abcdef104",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        520,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "o1",
+              "name": "userMessageText",
+              "value": "={{ $('Prepare User Question').item.json.userMessageText }}",
+              "type": "string"
+            },
+            {
+              "id": "o2",
+              "name": "aiResponseText",
+              "value": "={{ $json.output ?? $json.text ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "o3",
+              "name": "chatId",
+              "value": "={{ $('Prepare User Question').item.json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e6f7a8b9-c0d1-2345-6789-0abcdef105",
+      "name": "Format AI Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "h1",
+              "name": "stage",
+              "value": "generate-ai-response",
+              "type": "string"
+            },
+            {
+              "id": "h2",
+              "name": "error",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "h3",
+              "name": "errorMessage",
+              "value": "={{ $json.error && $json.error.message ? $json.error.message : 'AI response generation failed' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f7a8b9c0-d1e2-3456-789a-bcdef106",
+      "name": "Handle AI Generation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Sub-Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare User Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare User Question": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI Chat Model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle AI Generation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle AI Generation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}
