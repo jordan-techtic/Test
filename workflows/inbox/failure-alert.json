@@ -1,0 +1,171 @@
+{
+  "name": "Inbox Failure Alert",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ia000001-0001-4001-8001-000000000001",
+      "name": "On Failure",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ia000002-0002-4002-8002-000000000002",
+              "name": "workflow",
+              "value": "={{ $json.workflow?.name || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "ia000003-0003-4003-8003-000000000003",
+              "name": "executionId",
+              "value": "={{ $json.execution?.id || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "ia000004-0004-4004-8004-000000000004",
+              "name": "node",
+              "value": "={{ $json.execution?.lastNodeExecuted || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "ia000005-0005-4005-8005-000000000005",
+              "name": "message",
+              "value": "={{ String($json.execution?.error?.message || 'unknown').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "ia000006-0006-4006-8006-000000000006",
+              "name": "at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ia000007-0007-4007-8007-000000000007",
+      "name": "Build Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ia000008-0008-4008-8008-000000000008",
+              "leftValue": "={{ $json.workflow }}",
+              "rightValue": "Inbox Failure Alert",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ia000009-0009-4009-8009-000000000009",
+      "name": "Is Own Failure",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $env.ALERT_RECIPIENT }}",
+        "subject": "={{ 'Inbox workflow failed: ' + $json.workflow }}",
+        "message": "={{ ['workflow: ' + $json.workflow, 'executionId: ' + $json.executionId, 'node: ' + $json.node, 'message: ' + $json.message, 'at: ' + $json.at].join('\\n') }}",
+        "options": {}
+      },
+      "id": "ia00000a-000a-400a-800a-00000000000a",
+      "name": "Send Alert",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        80
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "On Failure": {
+      "main": [
+        [
+          {
+            "node": "Build Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Alert": {
+      "main": [
+        [
+          {
+            "node": "Is Own Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Own Failure": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "ia00000c-000c-400c-800c-00000000000c",
+  "tags": []
+}

@@ -1,0 +1,487 @@
+{
+  "name": "Draft Reply With AI",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "dr000001-0001-4001-8001-000000000001",
+      "name": "When Called",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "threadId": "={{ $json.threadId }}"
+        }
+      },
+      "id": "dr000002-0002-4002-8002-000000000002",
+      "name": "Find Existing Draft",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dr000003-0003-4003-8003-000000000003",
+              "leftValue": "={{ $('Find Existing Draft').all().filter((i) => i.json && i.json.id).length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dr000004-0004-4004-8004-000000000004",
+      "name": "Draft Exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dr000005-0005-4005-8005-000000000005",
+              "name": "status",
+              "value": "skipped",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dr000006-0006-4006-8006-000000000006",
+      "name": "Return Skipped",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "chatModel": "={{ $env.OPENAI_MODEL }}",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You write polite support email replies. Use the sender's language. Stay under 150 words. Be helpful but do not promise refunds, dates, or outcomes. Do not invent facts. Do not include links or currency amounts. Do not use the words guarantee or promise. Sign the reply exactly as instructed in the user message."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Category: ' + ($('When Called').item.json.category || '') + '\\nSubject: ' + ($('When Called').item.json.subject || '') + '\\n\\nCustomer message:\\n' + String($('When Called').item.json.body || '').slice(0, 4000) + '\\n\\nSign as: ' + ($env.REPLY_SIGNATURE || '') }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 400,
+          "timeout": 30000
+        },
+        "requestOptions": {}
+      },
+      "id": "dr000007-0007-4007-8007-000000000007",
+      "name": "Write Reply",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        60
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4",
+          "name": "OpenAI API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item.json;\nlet text =\n  item.message?.content ??\n  item.text ??\n  item.content ??\n  item.choices?.[0]?.message?.content ??\n  '';\nif (typeof text === 'object' && text !== null) text = JSON.stringify(text);\ntext = String(text).trim();\nconst link = /https?:\\/\\//i.test(text);\nconst currency = /(?:\\$|€|£)\\s?\\d|(?:\\d+[.,]\\d{2}\\s?(?:usd|eur|gbp))/i.test(text);\nconst banned = /\\b(guarantee|promise)\\b/i.test(text);\nconst ok = text.length > 0 && text.length <= 1200 && !link && !currency && !banned;\nreturn { json: { replyText: text, ok } };"
+      },
+      "id": "dr000008-0008-4008-8008-000000000008",
+      "name": "Check Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dr000009-0009-4009-8009-000000000009",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dr00000a-000a-400a-800a-00000000000a",
+      "name": "Reply OK",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "create",
+        "subject": "={{ $('When Called').item.json.subject }}",
+        "message": "={{ $json.replyText }}",
+        "options": {
+          "threadId": "={{ $('When Called').item.json.threadId }}",
+          "sendTo": "={{ $('When Called').item.json.id }}"
+        }
+      },
+      "id": "dr00000b-000b-400b-800b-00000000000b",
+      "name": "Create Draft",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        -20
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dr00000c-000c-400c-800c-00000000000c",
+              "name": "status",
+              "value": "drafted",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dr00000d-000d-400d-800d-00000000000d",
+      "name": "Return Drafted",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "addLabels",
+        "threadId": "={{ $('When Called').item.json.threadId }}",
+        "labelIds": [
+          "AI-Needs-Human"
+        ]
+      },
+      "id": "dr00000e-000e-400e-800e-00000000000e",
+      "name": "Label Needs Human",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        160
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dr00000f-000f-400f-800f-00000000000f",
+              "name": "status",
+              "value": "needs_human",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dr000010-0010-4010-8010-000000000010",
+      "name": "Return Needs Human",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dr000014-0014-4014-8014-000000000014",
+              "leftValue": "={{ $('Check Reply').isExecuted }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dr000012-0012-4012-8012-000000000012",
+      "name": "OpenAI Failed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ String($('Write Reply').item.json.error?.message || $('Write Reply').item.json.message || 'OpenAI request failed').slice(0, 200) }}"
+      },
+      "id": "dr000013-0013-4013-8013-000000000013",
+      "name": "Report OpenAI Failure",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "When Called": {
+      "main": [
+        [
+          {
+            "node": "Find Existing Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Existing Draft": {
+      "main": [
+        [
+          {
+            "node": "Draft Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Exists": {
+      "main": [
+        [
+          {
+            "node": "Return Skipped",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Reply": {
+      "main": [
+        [
+          {
+            "node": "Check Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Label Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reply": {
+      "main": [
+        [
+          {
+            "node": "Reply OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply OK": {
+      "main": [
+        [
+          {
+            "node": "Create Draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Label Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Draft": {
+      "main": [
+        [
+          {
+            "node": "Return Drafted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Label Needs Human": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Failed": {
+      "main": [
+        [
+          {
+            "node": "Report OpenAI Failure",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Inbox Failure Alert"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "dr000011-0011-4011-8011-000000000011",
+  "tags": []
+}

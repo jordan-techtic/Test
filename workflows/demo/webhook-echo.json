@@ -1,0 +1,223 @@
+{
+  "name": "Webhook Echo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "demo/echo",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "f8e7d6c5-b4a3-4210-9f8e-76543210abcd",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Demo Webhook Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+              "leftValue": "={{ typeof $json.body?.message === 'string' ? $json.body.message.trim() : '' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+      "name": "Has Message",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+              "name": "received",
+              "value": "={{ $json.body.message.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "e5f6a7b8-c9d0-4123-e456-789abcdef012",
+              "name": "length",
+              "value": "={{ $json.body.message.trim().length }}",
+              "type": "number"
+            },
+            {
+              "id": "f6a7b8c9-d0e1-4234-f567-89abcdef0123",
+              "name": "upper",
+              "value": "={{ $json.body.message.trim().toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-e1f2-4345-a678-9abcdef01234",
+      "name": "Build Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        -80
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { received: $json.received, length: $json.length, upper: $json.upper } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "b8c9d0e1-f2a3-4456-b789-abcdef012345",
+      "name": "Reply OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { error: 'message is required' } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "c9d0e1f2-a3b4-4567-c890-bcdef0123456",
+      "name": "Reply Bad Request",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { error: 'internal' } }}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "id": "d0e1f2a3-b4c5-4678-d901-cdef01234567",
+      "name": "Reply Internal",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Has Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Message": {
+      "main": [
+        [
+          {
+            "node": "Build Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply Bad Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Internal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reply": {
+      "main": [
+        [
+          {
+            "node": "Reply OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Internal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "e1f2a3b4-c5d6-4789-e012-def012345678",
+  "tags": []
+}
