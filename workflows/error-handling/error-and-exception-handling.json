@@ -1,0 +1,504 @@
+{
+  "name": "Error and Exception Handling",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9920)\n- Webhook: POST **/error**, body `{ errorId, details, retryCount?, maxRetries?, retrySafe? }`; **MPA API service credential** (Header Auth) on the Webhook node (callers send the same API key header).\n- Invalid payload: missing/empty `errorId` or `details` → logged and ignored.\n- Duplicates: `errorId` in workflow global static data.\n- Record: POST **/v1/errors/record** (2 retries, 30s apart on this node).\n- Ticket when `retrySafe === false` OR `retryCount >= maxRetries` (defaults: `retryCount=0`, `maxRetries=2`, `retrySafe=true`).\n- Retry path: POST **/v1/errors/schedule-retry** after record.\n- Ticket path: POST **/v1/admin/exception-queue/tickets** after record.\n- Workflow failure: POST **/v1/admin/team-alert** (`team: admin`, email).",
+        "height": 380,
+        "width": 560
+      },
+      "id": "10000001-aaaa-bbbb-cccc-000000000001",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "path": "error",
+        "httpMethod": "POST",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "10000002-aaaa-bbbb-cccc-000000000002",
+      "name": "Error Report Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "error-report-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "miss-err-id",
+              "leftValue": "={{ $json.body?.errorId ?? $json.errorId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "miss-details",
+              "leftValue": "={{ $json.body?.details ?? $json.details }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "10000003-aaaa-bbbb-cccc-000000000003",
+      "name": "Invalid Payload",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "inv-msg",
+              "name": "message",
+              "value": "Ignored invalid error payload: missing errorId or details.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10000004-aaaa-bbbb-cccc-000000000004",
+      "name": "Log Invalid Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst body = raw.body && typeof raw.body === 'object' ? raw.body : raw;\nconst errorId = String(body.errorId ?? '').trim();\nconst details = String(body.details ?? '').trim();\n\nconst staticData = $getWorkflowStaticData('global');\nif (!staticData.seenErrorIds) staticData.seenErrorIds = {};\nif (staticData.seenErrorIds[errorId]) {\n  return [{ json: { errorId, details, route: 'duplicate' } }];\n}\nstaticData.seenErrorIds[errorId] = new Date().toISOString();\n\nconst retryCount = Number(body.retryCount ?? 0);\nconst maxRetries = Number(body.maxRetries ?? 2);\nconst retrySafe = body.retrySafe !== false;\nconst needsTicket = !retrySafe || retryCount >= maxRetries;\n\nreturn [{\n  json: {\n    errorId,\n    details,\n    retryCount,\n    maxRetries,\n    retrySafe,\n    needsTicket,\n    route: needsTicket ? 'ticket' : 'retry',\n  },\n}];"
+      },
+      "id": "10000005-aaaa-bbbb-cccc-000000000005",
+      "name": "Route Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        380
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dup-route",
+              "leftValue": "={{ $json.route }}",
+              "rightValue": "duplicate",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "10000006-aaaa-bbbb-cccc-000000000006",
+      "name": "Duplicate errorId",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dup-msg",
+              "name": "message",
+              "value": "={{ 'Ignored duplicate error report for errorId ' + $json.errorId }}",
+              "type": "string"
+            },
+            {
+              "id": "dup-id",
+              "name": "errorId",
+              "value": "={{ $json.errorId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10000007-aaaa-bbbb-cccc-000000000007",
+      "name": "Log Duplicate Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1240,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/errors/record",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"errorId\": {{ JSON.stringify($json.errorId) }},\n  \"details\": {{ JSON.stringify($json.details) }},\n  \"retryCount\": {{ $json.retryCount }},\n  \"maxRetries\": {{ $json.maxRetries }},\n  \"retrySafe\": {{ $json.retrySafe }}\n}",
+        "options": {}
+      },
+      "id": "10000008-aaaa-bbbb-cccc-000000000008",
+      "name": "Record Error",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        460
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "needs-ticket",
+              "leftValue": "={{ $('Route Error').item.json.needsTicket }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "10000009-aaaa-bbbb-cccc-000000000009",
+      "name": "Retries Unsafe Or Exhausted",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/admin/exception-queue/tickets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"errorId\": {{ JSON.stringify($('Route Error').item.json.errorId) }},\n  \"details\": {{ JSON.stringify($('Route Error').item.json.details) }},\n  \"queue\": \"admin-exception\",\n  \"reason\": \"retries-unsafe-or-exhausted\"\n}",
+        "options": {}
+      },
+      "id": "10000010-aaaa-bbbb-cccc-000000000010",
+      "name": "Create Admin Exception Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        340
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/errors/schedule-retry",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"errorId\": {{ JSON.stringify($('Route Error').item.json.errorId) }},\n  \"details\": {{ JSON.stringify($('Route Error').item.json.details) }},\n  \"retryCount\": {{ $('Route Error').item.json.retryCount }},\n  \"nextRetryCount\": {{ $('Route Error').item.json.retryCount + 1 }}\n}",
+        "options": {}
+      },
+      "id": "10000011-aaaa-bbbb-cccc-000000000011",
+      "name": "Log And Schedule Retry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        580
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/admin/team-alert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"team\": \"admin\",\n  \"channel\": \"email\",\n  \"subject\": \"Error handling workflow failure\",\n  \"errorId\": {{ JSON.stringify($('Route Error').item.json.errorId ?? $('Error Report Webhook').item.json.body?.errorId ?? '') }},\n  \"errorMessage\": {{ JSON.stringify($json.error?.message ?? $json.message ?? 'Error handling step failed') }},\n  \"failedNode\": {{ JSON.stringify($json.error?.node?.name ?? 'Record Error') }}\n}",
+        "options": {}
+      },
+      "id": "10000012-aaaa-bbbb-cccc-000000000012",
+      "name": "Log And Email Admin Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        780
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb-msg",
+              "name": "message",
+              "value": "={{ 'Admin team alert could not be sent via MPA: ' + ($json.error?.message ?? 'unknown error') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10000013-aaaa-bbbb-cccc-000000000013",
+      "name": "Log Unrecoverable Admin Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2360,
+        880
+      ]
+    }
+  ],
+  "connections": {
+    "Error Report Webhook": {
+      "main": [
+        [
+          {
+            "node": "Invalid Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Payload": {
+      "main": [
+        [
+          {
+            "node": "Log Invalid Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Error": {
+      "main": [
+        [
+          {
+            "node": "Duplicate errorId",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Email Admin Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Duplicate errorId": {
+      "main": [
+        [
+          {
+            "node": "Log Duplicate Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Error": {
+      "main": [
+        [
+          {
+            "node": "Retries Unsafe Or Exhausted",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Email Admin Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retries Unsafe Or Exhausted": {
+      "main": [
+        [
+          {
+            "node": "Create Admin Exception Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Schedule Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Admin Exception Ticket": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log And Email Admin Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log And Schedule Retry": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log And Email Admin Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log And Email Admin Team": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log Unrecoverable Admin Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "error-and-exception-handling-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "ErrorAndExceptionHandling",
+  "tags": []
+}

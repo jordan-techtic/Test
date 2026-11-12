@@ -1,0 +1,448 @@
+{
+  "name": "Post-launch Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9919)\n- **Schedule:** Cron `0 0 * * *` (daily midnight **UTC**).\n- **Daily idempotency:** Global static data stores `lastProcessedDate` (UTC `YYYY-MM-DD`); a second run the same day exits with no pull.\n- **Pull:** GET **/v1/post-launch/performance?date={processingDate}** via MPA (2 retries, 30s apart on this node).\n- **Reconcile:** POST **/v1/post-launch/reconcile** with pull payload + date; response includes `hasDiscrepancies` and `discrepancies`.\n- **Discrepancy rule:** MPA sets `hasDiscrepancies` when any metric’s planned vs actual differs by more than 1%.\n- **Proposal:** POST **/v1/post-launch/precedent-proposals** when `hasDiscrepancies` is true.\n- **No discrepancies:** Set node only (no downstream calls).\n- **Failures:** POST **/v1/post-launch/team-alert** (`team: post-launch`, email).",
+        "height": 400,
+        "width": 560
+      },
+      "id": "20000001-bbbb-cccc-dddd-000000000001",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        }
+      },
+      "id": "20000002-bbbb-cccc-dddd-000000000002",
+      "name": "Daily Midnight UTC",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst today = new Date().toISOString().slice(0, 10);\nif (staticData.lastProcessedDate === today) {\n  return [{ json: { processingDate: today, skipped: true } }];\n}\nstaticData.lastProcessedDate = today;\nreturn [{ json: { processingDate: today, skipped: false } }];"
+      },
+      "id": "20000003-bbbb-cccc-dddd-000000000003",
+      "name": "Mark Processing Day",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "skipped-today",
+              "leftValue": "={{ $json.skipped }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "20000004-bbbb-cccc-dddd-000000000004",
+      "name": "Already Processed Today",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "skip-msg",
+              "name": "message",
+              "value": "={{ 'No action: performance data already processed for ' + $json.processingDate }}",
+              "type": "string"
+            },
+            {
+              "id": "skip-date",
+              "name": "processingDate",
+              "value": "={{ $json.processingDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "20000005-bbbb-cccc-dddd-000000000005",
+      "name": "No Action Duplicate Day",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://mpa-api.example/v1/post-launch/performance?date={{ $json.processingDate }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "20000006-bbbb-cccc-dddd-000000000006",
+      "name": "Pull Performance Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        400
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/post-launch/reconcile",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"processingDate\": {{ JSON.stringify($('Mark Processing Day').item.json.processingDate) }},\n  \"performance\": {{ JSON.stringify($json) }}\n}",
+        "options": {}
+      },
+      "id": "20000007-bbbb-cccc-dddd-000000000007",
+      "name": "Reconcile Plan And Actual",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-disc",
+              "leftValue": "={{ $json.hasDiscrepancies }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "20000008-bbbb-cccc-dddd-000000000008",
+      "name": "Discrepancies Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/post-launch/precedent-proposals",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"processingDate\": {{ JSON.stringify($('Mark Processing Day').item.json.processingDate) }},\n  \"discrepancies\": {{ JSON.stringify($json.discrepancies ?? []) }},\n  \"status\": \"pending-approval\"\n}",
+        "options": {}
+      },
+      "id": "20000009-bbbb-cccc-dddd-000000000009",
+      "name": "Propose Precedent For Approval",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ok-msg",
+              "name": "message",
+              "value": "={{ 'No precedent proposal: planned and actual aligned for ' + $('Mark Processing Day').item.json.processingDate }}",
+              "type": "string"
+            },
+            {
+              "id": "ok-date",
+              "name": "processingDate",
+              "value": "={{ $('Mark Processing Day').item.json.processingDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "20000010-bbbb-cccc-dddd-000000000010",
+      "name": "No Discrepancies No Action",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/post-launch/team-alert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"team\": \"post-launch\",\n  \"channel\": \"email\",\n  \"subject\": \"Post-launch workflow failure\",\n  \"processingDate\": {{ JSON.stringify($('Mark Processing Day').item.json.processingDate ?? '') }},\n  \"errorMessage\": {{ JSON.stringify($json.error?.message ?? $json.message ?? 'Post-launch step failed') }},\n  \"failedNode\": {{ JSON.stringify($json.error?.node?.name ?? 'Pull Performance Data') }}\n}",
+        "options": {}
+      },
+      "id": "20000011-bbbb-cccc-dddd-000000000011",
+      "name": "Log And Email Post Launch Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        720
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb-msg",
+              "name": "message",
+              "value": "={{ 'Post-launch team alert could not be sent via MPA: ' + ($json.error?.message ?? 'unknown error') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "20000012-bbbb-cccc-dddd-000000000012",
+      "name": "Log Unrecoverable Post Launch Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2080,
+        820
+      ]
+    }
+  ],
+  "connections": {
+    "Daily Midnight UTC": {
+      "main": [
+        [
+          {
+            "node": "Mark Processing Day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Processing Day": {
+      "main": [
+        [
+          {
+            "node": "Already Processed Today",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Email Post Launch Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already Processed Today": {
+      "main": [
+        [
+          {
+            "node": "No Action Duplicate Day",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pull Performance Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Performance Data": {
+      "main": [
+        [
+          {
+            "node": "Reconcile Plan And Actual",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Email Post Launch Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reconcile Plan And Actual": {
+      "main": [
+        [
+          {
+            "node": "Discrepancies Found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log And Email Post Launch Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discrepancies Found": {
+      "main": [
+        [
+          {
+            "node": "Propose Precedent For Approval",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Discrepancies No Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Propose Precedent For Approval": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log And Email Post Launch Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log And Email Post Launch Team": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log Unrecoverable Post Launch Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "UTC"
+  },
+  "active": false,
+  "versionId": "post-launch-workflow-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "PostLaunchWorkflow",
+  "tags": []
+}

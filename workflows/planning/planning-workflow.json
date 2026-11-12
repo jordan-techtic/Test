@@ -1,0 +1,391 @@
+{
+  "name": "Planning Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9918)\n- MPA notification: POST https://mpa-api.example/v1/planning/ready-notify with JSON { requestId, qaResult, audience: \"planning-personnel\" }; auth via **MPA API service credential** (HTTP Header).\n- Failure email: POST https://mpa-api.example/v1/planning/team-alert (same credential) with team \"planning\" and error context from the failed step.\n- Duplicates: requestId tracked in workflow global static data (ignored on repeat).\n- Invalid payload: missing/empty requestId or qaResult → structured log item in execution (ignored, no notification).\n- Notification retries: 2 retries, 30s between attempts on the notify HTTP node only.",
+        "height": 340,
+        "width": 520
+      },
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Ready Request",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "inv-req-id",
+              "leftValue": "={{ $json.requestId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "inv-qa",
+              "leftValue": "={{ $json.qaResult }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Invalid Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "log-level",
+              "name": "logLevel",
+              "value": "warn",
+              "type": "string"
+            },
+            {
+              "id": "log-msg",
+              "name": "message",
+              "value": "={{ 'Ignored invalid Ready request: missing requestId or qaResult. Payload keys: ' + Object.keys($json).join(', ') }}",
+              "type": "string"
+            },
+            {
+              "id": "log-req",
+              "name": "requestId",
+              "value": "={{ $json.requestId }}",
+              "type": "string"
+            },
+            {
+              "id": "log-qa",
+              "name": "qaResult",
+              "value": "={{ $json.qaResult }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-def0-234567890123",
+      "name": "Log Invalid Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nif (!staticData.seenRequestIds) staticData.seenRequestIds = {};\n\nconst item = $input.first().json;\nconst requestId = String(item.requestId ?? '').trim();\nconst qaResult = String(item.qaResult ?? '').trim();\n\nif (staticData.seenRequestIds[requestId]) {\n  return [{ json: { status: 'duplicate', requestId, qaResult } }];\n}\n\nstaticData.seenRequestIds[requestId] = new Date().toISOString();\nreturn [{ json: { status: 'notify', requestId, qaResult } }];"
+      },
+      "id": "e5f6a7b8-c9d0-1234-ef01-345678901234",
+      "name": "Check Duplicate requestId",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        380
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dup-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "duplicate",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-f012-456789012345",
+      "name": "Duplicate requestId",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dup-log",
+              "name": "message",
+              "value": "={{ 'Ignored duplicate Ready request for requestId ' + $json.requestId }}",
+              "type": "string"
+            },
+            {
+              "id": "dup-req",
+              "name": "requestId",
+              "value": "={{ $json.requestId }}",
+              "type": "string"
+            },
+            {
+              "id": "dup-qa",
+              "name": "qaResult",
+              "value": "={{ $json.qaResult }}",
+              "type": "string"
+            },
+            {
+              "id": "dup-status",
+              "name": "status",
+              "value": "ignored-duplicate",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-e1f2-3456-0123-567890123456",
+      "name": "Log Duplicate Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/planning/ready-notify",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requestId\": {{ JSON.stringify($json.requestId) }},\n  \"qaResult\": {{ JSON.stringify($json.qaResult) }},\n  \"audience\": \"planning-personnel\"\n}",
+        "options": {}
+      },
+      "id": "b8c9d0e1-f2a3-4567-1234-678901234567",
+      "name": "Notify Planning Personnel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        500
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/planning/team-alert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"team\": \"planning\",\n  \"channel\": \"email\",\n  \"subject\": \"Planning workflow failure\",\n  \"requestId\": {{ JSON.stringify($('Ready Request').item.json.requestId ?? $json.requestId ?? '') }},\n  \"qaResult\": {{ JSON.stringify($('Ready Request').item.json.qaResult ?? $json.qaResult ?? '') }},\n  \"errorMessage\": {{ JSON.stringify($json.error?.message ?? $json.message ?? 'Notification or deduplication step failed') }},\n  \"failedNode\": {{ JSON.stringify($json.error?.node?.name ?? 'Notify Planning Personnel') }}\n}",
+        "options": {}
+      },
+      "id": "c9d0e1f2-a3b4-5678-2345-789012345678",
+      "name": "Log and Email Planning Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1560,
+        620
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fallback-msg",
+              "name": "message",
+              "value": "={{ 'Planning team alert could not be sent via MPA: ' + ($json.error?.message ?? 'unknown error') }}",
+              "type": "string"
+            },
+            {
+              "id": "fallback-req",
+              "name": "requestId",
+              "value": "={{ $('Ready Request').item.json.requestId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d0e1f2a3-b4c5-6789-3456-890123456789",
+      "name": "Log Unrecoverable Alert Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1840,
+        720
+      ]
+    }
+  ],
+  "connections": {
+    "Ready Request": {
+      "main": [
+        [
+          {
+            "node": "Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Request": {
+      "main": [
+        [
+          {
+            "node": "Log Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Duplicate requestId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate requestId": {
+      "main": [
+        [
+          {
+            "node": "Duplicate requestId",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log and Email Planning Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Duplicate requestId": {
+      "main": [
+        [
+          {
+            "node": "Log Duplicate Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Planning Personnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Planning Personnel": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log and Email Planning Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log and Email Planning Team": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log Unrecoverable Alert Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "planning-workflow-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "PlanningWorkflow",
+  "tags": []
+}
