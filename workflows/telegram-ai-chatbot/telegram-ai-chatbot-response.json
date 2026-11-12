@@ -1,0 +1,245 @@
+{
+  "name": "Telegram AI Chatbot Response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "f3a8c2d1-4b5e-4f6a-9c0d-1e2f3a4b5c6d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "telegram-ai-chatbot-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+      "name": "Message Is Text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "={{ $('Webhook').item.json.message.text }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.7
+        }
+      },
+      "id": "b8c9d0e1-2f3a-4b5c-9d0e-1f2a3b4c5d6e",
+      "name": "Send to OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Webhook').item.json.message.chat?.id || $('Webhook').item.json.message.chat_id || $('Webhook').item.json.chat_id || $env.TELEGRAM_REPLY_CHAT_ID }}",
+        "text": "={{ $json.message?.content || $json.choices?.[0]?.message?.content || $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "c9d0e1f2-3a4b-5c6d-0e1f-2a3b4c5d6e7f",
+      "name": "Send Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        -80
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "3",
+          "name": "Telegram API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "tg-ai-chatbot-error",
+          "mode": "id",
+          "cachedResultName": "Telegram AI Chatbot Error Handling"
+        },
+        "options": {}
+      },
+      "id": "d0e1f2a3-4b5c-6d7e-1f2a-3b4c5d6e7f80",
+      "name": "Call Error Handling Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e1f2a3b4-5c6d-7e8f-2a3b-4c5d6e7f8091",
+      "name": "Ignore Non-Text",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        480,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Assumptions\n\n- Generic **Webhook** POST `telegram` (not Telegram Trigger); body includes `message.text`.\n- **chatId** resolution order: `message.chat.id`, then `message.chat_id`, then top-level `chat_id`, then **$env.TELEGRAM_REPLY_CHAT_ID** (for minimal test payloads).\n- Ticket test example: `{\"message\":{\"text\":\"Hello, AI!\"}}` works when **TELEGRAM_REPLY_CHAT_ID** is set on the n8n host; or use `{\"message\":{\"text\":\"Hello, AI!\",\"chat\":{\"id\":123}}}`.\n- Inbound auth uses **HTTP Header Auth** credential named **Telegram API**; outbound Telegram uses **telegramApi** with the same display name.\n- OpenAI reply text: `message.content`, else `choices[0].message.content`, else `text`.\n- OpenAI: **gpt-4o-mini**, user message only, maxTokens 500, temperature 0.7; 3 retries with 1s wait between tries.\n- Failures route via **onError → Execute Workflow** id `tg-ai-chatbot-error` (Error Handling workflow)."
+      },
+      "id": "f2a3b4c5-6d7e-8f9a-3b4c-5d6e7f8091a2",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message Is Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Is Text": {
+      "main": [
+        [
+          {
+            "node": "Send to OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ignore Non-Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Error Handling Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Reply": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Call Error Handling Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-11-12T00:00:00.000Z",
+  "versionId": "1",
+  "id": "tg-ai-chatbot-response",
+  "meta": {
+    "instanceId": "repository-local"
+  },
+  "active": false
+}
