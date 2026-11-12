@@ -1,0 +1,560 @@
+{
+  "name": "Intake Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9917)\n- Webhook: POST **/intake-brief**, body `{ briefId, content }`; **Monday.com webhook secret** via n8n Header Auth on the Webhook node (shared secret header configured in the credential).\n- Valid brief: non-empty `briefId` and `content`, and `content.trim().length >= 5` (test payload passes).\n- Invalid shape: missing/empty fields → logged and ignored (no gap, no planning).\n- Failed validation (too-short content): POST **/v1/intake/gap-messages** via MPA.\n- Success: POST **/v1/intake/planning-run** then **Execute Workflow → Planning Workflow** with `requestId=briefId`, `qaResult=Pass`.\n- Duplicates: `briefId` in workflow global static data.\n- MPA validation audit: POST **/v1/intake/validate-brief** with `{ briefId, content, valid, gaps }` before branching.\n- Failures: POST **/v1/intake/team-alert** (`team: intake`, email). Processing HTTP nodes: 2 retries, 30s apart.",
+        "height": 400,
+        "width": 560
+      },
+      "id": "f1e2d3c4-b5a6-9780-1234-567890abcdef",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "path": "intake-brief",
+        "httpMethod": "POST",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "a1b2c3d4-1111-4222-8333-444455556666",
+      "name": "Intake Brief Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        320
+      ],
+      "webhookId": "intake-brief-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "monday-webhook-cred",
+          "name": "Monday.com webhook secret"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "miss-id",
+              "leftValue": "={{ $json.body?.briefId ?? $json.briefId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "miss-content",
+              "leftValue": "={{ $json.body?.content ?? $json.content }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-2222-4333-8444-555566667777",
+      "name": "Invalid Payload",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "inv-msg",
+              "name": "message",
+              "value": "={{ 'Ignored invalid intake payload: missing briefId or content.' }}",
+              "type": "string"
+            },
+            {
+              "id": "inv-keys",
+              "name": "receivedKeys",
+              "value": "={{ Object.keys($json.body ?? $json).join(', ') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3d4e5f6-3333-4444-9555-666677778888",
+      "name": "Log Invalid Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nif (!staticData.seenBriefIds) staticData.seenBriefIds = {};\n\nconst raw = $input.first().json;\nconst body = raw.body && typeof raw.body === 'object' ? raw.body : raw;\nconst briefId = String(body.briefId ?? '').trim();\nconst content = String(body.content ?? '').trim();\n\nif (staticData.seenBriefIds[briefId]) {\n  return [{ json: { briefId, content, route: 'duplicate' } }];\n}\nstaticData.seenBriefIds[briefId] = new Date().toISOString();\n\nconst minLength = 5;\nconst valid = content.length >= minLength;\nconst gaps = valid\n  ? []\n  : [`Brief content must be at least ${minLength} characters (received ${content.length}).`];\n\nreturn [{\n  json: {\n    briefId,\n    content,\n    route: valid ? 'planning' : 'gap',\n    valid,\n    gaps,\n  },\n}];"
+      },
+      "id": "d4e5f6a7-4444-4555-a666-777788889999",
+      "name": "Assess Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        400
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dup-route",
+              "leftValue": "={{ $json.route }}",
+              "rightValue": "duplicate",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-5555-4666-b777-888899990000",
+      "name": "Duplicate briefId",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dup-msg",
+              "name": "message",
+              "value": "={{ 'Ignored duplicate brief submission for briefId ' + $json.briefId }}",
+              "type": "string"
+            },
+            {
+              "id": "dup-id",
+              "name": "briefId",
+              "value": "={{ $json.briefId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-6666-4777-c888-999900001111",
+      "name": "Log Duplicate Brief",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1240,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/intake/validate-brief",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"briefId\": {{ JSON.stringify($json.briefId) }},\n  \"content\": {{ JSON.stringify($json.content) }},\n  \"valid\": {{ $json.valid }},\n  \"gaps\": {{ JSON.stringify($json.gaps) }}\n}",
+        "options": {}
+      },
+      "id": "a7b8c9d0-7777-4888-d999-000011112222",
+      "name": "Validate Brief with MPA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        480
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "gap-route",
+              "leftValue": "={{ $('Assess Brief').item.json.route }}",
+              "rightValue": "gap",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b8c9d0e1-8888-4999-e000-111122223333",
+      "name": "Brief Needs Gap Messages",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/intake/gap-messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"briefId\": {{ JSON.stringify($('Assess Brief').item.json.briefId) }},\n  \"content\": {{ JSON.stringify($('Assess Brief').item.json.content) }},\n  \"gaps\": {{ JSON.stringify($('Assess Brief').item.json.gaps) }}\n}",
+        "options": {}
+      },
+      "id": "c9d0e1f2-9999-4aaa-f111-222233334444",
+      "name": "Send Gap Messages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        360
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/intake/planning-run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"briefId\": {{ JSON.stringify($('Assess Brief').item.json.briefId) }},\n  \"content\": {{ JSON.stringify($('Assess Brief').item.json.content) }}\n}",
+        "options": {}
+      },
+      "id": "d0e1f2a3-aaaa-4bbb-0111-333344445555",
+      "name": "Initiate Planning Run",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        600
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Planning Workflow",
+          "mode": "name",
+          "cachedResultName": "Planning Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "requestId": "={{ $('Assess Brief').item.json.briefId }}",
+            "qaResult": "Pass"
+          }
+        },
+        "options": {}
+      },
+      "id": "e1f2a3b4-bbbb-4ccc-1222-444455556666",
+      "name": "Start Planning Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        600
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mpa-api.example/v1/intake/team-alert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"team\": \"intake\",\n  \"channel\": \"email\",\n  \"subject\": \"Intake workflow failure\",\n  \"briefId\": {{ JSON.stringify($('Assess Brief').item.json.briefId ?? $('Intake Brief Webhook').item.json.body?.briefId ?? '') }},\n  \"errorMessage\": {{ JSON.stringify($json.error?.message ?? $json.message ?? 'Intake processing failed') }},\n  \"failedNode\": {{ JSON.stringify($json.error?.node?.name ?? 'Assess Brief') }}\n}",
+        "options": {}
+      },
+      "id": "f2a3b4c5-cccc-4ddd-2333-555566667777",
+      "name": "Log and Email Intake Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        840
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-cred-id",
+          "name": "MPA API service credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb-msg",
+              "name": "message",
+              "value": "={{ 'Intake team alert could not be sent via MPA: ' + ($json.error?.message ?? 'unknown error') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a3b4c5d6-dddd-4eee-3444-666677778888",
+      "name": "Log Unrecoverable Intake Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2360,
+        940
+      ]
+    }
+  ],
+  "connections": {
+    "Intake Brief Webhook": {
+      "main": [
+        [
+          {
+            "node": "Invalid Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Payload": {
+      "main": [
+        [
+          {
+            "node": "Log Invalid Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assess Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assess Brief": {
+      "main": [
+        [
+          {
+            "node": "Duplicate briefId",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log and Email Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Duplicate briefId": {
+      "main": [
+        [
+          {
+            "node": "Log Duplicate Brief",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate Brief with MPA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Brief with MPA": {
+      "main": [
+        [
+          {
+            "node": "Brief Needs Gap Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log and Email Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Needs Gap Messages": {
+      "main": [
+        [
+          {
+            "node": "Send Gap Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Initiate Planning Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gap Messages": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log and Email Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initiate Planning Run": {
+      "main": [
+        [
+          {
+            "node": "Start Planning Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log and Email Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Planning Workflow": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log and Email Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log and Email Intake Team": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Log Unrecoverable Intake Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "intake-workflow-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "IntakeWorkflow",
+  "tags": []
+}
