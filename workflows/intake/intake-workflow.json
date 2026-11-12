@@ -1,0 +1,475 @@
+{
+  "name": "Intake Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "intake-brief",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "8f3c2b1a-0e4d-4c5f-9a8b-1c2d3e4f5a6b",
+      "name": "Intake Brief Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "intake-brief-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "monday-webhook-secret",
+          "name": "Monday.com Webhook Secret"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body ?? item;\nconst briefId = body.briefId;\nconst content = body.content;\nconst payloadOk =\n  typeof briefId === 'string' &&\n  briefId.trim().length > 0 &&\n  typeof content === 'string' &&\n  content.trim().length > 0;\nreturn [\n  {\n    json: {\n      briefId: typeof briefId === 'string' ? briefId.trim() : briefId,\n      content: typeof content === 'string' ? content.trim() : content,\n      payloadOk,\n      raw: body,\n    },\n  },\n];"
+      },
+      "id": "9a4d3c2b-1f5e-4d6a-8b9c-2d3e4f5a6b7c",
+      "name": "Prepare Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-payload-ok",
+              "leftValue": "={{ $json.payloadOk }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ab5e4d3c-2a6f-4e7b-9c0d-3e4f5a6b7c8d",
+      "name": "Payload Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.raw;\nconsole.log('Invalid intake payload ignored', JSON.stringify(raw));\nreturn [];"
+      },
+      "id": "bc6f5e4d-3b7a-4f8c-0d1e-4f5a6b7c8d9e",
+      "name": "Log Invalid Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nif (!staticData.briefIds) {\n  staticData.briefIds = {};\n}\nconst briefId = $input.first().json.briefId;\nconst isDuplicate = Object.prototype.hasOwnProperty.call(staticData.briefIds, briefId);\nif (!isDuplicate) {\n  staticData.briefIds[briefId] = new Date().toISOString();\n}\nreturn [\n  {\n    json: {\n      ...$input.first().json,\n      isDuplicate,\n    },\n  },\n];"
+      },
+      "id": "cd7a6f5e-4c8b-4a9d-1e2f-5a6b7c8d9e0f",
+      "name": "Dedupe Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-dup",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "de8b7a6f-5d9c-4b0e-2f3a-6b7c8d9e0f1a",
+      "name": "Is Duplicate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const briefId = $input.first().json.briefId;\nconsole.log('Duplicate briefId ignored', briefId);\nreturn [];"
+      },
+      "id": "ef9c8b7a-6e0d-4c1f-3a4b-7c8d9e0f1a2b",
+      "name": "Log Duplicate Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/intake/validate' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ briefId: $json.briefId, content: $json.content }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "f0ad9c8b-7f1e-4d2a-4b5c-8d9e0f1a2b3c",
+      "name": "Validate Brief MPA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-brief-valid",
+              "leftValue": "={{ $json.valid === true || $json.body?.valid === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "01be0d9c-8a2f-4e3b-5c6d-9e0f1a2b3c4d",
+      "name": "Brief Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/intake/gap-messages' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ briefId: $('Dedupe Brief').item.json.briefId, content: $('Dedupe Brief').item.json.content, validation: $json }) }}",
+        "options": {}
+      },
+      "id": "12cf1e0d-9b3a-4f4c-6d7e-0f1a2b3c4d5e",
+      "name": "Send Gap Messages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        480
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Planning Workflow",
+          "mode": "name"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "requestId",
+              "stringValue": "={{ $('Dedupe Brief').item.json.briefId }}"
+            },
+            {
+              "name": "qaResult",
+              "stringValue": "={{ $json.qaResult || $json.body?.qaResult || 'Validated' }}"
+            }
+          ]
+        }
+      },
+      "id": "23d02e1f-0c4b-4a5d-7e8f-1a2b3c4d5e6f",
+      "name": "Start Planning Run",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\nconsole.error('Intake workflow error', JSON.stringify(err));\nreturn [{ json: err }];"
+      },
+      "id": "34e13f20-1d5c-4b6e-8f9a-2b3c4d5e6f7a",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.INTAKE_NOTIFY_FROM || 'intake-automation@example.com' }}",
+        "toEmail": "={{ $env.INTAKE_TEAM_EMAIL || 'intake-team@example.com' }}",
+        "subject": "Intake workflow failure",
+        "emailFormat": "text",
+        "text": "={{ 'An intake workflow step failed. Details: ' + JSON.stringify($json) }}"
+      },
+      "id": "45f24a31-2e6d-4c7f-9a0b-3c4d5e6f7a8b",
+      "name": "Notify Intake Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        680
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "smtp": {
+          "id": "intake-team-email",
+          "name": "Intake Team Email"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Intake Brief Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Brief": {
+      "main": [
+        [
+          {
+            "node": "Payload Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payload Valid": {
+      "main": [
+        [
+          {
+            "node": "Dedupe Brief",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Invalid Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dedupe Brief": {
+      "main": [
+        [
+          {
+            "node": "Is Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Duplicate": {
+      "main": [
+        [
+          {
+            "node": "Log Duplicate Brief",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate Brief MPA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Brief MPA": {
+      "main": [
+        [
+          {
+            "node": "Brief Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Valid": {
+      "main": [
+        [
+          {
+            "node": "Start Planning Run",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Gap Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Planning Run": {
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gap Messages": {
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Intake Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "active": false
+}

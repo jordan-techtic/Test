@@ -1,0 +1,346 @@
+{
+  "name": "Post-launch Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        },
+        "timezone": "UTC"
+      },
+      "id": "p10a20b3-0c4d-4e5f-6a7b-8c9d0e1f2a3b",
+      "name": "Daily Midnight UTC",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const runDate = new Date().toISOString().slice(0, 10);\nreturn [{ json: { runDate, triggeredAt: new Date().toISOString() } }];"
+      },
+      "id": "p21b30c4-1d5e-4f6a-7b8c-9d0e1f2a3b4c",
+      "name": "Set Processing Date",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/post-launch/performance?runDate=' + encodeURIComponent($json.runDate) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "p32c41d5-2e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "name": "Pull Performance Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/post-launch/reconcile' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runDate: $('Set Processing Date').item.json.runDate, performance: $json }) }}",
+        "options": {}
+      },
+      "id": "p43d52e6-3f7a-4b8c-9d0e-1f2a3b4c5d6e",
+      "name": "Reconcile Plan",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst body = response.body ?? response;\nconst discrepancies =\n  body.hasDiscrepancies === true ||\n  (Array.isArray(body.discrepancies) && body.discrepancies.length > 0);\nreturn [\n  {\n    json: {\n      runDate: $('Set Processing Date').item.json.runDate,\n      hasDiscrepancies: discrepancies,\n      reconciliation: body,\n    },\n  },\n];"
+      },
+      "id": "p54e63f7-4a8b-4c9d-0e1f-2a3b4c5d6e7f",
+      "name": "Evaluate Discrepancies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-discrepancy",
+              "leftValue": "={{ $json.hasDiscrepancies }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "p65f74a8-5b9c-4d0e-1f2a-3b4c5d6e7f8a",
+      "name": "Discrepancies Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.MPA_SERVICE_URL || '').replace(/\\/$/, '') + '/post-launch/precedent/propose' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runDate: $json.runDate, reconciliation: $json.reconciliation }) }}",
+        "options": {}
+      },
+      "id": "p76a85b9-6c0d-4e1f-2a3b-4c5d6e7f8a9b",
+      "name": "Propose Precedent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        180
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mpa-api-service",
+          "name": "MPA API Service"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const runDate = $input.first().json.runDate;\nconsole.log('Post-launch reconcile complete with no discrepancies', runDate);\nreturn [{ json: { runDate, action: 'none' } }];"
+      },
+      "id": "p87b96c0-7d1e-4f2a-3b4c-5d6e7f8a9b0c",
+      "name": "No Discrepancy Action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\nconsole.error('Post-launch workflow error', JSON.stringify(err));\nreturn [{ json: err }];"
+      },
+      "id": "p98c0a7d1-8e2f-4a3b-4c5d-6e7f8a9b0c1d",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.POSTLAUNCH_NOTIFY_FROM || 'postlaunch-automation@example.com' }}",
+        "toEmail": "={{ $env.POSTLAUNCH_TEAM_EMAIL || 'postlaunch-team@example.com' }}",
+        "subject": "Post-launch workflow failure",
+        "emailFormat": "text",
+        "text": "={{ 'The post-launch workflow failed. Details: ' + JSON.stringify($json) }}"
+      },
+      "id": "pa9d1b8e2-9f3a-4b4c-5d6e-7f8a9b0c1d2e",
+      "name": "Notify Post-launch Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1540,
+        640
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 30000,
+      "credentials": {
+        "smtp": {
+          "id": "post-launch-team-email",
+          "name": "Post-launch Team Email"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily Midnight UTC": {
+      "main": [
+        [
+          {
+            "node": "Set Processing Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Processing Date": {
+      "main": [
+        [
+          {
+            "node": "Pull Performance Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Performance Data": {
+      "main": [
+        [
+          {
+            "node": "Reconcile Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reconcile Plan": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Discrepancies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Discrepancies": {
+      "main": [
+        [
+          {
+            "node": "Discrepancies Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discrepancies Found": {
+      "main": [
+        [
+          {
+            "node": "Propose Precedent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Discrepancy Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Propose Precedent": {
+      "error": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Post-launch Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "active": false
+}
