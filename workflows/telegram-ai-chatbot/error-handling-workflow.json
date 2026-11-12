@@ -1,0 +1,153 @@
+{
+  "name": "Telegram AI Chatbot Error Handling",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-5e6f-7a8b-9c0d-e1f2a3b4c5d6e",
+      "name": "When Called by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+              "name": "failedNode",
+              "value": "={{ $json.error && $json.error.node ? $json.error.node.name : 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+              "name": "errorSummary",
+              "value": "={{ $json.error && $json.error.message ? $json.error.message : ($json.error && $json.error.description ? $json.error.description : 'Workflow execution failed') }}",
+              "type": "string"
+            },
+            {
+              "id": "d4e5f6a7-8b9c-0d1e-2f3a-3b4c5d6e7f80",
+              "name": "sourceWorkflow",
+              "value": "={{ $json.error && $json.error.workflow ? $json.error.workflow.name : 'Telegram AI Chatbot Response' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+      "name": "Prepare Error Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.TELEGRAM_ADMIN_CHAT_ID }}",
+        "text": "=Chatbot error in {{ $json.sourceWorkflow }} (node: {{ $json.failedNode }}): {{ $json.errorSummary }}",
+        "additionalFields": {}
+      },
+      "id": "f6a7b8c9-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+      "name": "Notify Administrator",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "3",
+          "name": "Telegram API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "id": "a7b8c9d0-1e2f-4a3b-9c0d-1e2f3a4b5c6d7e",
+      "name": "Notification Delivery Failed",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        780,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Assumptions\n\n- Trigger is **Execute Workflow Trigger** (sub-workflow), matching the main workflow's **Execute Workflow** call with id `tg-ai-chatbot-error`.\n- **Logging** = **Prepare Error Log** Set node fields (`failedNode`, `errorSummary`, `sourceWorkflow`) stored in n8n execution data only; no user message text.\n- Admin alerts go to **$env.TELEGRAM_ADMIN_CHAT_ID** via **Telegram API** credential; 3 send retries.\n- Telegram notify failures end on **Notification Delivery Failed** (no further escalation)."
+      },
+      "id": "b8c9d0e1-2f3a-4b5c-9d0e-1f2a3b4c5d6e7f",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -200
+      ]
+    }
+  ],
+  "connections": {
+    "When Called by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Prepare Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log": {
+      "main": [
+        [
+          {
+            "node": "Notify Administrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Administrator": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Notification Delivery Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-11-12T00:00:00.000Z",
+  "versionId": "1",
+  "id": "tg-ai-chatbot-error",
+  "meta": {
+    "instanceId": "repository-local"
+  },
+  "active": false
+}
