@@ -1,0 +1,376 @@
+{
+  "name": "Telegram AI Chatbot Response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "f3a8c2d1-4b5e-4f6a-9c0d-1e2f3a4b5c6d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "telegram-ai-chatbot-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+              "leftValue": "={{ $json.body?.message?.text ?? $json.message?.text ?? '' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+      "name": "Message Is Text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1b2c3d4-e5f6-4789-a012-startcmd00001",
+              "leftValue": "={{ $json.body?.message?.text ?? $json.message?.text ?? '' }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
+      "name": "Start Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "={{ $('Webhook').item.json.body?.message?.text ?? $('Webhook').item.json.message?.text ?? '' }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.7
+        }
+      },
+      "id": "b8c9d0e1-2f3a-4b5c-9d0e-1f2a3b4c5d6e",
+      "name": "Send to OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -120
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "notes": "Keyword rules (upstream IF nodes decide routing; this node runs only when all pass):\n\n1. **Message Is Text** — `body.message.text` or `message.text` must be a non-empty string. Otherwise the update stops at **Ignore Non-Text** (no OpenAI call).\n2. **Start Command** — text that equals `/start` gets a fixed welcome reply via **Send Telegram Reply** and is not sent to OpenAI.\n3. **OpenAI path** — every other non-empty text message is forwarded here as the user chat message.\n\nThere is no separate keyword allow/deny list in this workflow; routing is by presence of text and the `/start` command only.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Webhook').item.json.body?.message?.chat?.id ?? $('Webhook').item.json.message?.chat?.id ?? $('Webhook').item.json.message?.chat_id ?? $('Webhook').item.json.chat_id }}",
+        "text": "={{ (($('Webhook').item.json.body?.message?.text ?? $('Webhook').item.json.message?.text) === '/start') ? 'Welcome! I am your AI assistant. Send a text message to chat.' : ($json.message?.content || $json.choices?.[0]?.message?.content || $json.text || '') }}",
+        "additionalFields": {}
+      },
+      "id": "c9d0e1f2-3a4b-5c6d-0e1f-2a3b4c5d6e7f",
+      "name": "Send Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        -80
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "h2i3j4k5-0001-4001-8001-000000000001",
+              "name": "stage",
+              "value": "={{ $json.error?.node?.name ?? 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0002-4002-8002-000000000002",
+              "name": "errorMessage",
+              "value": "={{ String($json.error?.message ?? $json.error?.description ?? 'Workflow step failed').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0003-4003-8003-000000000003",
+              "name": "at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "h2i3j4k5-l6m7-4n8o-9p0q-1r2s3t4u5v6w",
+      "name": "Prepare Error Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.TELEGRAM_ADMIN_CHAT_ID }}",
+        "text": "=Chatbot step failed ({{ $json.stage }}): {{ $json.errorMessage }} at {{ $json.at }}",
+        "additionalFields": {}
+      },
+      "id": "i3j4k5l6-m7n8-4o9p-0q1r-2s3t4u5v6w7x",
+      "name": "Notify Administrator",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "id": "j4k5l6m7-n8o9-0p1q-2r3s-4t5u6v7w8x9y",
+      "name": "Notification Delivery Failed",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e1f2a3b4-5c6d-7e8f-2a3b-4c5d6e7f8091",
+      "name": "Ignore Non-Text",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        480,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Assumptions\n\n- Generic **Webhook** POST `telegram`; payload uses `message.text` at the root or under `body` (Telegram update shape).\n- **Start Command** IF: `/start` gets a fixed greeting via **Send Telegram Reply** without OpenAI; other text goes to OpenAI.\n- JAW-9925: keyword rules are documented on **Send to OpenAI** via per-node `notes` + `notesInFlow` (not an extra sticky); content reflects text/non-text and `/start` only—no product keyword list or message-id dedup in this file.\n- Inbound auth: **httpHeaderAuth** credential named **Telegram API** (maps to Telegram `secret_token` header); outbound send uses **telegramApi** with the same display name.\n- OpenAI: **gpt-4o-mini**, user message only, maxTokens 500; **3 retries**, **5s** between tries.\n- **chatId**: from `message.chat.id` (or documented fallbacks); Telegram updates must include `chat`—no fixed env fallback for outbound send.\n- Errors (JAW-9926): **Send to OpenAI** / **Send Telegram Reply** error outputs → **Prepare Error Log** (`stage`, `errorMessage` ≤200 chars, `at` ISO) → **Notify Administrator** to **$env.TELEGRAM_ADMIN_CHAT_ID** (3 retries, 5s); no user message text or chat ids in the alert. Failed notify ends at **Notification Delivery Failed**.\n- Non-text updates end at **Ignore Non-Text** without error."
+      },
+      "id": "f2a3b4c5-6d7e-8f9a-3b4c-5d6e7f8091a2",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -240
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message Is Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Is Text": {
+      "main": [
+        [
+          {
+            "node": "Start Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ignore Non-Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Command": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Reply": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Prepare Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log": {
+      "main": [
+        [
+          {
+            "node": "Notify Administrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Administrator": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Notification Delivery Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-11-12T00:00:00.000Z",
+  "versionId": "1",
+  "id": "tg-ai-chatbot-response",
+  "meta": {
+    "instanceId": "repository-local"
+  },
+  "active": false
+}
