@@ -1,0 +1,1040 @@
+{
+  "name": "Email Management - Handle Long Random Waits",
+  "id": "jaw9968-long-random-waits",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9968)\n- Schedule: every hour; `settings.timezone`: UTC; `executionTimeout`: 300.\n- Table `email_processing_waits` (`id`, `status`, `next_stage_at`, ...). Rows: `due` (schedule random delay) or `waiting` with `next_stage_at <= now()` (complete).\n- Random delay seconds: `$env.RANDOM_WAIT_MIN_SECONDS`–`$env.RANDOM_WAIT_MAX_SECONDS` (default 30–120); stored in `next_stage_at` (resume next run — no in-run Wait to avoid batch loop validator issues).\n- Up to 100 rows/run; dedupe on `id`. Logs: `email_wait_process_logs`, `workflow_error_logs`.\n- **Outreach Postgres**; Gmail → `$env.ADMIN_NOTIFY_EMAIL`. No PII in logs.",
+        "height": 320,
+        "width": 540
+      },
+      "id": "9968aa11-bb22-4433-cc44-dd55ee667788",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "9968bb22-cc33-4544-dd55-ee6677889900",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*)::int AS row_count FROM email_processing_waits WHERE (status = 'due' AND (next_stage_at IS NULL OR next_stage_at <= NOW())) OR (status = 'waiting' AND next_stage_at <= NOW())",
+        "options": {}
+      },
+      "id": "9968cc33-dd44-4655-ee66-7788990011aa",
+      "name": "Postgres Check Due Wait Rows",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        220,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hw1",
+              "leftValue": "={{ ($json.row_count || 0) > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9968dd44-ee55-4766-ff77-8899001122bb",
+      "name": "IF Due Wait Rows Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_management_run_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Handle Long Random Waits",
+            "run_kind": "empty",
+            "rows_found": 0,
+            "rows_claimed": 0,
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9968ee55-ff66-4877-a088-9900112233cc",
+      "name": "Postgres Log Empty Run",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id::text AS id, status FROM email_processing_waits WHERE (status = 'due' AND (next_stage_at IS NULL OR next_stage_at <= NOW())) OR (status = 'waiting' AND next_stage_at <= NOW()) ORDER BY id ASC LIMIT 100",
+        "options": {}
+      },
+      "id": "9968ff66-a077-4988-b199-001122334455",
+      "name": "Postgres Load Due Wait Rows",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        -120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "id",
+        "options": {}
+      },
+      "id": "99680011-b188-4999-c2aa-112233445566",
+      "name": "Remove Duplicate Wait Rows",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "99681122-c299-4000-d3bb-223344556677",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1100,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "rw1",
+              "name": "rowId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "rw2",
+              "name": "waitSeconds",
+              "value": "={{ (() => { const min = Number($env.RANDOM_WAIT_MIN_SECONDS || 30); const max = Number($env.RANDOM_WAIT_MAX_SECONDS || 120); const lo = Math.min(min, max); const hi = Math.max(min, max); return Math.floor(Math.random() * (hi - lo + 1)) + lo; })() }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99682233-d3aa-4111-e4cc-334455667788",
+      "name": "Set Random Wait",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bs1",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "waiting",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99684455-f5cc-4333-a6ee-556677889900",
+      "name": "IF Row Ready To Complete",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE email_processing_waits SET status = 'waiting', next_stage_at = NOW() + ($2::int * INTERVAL '1 second'), updated_at = NOW() WHERE id = $1::bigint AND status = 'due' RETURNING id::text AS row_id, $2::int AS wait_seconds",
+        "options": {
+          "queryReplacement": "={{ $('Set Random Wait').item.json.rowId }},={{ $('Set Random Wait').item.json.waitSeconds }}"
+        }
+      },
+      "id": "99684466-c5dd-4444-c7ff-7788990011aa",
+      "name": "Postgres Schedule Random Wait",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        40
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE email_processing_waits SET status = 'processed', processed_at = NOW(), updated_at = NOW() WHERE id = $1::bigint AND status = 'waiting' RETURNING id::text AS row_id",
+        "options": {
+          "queryReplacement": "={{ $json.id }}"
+        }
+      },
+      "id": "99685566-a6dd-4444-b7ff-667788990011",
+      "name": "Postgres Mark Row Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1980,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_wait_process_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Split In Batches').item.json.id }}",
+            "wait_seconds": "={{ $('Set Random Wait').isExecuted ? $('Set Random Wait').item.json.waitSeconds : 0 }}",
+            "status": "={{ $('Split In Batches').item.json.status === 'waiting' ? 'processed' : 'waiting' }}",
+            "workflow_name": "Email Management - Handle Long Random Waits",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99686677-b7ee-4555-c8aa-778899001122",
+      "name": "Postgres Log Row Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2200,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_management_run_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Handle Long Random Waits",
+            "run_kind": "completed",
+            "rows_found": "={{ $('Postgres Check Due Wait Rows').item.json.row_count || 0 }}",
+            "rows_claimed": "={{ $('Postgres Load Due Wait Rows').all().length }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99687788-c8ff-4666-d9bb-889900112233",
+      "name": "Postgres Log Run Summary",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        -40
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "re1",
+              "name": "stage",
+              "value": "Handle Long Random Waits",
+              "type": "string"
+            },
+            {
+              "id": "re2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "re3",
+              "name": "rowId",
+              "value": "={{ $('Set Random Wait').isExecuted ? $('Set Random Wait').item.json.rowId : '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99688899-d900-4777-eacc-990011223344",
+      "name": "Set Row Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pe1",
+              "name": "stage",
+              "value": "Handle Long Random Waits",
+              "type": "string"
+            },
+            {
+              "id": "pe2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99689900-ea11-4888-bd66-001122334455",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Handle Long Random Waits",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ rowId: $json.rowId || '' }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9968aa00-fb22-4999-ce77-112233445566",
+      "name": "Postgres Log Row Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1980,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Handle Long Random Waits",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({}) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9968bb11-ac33-4777-de88-223344556677",
+      "name": "Postgres Log Pipeline Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        880,
+        320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "em1",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "em2",
+              "name": "errorMessage",
+              "value": "={{ $json.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "em3",
+              "name": "adminEmailRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + ($env.ADMIN_NOTIFY_EMAIL || '') + '\\r\\nSubject: Handle long random waits alert\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\nWorkflow: Email Management - Handle Long Random Waits\\r\\nStage: ' + ($json.stage || 'Handle Long Random Waits') + '\\r\\nMessage: ' + ($json.errorMessage || 'unknown error') + '\\r\\n'))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9968cc22-bd44-4888-ef99-334455667788",
+      "name": "Build Admin Row Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ep1",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "ep2",
+              "name": "errorMessage",
+              "value": "={{ $json.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "ep3",
+              "name": "adminEmailRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + ($env.ADMIN_NOTIFY_EMAIL || '') + '\\r\\nSubject: Handle long random waits pipeline alert\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\nWorkflow: Email Management - Handle Long Random Waits\\r\\nStage: ' + ($json.stage || 'Handle Long Random Waits') + '\\r\\nMessage: ' + ($json.errorMessage || 'unknown error') + '\\r\\n'))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9968dd33-ce55-4999-fa00-445566778899",
+      "name": "Build Admin Pipeline Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.adminEmailRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "9968ee44-df66-4333-efff-556677889900",
+      "name": "Gmail Notify Admin Row",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.adminEmailRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "9968ff55-ea77-4444-faaa-667788990011",
+      "name": "Gmail Notify Admin Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : ($('Set Row Error Context').isExecuted ? $('Set Row Error Context').item.json.errorMessage : 'Handle Long Random Waits failed') }}"
+      },
+      "id": "9968aa22-fb88-4555-abbb-778899001133",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        360
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres Check Due Wait Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Check Due Wait Rows": {
+      "main": [
+        [
+          {
+            "node": "IF Due Wait Rows Found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Due Wait Rows Found": {
+      "main": [
+        [
+          {
+            "node": "Postgres Load Due Wait Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres Log Empty Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Load Due Wait Rows": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Wait Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Wait Rows": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Row Ready To Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Row Ready To Complete": {
+      "main": [
+        [
+          {
+            "node": "Postgres Mark Row Processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Random Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Random Wait": {
+      "main": [
+        [
+          {
+            "node": "Postgres Schedule Random Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Schedule Random Wait": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Row Processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Row Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Mark Row Processed": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Row Processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Row Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Row Processed": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Row Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Empty Run": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Run Summary": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Row Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Row Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Pipeline Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Row Error": {
+      "main": [
+        [
+          {
+            "node": "Build Admin Row Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Admin Row Email": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notify Admin Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Notify Admin Row": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Pipeline Error": {
+      "main": [
+        [
+          {
+            "node": "Build Admin Pipeline Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Admin Pipeline Email": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notify Admin Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Notify Admin Pipeline": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300,
+    "timezone": "UTC"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

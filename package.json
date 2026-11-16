@@ -1,0 +1,15 @@
+{
+  "name": "n8n-workflows",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "n8n workflow definitions (one JSON file per workflow)",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node scripts/validate-workflows.mjs",
+    "lint": "node scripts/validate-workflows.mjs --lint",
+    "format": "node scripts/format-workflows.mjs"
+  }
+}
