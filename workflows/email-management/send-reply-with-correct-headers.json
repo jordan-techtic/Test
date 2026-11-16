@@ -1,0 +1,902 @@
+{
+  "name": "Email Management - Send Reply with Correct Headers",
+  "id": "jaw9967-send-reply-headers",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9967)\n- Webhook `POST /send-reply` with **Outreach Webhook Header Auth**; outbound send uses **Outreach Gmail OAuth** (HTTP Request).\n- `threadId` is a Gmail API thread id; **In-Reply-To** / **References** use RFC Message-Ids from the last message in that thread (`threads.get` format=full).\n- Reply **To** = original **From**; subject prefixed with `Re:` when missing.\n- Dedupe on `threadId` per run (`Remove Duplicate Thread Id`). Audit: `email_reply_send_audits` (thread_id only). Errors: `workflow_error_logs` + Gmail to `$env.ADMIN_NOTIFY_EMAIL` (no message body logged).",
+        "height": 280,
+        "width": 560
+      },
+      "id": "9967aa11-bb22-4433-cc44-dd55ee667788",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-reply",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "9967bb22-cc33-4544-dd55-ee6677889900",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "send-reply-headers",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "threadId",
+              "value": "={{ String(($json.body && $json.body.threadId !== undefined) ? $json.body.threadId : ($json.threadId !== undefined ? $json.threadId : '')).trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "n2",
+              "name": "message",
+              "value": "={{ String(($json.body && $json.body.message !== undefined) ? $json.body.message : ($json.message !== undefined ? $json.message : '')).trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9967cc33-dd44-4655-ee66-7788990011aa",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.threadId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "v2",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9967dd44-ee55-4766-ff77-8899001122bb",
+      "name": "IF Valid Reply Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vf1",
+              "name": "stage",
+              "value": "Validate Input",
+              "type": "string"
+            },
+            {
+              "id": "vf2",
+              "name": "errorMessage",
+              "value": "Invalid or missing threadId or message",
+              "type": "string"
+            },
+            {
+              "id": "vf3",
+              "name": "threadId",
+              "value": "={{ $('Normalize Input').item.json.threadId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9967ee55-ff66-4877-a088-9900112233cc",
+      "name": "Set Validation Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "threadId",
+        "options": {}
+      },
+      "id": "9967ff66-a077-4988-b199-001122334455",
+      "name": "Remove Duplicate Thread Id",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/threads/' + encodeURIComponent($('Normalize Input').item.json.threadId) + '?format=full' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99670011-b188-4999-c2aa-112233445566",
+      "name": "Gmail Get Thread",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "th1",
+              "name": "messageId",
+              "value": "={{ (() => { const msgs = $json.messages || []; const last = msgs[msgs.length - 1]; if (!last) return ''; const headers = (last.payload && last.payload.headers) || []; const h = headers.find(x => String(x.name || '').toLowerCase() === 'message-id'); return h ? String(h.value || '').trim() : ''; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "th2",
+              "name": "references",
+              "value": "={{ (() => { const msgs = $json.messages || []; const last = msgs[msgs.length - 1]; if (!last) return ''; const headers = (last.payload && last.payload.headers) || []; const get = (n) => { const h = headers.find(x => String(x.name || '').toLowerCase() === n.toLowerCase()); return h ? String(h.value || '').trim() : ''; }; const messageId = get('Message-ID'); const prev = get('References'); return prev ? (prev + ' ' + messageId).trim() : messageId; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "th3",
+              "name": "replyTo",
+              "value": "={{ (() => { const msgs = $json.messages || []; const last = msgs[msgs.length - 1]; if (!last) return ''; const headers = (last.payload && last.payload.headers) || []; const h = headers.find(x => String(x.name || '').toLowerCase() === 'from'); return h ? String(h.value || '').trim() : ''; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "th4",
+              "name": "replySubject",
+              "value": "={{ (() => { const msgs = $json.messages || []; const last = msgs[msgs.length - 1]; if (!last) return 'Re:'; const headers = (last.payload && last.payload.headers) || []; const h = headers.find(x => String(x.name || '').toLowerCase() === 'subject'); const subj = h ? String(h.value || '').trim() : ''; if (!subj) return 'Re:'; return subj.toLowerCase().startsWith('re:') ? subj : 'Re: ' + subj; })() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99671122-c299-4000-d3bb-223344556677",
+      "name": "Set Thread Headers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "t1",
+              "leftValue": "={{ $json.messageId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "t2",
+              "leftValue": "={{ $json.replyTo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99672233-d3aa-4111-e4cc-334455667788",
+      "name": "IF Valid Thread",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "it1",
+              "name": "stage",
+              "value": "Validate Thread",
+              "type": "string"
+            },
+            {
+              "id": "it2",
+              "name": "errorMessage",
+              "value": "Invalid or unknown threadId",
+              "type": "string"
+            },
+            {
+              "id": "it3",
+              "name": "threadId",
+              "value": "={{ $('Normalize Input').item.json.threadId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99673344-e4bb-4222-f5dd-445566778899",
+      "name": "Set Invalid Thread Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "br1",
+              "name": "replyRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + $('Set Thread Headers').item.json.replyTo + '\\r\\nSubject: ' + $('Set Thread Headers').item.json.replySubject + '\\r\\nIn-Reply-To: ' + $('Set Thread Headers').item.json.messageId + '\\r\\nReferences: ' + $('Set Thread Headers').item.json.references + '\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\n' + $('Normalize Input').item.json.message))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99674455-f5cc-4333-a6ee-556677889900",
+      "name": "Build Reply Raw",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.replyRaw, threadId: $('Normalize Input').item.json.threadId }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99675566-a6dd-4444-b7ff-667788990011",
+      "name": "Gmail Send Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_reply_send_audits"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "thread_id": "={{ $('Normalize Input').item.json.threadId }}",
+            "gmail_message_id": "={{ $json.id || '' }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99676677-b7ee-4555-c8aa-778899001122",
+      "name": "Postgres Audit Reply Send",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1980,
+        -240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, threadId: $('Normalize Input').item.json.threadId, messageId: $json.gmail_message_id || $('Gmail Send Reply').item.json.id || '' }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "99677788-c8ff-4666-d9bb-889900112233",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        -240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Send Reply with Correct Headers",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "threadId",
+              "value": "={{ $('Normalize Input').item.json.threadId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99678899-d900-4777-eacc-990011223344",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Send Reply with Correct Headers",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ threadId: $json.threadId || '' }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99679900-ea11-4888-fbdd-001122334455",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "em1",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "em2",
+              "name": "errorMessage",
+              "value": "={{ $json.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "em3",
+              "name": "adminEmailRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + ($env.ADMIN_NOTIFY_EMAIL || '') + '\\r\\nSubject: Send reply headers alert\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\nWorkflow: Email Management - Send Reply with Correct Headers\\r\\nStage: ' + ($json.stage || 'Send Reply with Correct Headers') + '\\r\\nMessage: ' + ($json.errorMessage || 'unknown error') + '\\r\\n'))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9967aa00-fb22-4999-acce-112233445566",
+      "name": "Build Admin Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.adminEmailRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "9967bb11-ac33-4777-bdff-223344556677",
+      "name": "Gmail Notify Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "stage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.stage : ($('Set Invalid Thread Failure').isExecuted ? $('Set Invalid Thread Failure').item.json.stage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.stage : 'Send Reply with Correct Headers')) }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "errorMessage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.errorMessage : ($('Set Invalid Thread Failure').isExecuted ? $('Set Invalid Thread Failure').item.json.errorMessage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : String($json.error ?? 'unknown error').slice(0, 200))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9967cc22-bd44-4888-eecc-334455667788",
+      "name": "Prepare Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2420,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.errorMessage, stage: $json.stage }) }}",
+        "options": {
+          "responseCode": "={{ $json.stage === 'Validate Input' || $json.stage === 'Validate Thread' ? 400 : 503 }}"
+        }
+      },
+      "id": "9967dd33-ce55-4999-fadd-445566778899",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.errorMessage || 'Send Reply with Correct Headers failed' }}"
+      },
+      "id": "9967ee44-df66-4333-fbee-556677889900",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2860,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Reply Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Reply Input": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Thread Id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Validation Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Invalid Thread Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Thread Id": {
+      "main": [
+        [
+          {
+            "node": "Gmail Get Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Get Thread": {
+      "main": [
+        [
+          {
+            "node": "Set Thread Headers",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Thread Headers": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Thread": {
+      "main": [
+        [
+          {
+            "node": "Build Reply Raw",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Invalid Thread Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reply Raw": {
+      "main": [
+        [
+          {
+            "node": "Gmail Send Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Send Reply": {
+      "main": [
+        [
+          {
+            "node": "Postgres Audit Reply Send",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Audit Reply Send": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Build Admin Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Admin Email": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Error": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 120,
+    "timezone": "UTC"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

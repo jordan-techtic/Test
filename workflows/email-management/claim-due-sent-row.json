@@ -1,0 +1,903 @@
+{
+  "name": "Email Management - Claim Due Sent Row",
+  "id": "jaw9966-claim-due-sent",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9966)\n- Schedule: every 30 minutes; `settings.timezone`: UTC.\n- Table `due_sent_rows` (`id`, `status`, `scheduled_at`, `claimed_at`, `updated_at`). Due rows: `status = 'due'` and `scheduled_at <= now()`.\n- Atomic claim: `UPDATE ... SET status = 'claimed' WHERE id = $1 AND status = 'due'` (overlap-safe).\n- Logs: `email_management_run_logs` (empty/completed runs), `due_sent_claim_logs` (per row), `workflow_error_logs` (errors).\n- Postgres credential: **Outreach Postgres**.\n- Admin email: Gmail API + **Outreach Gmail OAuth** to `$env.ADMIN_NOTIFY_EMAIL`.",
+        "height": 300,
+        "width": 520
+      },
+      "id": "9966aa11-bb22-4433-cc44-dd55ee667788",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "9966bb22-cc33-4544-dd55-ee6677889900",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*)::int AS row_count FROM due_sent_rows WHERE status = 'due' AND scheduled_at <= NOW()",
+        "options": {}
+      },
+      "id": "9966cc33-dd44-4655-ee66-7788990011aa",
+      "name": "Postgres Check Due Sent Rows",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        220,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dr1",
+              "leftValue": "={{ ($json.row_count || 0) > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9966dd44-ee55-4766-ff77-8899001122bb",
+      "name": "IF Due Sent Rows Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_management_run_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Claim Due Sent Row",
+            "run_kind": "empty",
+            "rows_found": 0,
+            "rows_claimed": 0,
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9966ee55-ff66-4877-a088-9900112233cc",
+      "name": "Postgres Log Empty Run",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id::text AS id FROM due_sent_rows WHERE status = 'due' AND scheduled_at <= NOW() ORDER BY id ASC LIMIT 500",
+        "options": {}
+      },
+      "id": "9966ff66-a077-4988-b199-001122334455",
+      "name": "Postgres List Due Sent Rows",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        -120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "id",
+        "options": {}
+      },
+      "id": "99660011-b188-4999-c2aa-112233445566",
+      "name": "Remove Duplicate Due Rows",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "99661122-c299-4000-d3bb-223344556677",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1100,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH upd AS (UPDATE due_sent_rows SET status = 'claimed', claimed_at = NOW(), updated_at = NOW() WHERE id = $1::bigint AND status = 'due' RETURNING id) SELECT $1::text AS due_sent_row_id, EXISTS (SELECT 1 FROM upd) AS claimed",
+        "options": {
+          "queryReplacement": "={{ $json.id }}"
+        }
+      },
+      "id": "99662233-d3aa-4111-e4cc-334455667788",
+      "name": "Postgres Claim Due Sent Row",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "due_sent_claim_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "due_sent_row_id": "={{ $json.due_sent_row_id }}",
+            "claimed": "={{ $json.claimed }}",
+            "workflow_name": "Email Management - Claim Due Sent Row",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99663344-e4bb-4222-f5dd-445566778899",
+      "name": "Postgres Log Claimed Row",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "email_management_run_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Claim Due Sent Row",
+            "run_kind": "completed",
+            "rows_found": "={{ $('Postgres Check Due Sent Rows').item.json.row_count || 0 }}",
+            "rows_claimed": "={{ $('Postgres List Due Sent Rows').all().length }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99664455-f5cc-4333-a6ee-556677889900",
+      "name": "Postgres Log Run Summary",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        -40
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "re1",
+              "name": "stage",
+              "value": "Claim Due Sent Row",
+              "type": "string"
+            },
+            {
+              "id": "re2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "re3",
+              "name": "dueSentRowId",
+              "value": "={{ $('Split In Batches').item.json.id || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99665566-a6dd-4444-b7ff-667788990011",
+      "name": "Set Row Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pe1",
+              "name": "stage",
+              "value": "Claim Due Sent Row",
+              "type": "string"
+            },
+            {
+              "id": "pe2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99666677-b7ee-4555-c8aa-778899001122",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Claim Due Sent Row",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ dueSentRowId: $json.dueSentRowId || '' }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99667788-c8ff-4666-d9bb-889900112233",
+      "name": "Postgres Log Row Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "em1",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "em2",
+              "name": "errorMessage",
+              "value": "={{ $json.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "em3",
+              "name": "adminEmailRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + ($env.ADMIN_NOTIFY_EMAIL || '') + '\\r\\nSubject: Claim Due Sent Row alert\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\nWorkflow: Email Management - Claim Due Sent Row\\r\\nStage: ' + ($json.stage || 'Claim Due Sent Row') + '\\r\\nMessage: ' + ($json.errorMessage || 'unknown error') + '\\r\\n'))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99668899-d900-4777-eacc-990011223344",
+      "name": "Build Admin Row Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.adminEmailRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99669900-ea11-4888-bd66-001122334455",
+      "name": "Gmail Notify Admin Row",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : ($('Set Row Error Context').isExecuted ? $('Set Row Error Context').item.json.errorMessage : 'Claim Due Sent Row failed') }}"
+      },
+      "id": "9966aa00-fb22-4999-ce77-112233445566",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Management - Claim Due Sent Row",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({}) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9966bb11-ac33-4777-de88-223344556677",
+      "name": "Postgres Log Pipeline Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ep1",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "ep2",
+              "name": "errorMessage",
+              "value": "={{ $json.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "ep3",
+              "name": "adminEmailRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('To: ' + ($env.ADMIN_NOTIFY_EMAIL || '') + '\\r\\nSubject: Claim Due Sent Row pipeline alert\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\n\\r\\nWorkflow: Email Management - Claim Due Sent Row\\r\\nStage: ' + ($json.stage || 'Claim Due Sent Row') + '\\r\\nMessage: ' + ($json.errorMessage || 'unknown error') + '\\r\\n'))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9966cc22-bd44-4888-ef99-334455667788",
+      "name": "Build Admin Pipeline Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ raw: $json.adminEmailRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "9966dd33-ce55-4999-fa00-445566778899",
+      "name": "Gmail Notify Admin Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres Check Due Sent Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Check Due Sent Rows": {
+      "main": [
+        [
+          {
+            "node": "IF Due Sent Rows Found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Due Sent Rows Found": {
+      "main": [
+        [
+          {
+            "node": "Postgres List Due Sent Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres Log Empty Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres List Due Sent Rows": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Due Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Due Rows": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres Claim Due Sent Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Claim Due Sent Row": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Claimed Row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Row Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Claimed Row": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Row Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Empty Run": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Run Summary": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Row Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Row Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Pipeline Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Row Error": {
+      "main": [
+        [
+          {
+            "node": "Build Admin Row Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Admin Row Email": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notify Admin Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Notify Admin Row": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Pipeline Error": {
+      "main": [
+        [
+          {
+            "node": "Build Admin Pipeline Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Admin Pipeline Email": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notify Admin Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Notify Admin Pipeline": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300,
+    "timezone": "UTC"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
