@@ -1,0 +1,874 @@
+{
+  "name": "Outreach Content - Generate Case Study Insights",
+  "id": "jaw9941-case-study-insights",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9941)\n- `caseStudyId` is the Google Drive file ID (native Docs exported via download).\n- Optional webhook `companyName` provides company context for the prompt.\n- Postgres table `case_study_insights` (`case_study_id`, `company_name`, `insights`, `created_at`).\n- Dedupe key: `caseStudyId`.\n- Google credential: **Outreach Google Drive** (googleDriveOAuth2Api).\n- Admin alerts: POST `$env.ADMIN_ALERT_WEBHOOK_URL`.",
+        "height": 300,
+        "width": 520
+      },
+      "id": "1a2b3c4d-5e6f-4789-a0b1-c2d3e4f50617",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-case-study-insights",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "2b3c4d5e-6f70-4890-b1c2-d3e4f5a60718",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "gen-case-study-insights",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "caseStudyId",
+              "value": "={{ String(($json.body && $json.body.caseStudyId) || $json.caseStudyId || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "n2",
+              "name": "companyName",
+              "value": "={{ String(($json.body && $json.body.companyName) || $json.companyName || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3c4d5e6f-7081-4901-c2d3-e4f5a6071829",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.caseStudyId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4d5e6f70-8192-4012-d3e4-f5a60718293a",
+      "name": "IF Valid Case Study Id",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vf1",
+              "name": "stage",
+              "value": "Validate Input",
+              "type": "string"
+            },
+            {
+              "id": "vf2",
+              "name": "errorMessage",
+              "value": "Invalid or missing caseStudyId",
+              "type": "string"
+            },
+            {
+              "id": "vf3",
+              "name": "caseStudyId",
+              "value": "={{ $('Normalize Input').item.json.caseStudyId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e6f7081-92a3-4123-e4f5-a60718293a4b",
+      "name": "Set Validation Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "caseStudyId",
+        "options": {}
+      },
+      "id": "6f708192-a3b4-4234-f5a6-0718293a4b5c",
+      "name": "Remove Duplicate Case Studies",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.caseStudyId }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "docsToFormat": "text/plain"
+          }
+        }
+      },
+      "id": "708192a3-b4c5-4345-a6b7-18293a4b5c6d",
+      "name": "Google Drive Download Case Study",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        880,
+        -120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4",
+          "name": "Outreach Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "8192a3b4-c5d6-4456-b7c8-293a4b5c6d7e",
+      "name": "Extract Document Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d1",
+              "name": "caseStudyId",
+              "value": "={{ $('Remove Duplicate Case Studies').item.json.caseStudyId }}",
+              "type": "string"
+            },
+            {
+              "id": "d2",
+              "name": "companyName",
+              "value": "={{ $('Remove Duplicate Case Studies').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "d3",
+              "name": "documentText",
+              "value": "={{ String($json.data || $json.text || $json.content || '').slice(0, 12000) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "92a3b4c5-d6e7-4567-c8d9-3a4b5c6d7e8f",
+      "name": "Prepare Document Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dt1",
+              "leftValue": "={{ $json.documentText }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a3b4c5d6-e7f8-4678-d9e0-4b5c6d7e8f9a",
+      "name": "IF Has Document Text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ed1",
+              "name": "stage",
+              "value": "Extract Document Text",
+              "type": "string"
+            },
+            {
+              "id": "ed2",
+              "name": "errorMessage",
+              "value": "Case study document text is empty after download",
+              "type": "string"
+            },
+            {
+              "id": "ed3",
+              "name": "caseStudyId",
+              "value": "={{ $('Prepare Document Context').item.json.caseStudyId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b4c5d6e7-f8a9-4789-e0f1-5c6d7e8f9a0b",
+      "name": "Set Empty Document Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENAI_API_BASE_URL + '/v1/chat/completions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: $env.OPENAI_MODEL || 'gpt-4o-mini', temperature: 0.3, messages: [{ role: 'user', content: 'Transform the case study below into concise outreach value propositions (bullet list, max 6 bullets). Company context: ' + ($json.companyName || 'unspecified') + '. Case study id: ' + $json.caseStudyId + '.\\n\\nCase study text:\\n' + $json.documentText }] }) }}",
+        "options": {
+          "timeout": 90000
+        }
+      },
+      "id": "c5d6e7f8-a9b0-4890-f1a2-6d7e8f9a0b1c",
+      "name": "OpenAI Generate Insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "2",
+          "name": "Outreach OpenAI OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p1",
+              "name": "caseStudyId",
+              "value": "={{ $('Prepare Document Context').item.json.caseStudyId }}",
+              "type": "string"
+            },
+            {
+              "id": "p2",
+              "name": "companyName",
+              "value": "={{ $('Prepare Document Context').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "p3",
+              "name": "insights",
+              "value": "={{ ($json.choices && $json.choices[0] && $json.choices[0].message && $json.choices[0].message.content) ? String($json.choices[0].message.content).trim() : '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d6e7f8a9-b0c1-4901-a2b3-7e8f9a0b1c2d",
+      "name": "Parse Insights",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "case_study_insights"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "case_study_id": "={{ $json.caseStudyId }}",
+            "company_name": "={{ $json.companyName }}",
+            "insights": "={{ $json.insights }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "e7f8a9b0-c1d2-4012-b3c4-8f9a0b1c2d3e",
+      "name": "Postgres Store Insights",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2200,
+        -360
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, caseStudyId: $('Parse Insights').item.json.caseStudyId, insights: $('Parse Insights').item.json.insights }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "f8a9b0c1-d2e3-4123-c4d5-9a0b1c2d3e4f",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Generate Case Study Insights",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "caseStudyId",
+              "value": "={{ $('Normalize Input').item.json.caseStudyId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a9b0c1d2-e3f4-4234-d5e6-0a1b2c3d4e5f",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Outreach Content - Generate Case Study Insights",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ caseStudyId: $json.caseStudyId }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "b0c1d2e3-f4a5-4345-e6f7-1a2b3c4d5e6f",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ADMIN_ALERT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ workflow: 'Outreach Content - Generate Case Study Insights', stage: $json.stage, message: $json.errorMessage, caseStudyId: $json.caseStudyId }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "c1d2e3f4-a5b6-4456-f8a9-2b3c4d5e6f70",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "stage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.stage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.stage : ($('Set Empty Document Failure').isExecuted ? $('Set Empty Document Failure').item.json.stage : 'Generate Case Study Insights')) }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "errorMessage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.errorMessage : ($('Set Empty Document Failure').isExecuted ? $('Set Empty Document Failure').item.json.errorMessage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : String($json.error ?? 'unknown error').slice(0, 200))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d2e3f4a5-b6c7-4567-a9b0-3c4d5e6f7081",
+      "name": "Prepare Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.errorMessage, stage: $json.stage }) }}",
+        "options": {
+          "responseCode": "={{ $json.stage === 'Validate Input' ? 400 : 503 }}"
+        }
+      },
+      "id": "e3f4a5b6-c7d8-4678-b0c1-4d5e6f708192",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.errorMessage || 'Generate Case Study Insights failed' }}"
+      },
+      "id": "f4a5b6c7-d8e9-4789-c1d2-e5f6f708192a3",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        160
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Case Study Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Case Study Id": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Case Studies",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Validation Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Case Studies": {
+      "main": [
+        [
+          {
+            "node": "Google Drive Download Case Study",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Download Case Study": {
+      "main": [
+        [
+          {
+            "node": "Extract Document Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Document Text": {
+      "main": [
+        [
+          {
+            "node": "Prepare Document Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Document Context": {
+      "main": [
+        [
+          {
+            "node": "IF Has Document Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Document Text": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Generate Insights",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Empty Document Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Empty Document Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Generate Insights": {
+      "main": [
+        [
+          {
+            "node": "Parse Insights",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Insights": {
+      "main": [
+        [
+          {
+            "node": "Postgres Store Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Store Insights": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Error": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
