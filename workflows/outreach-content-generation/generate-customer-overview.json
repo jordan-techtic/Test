@@ -1,0 +1,826 @@
+{
+  "name": "Outreach Content - Generate Customer Overview",
+  "id": "jaw9940-customer-overview",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9940)\n- Sub-workflow input: `contactId` only (declared on Execute Workflow Trigger).\n- Loads contact rows from Postgres table `contacts` (`contact_id`, `full_name`, `job_title`, `company_name`, `email`).\n- OpenAI: same `$env.OPENAI_*` as company overview workflow.\n- Stores generated summaries in `customer_persona_summaries`.\n- Default persona: fixed fallback string when input invalid or generation fails.\n- Error audit rows: `workflow_error_logs` via Outreach Postgres.",
+        "height": 320,
+        "width": 520
+      },
+      "id": "8091a2b3-c4d5-46e7-8f90-a1b2c3d4e5f6",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "contactId"
+            }
+          ]
+        }
+      },
+      "id": "9102b3c4-d5e6-47f8-9a01-b2c3d4e5f6a7",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "contactId",
+              "value": "={{ String($json.contactId || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a213b4c5-d6e7-48a9-b1c2-d3e4f5a6b7c8",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "vc1",
+              "leftValue": "={{ $json.contactId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b324c5d6-e7f8-49b0-c2d3-e4f5a6b7c8d9",
+      "name": "IF Valid Contact Id",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vf1",
+              "name": "stage",
+              "value": "Validate Input",
+              "type": "string"
+            },
+            {
+              "id": "vf2",
+              "name": "errorMessage",
+              "value": "Invalid or missing contactId",
+              "type": "string"
+            },
+            {
+              "id": "vf3",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c435d6e7-f8a9-40c1-d3e4-f5a6b7c8d9e0",
+      "name": "Set Validation Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT contact_id, full_name, job_title, company_name, email FROM contacts WHERE contact_id = $1 LIMIT 1",
+        "options": {
+          "queryReplacement": "={{ $json.contactId }}"
+        }
+      },
+      "id": "d546e7f8-a9b0-41d2-e4f5-a6b7c8d9e0f1",
+      "name": "Postgres Load Contact",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        -80
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "m2",
+              "name": "full_name",
+              "value": "={{ String($json.full_name || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "m3",
+              "name": "job_title",
+              "value": "={{ String($json.job_title || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "m4",
+              "name": "company_name",
+              "value": "={{ String($json.company_name || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "m5",
+              "name": "email",
+              "value": "={{ String($json.email || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e657f8a9-b0c1-42e3-f5a6-b7c8d9e0f1a2",
+      "name": "Merge Contact Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hc1",
+              "leftValue": "={{ $json.full_name + $json.email + $json.company_name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f768a9b0-c1d2-43f4-a6b7-c8d9e0f1a2b3",
+      "name": "IF Contact Has Profile",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "nf1",
+              "name": "stage",
+              "value": "Load Contact",
+              "type": "string"
+            },
+            {
+              "id": "nf2",
+              "name": "errorMessage",
+              "value": "No contact profile found for contactId",
+              "type": "string"
+            },
+            {
+              "id": "nf3",
+              "name": "contactId",
+              "value": "={{ $('Merge Contact Context').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a879b0c1-d2e3-44g5-b7c8-d9e0f1a2b3c4",
+      "name": "Set Missing Contact",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENAI_API_BASE_URL + '/v1/chat/completions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: $env.OPENAI_MODEL || 'gpt-4o-mini', temperature: 0.4, messages: [{ role: 'user', content: 'Write a short persona summary (2-3 sentences) for B2B email personalization. Be factual and neutral; do not invent private details. Contact id: ' + $json.contactId + '. Name: ' + $json.full_name + '. Title: ' + $json.job_title + '. Company: ' + $json.company_name + '. Email domain hint: ' + ($json.email.split('@')[1] || 'unknown') + '.' }] }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "b980c1d2-e3f4-45h6-c8d9-e0f1a2b3c4d5",
+      "name": "OpenAI Generate Persona",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "2",
+          "name": "Outreach OpenAI OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p1",
+              "name": "contactId",
+              "value": "={{ $('Merge Contact Context').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "p2",
+              "name": "personaSummary",
+              "value": "={{ ($json.choices && $json.choices[0] && $json.choices[0].message && $json.choices[0].message.content) ? String($json.choices[0].message.content).trim() : '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c091d2e3-f4a5-46i7-d9e0-f1a2b3c4d5e6",
+      "name": "Parse Persona Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ps1",
+              "leftValue": "={{ $json.personaSummary }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d102e3f4-a5b6-47j8-e0f1-a2b3c4d5e6f7",
+      "name": "IF Parsed Persona",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "customer_persona_summaries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contact_id": "={{ $json.contactId }}",
+            "persona_summary": "={{ $json.personaSummary }}",
+            "source": "generated",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "e213f4a5-b6c7-48k9-f1a2-b3c4d5e6f7a8",
+      "name": "Postgres Store Persona",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1980,
+        -400
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "contactId",
+              "value": "={{ $('Parse Persona Summary').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "personaSummary",
+              "value": "={{ $('Parse Persona Summary').item.json.personaSummary }}",
+              "type": "string"
+            },
+            {
+              "id": "r3",
+              "name": "usedFallback",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f324a5b6-c7d8-49l0-a2b3-c4d5e6f7a8b9",
+      "name": "Return Generated Persona",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Generate Customer Overview",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a435b6c7-d8e9-40m1-b3c4-d5e6f7a8b9c0",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ge1",
+              "name": "stage",
+              "value": "OpenAI Generate Persona",
+              "type": "string"
+            },
+            {
+              "id": "ge2",
+              "name": "errorMessage",
+              "value": "OpenAI returned an empty persona summary",
+              "type": "string"
+            },
+            {
+              "id": "ge3",
+              "name": "contactId",
+              "value": "={{ $('Merge Contact Context').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b546c7d8-e9f0-41n2-c4d5-e6f7a8b9c0d1",
+      "name": "Set Empty Persona Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Outreach Content - Generate Customer Overview",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ contactId: $json.contactId }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "c657d8e9-f0a1-42o3-d5e6-f7a8b9c0d1e2",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        140
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d1",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId || $json.contactId || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "d2",
+              "name": "personaSummary",
+              "value": "A business professional who may benefit from tailored outreach about solutions relevant to their role and organization.",
+              "type": "string"
+            },
+            {
+              "id": "d3",
+              "name": "usedFallback",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d768e9f0-a1b2-43p4-e6f7-a8b9c0d1e2f3",
+      "name": "Return Default Persona",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        140
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Contact Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Contact Id": {
+      "main": [
+        [
+          {
+            "node": "Postgres Load Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Validation Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Load Contact": {
+      "main": [
+        [
+          {
+            "node": "Merge Contact Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Contact Context": {
+      "main": [
+        [
+          {
+            "node": "IF Contact Has Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Contact Has Profile": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Generate Persona",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Missing Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Missing Contact": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Generate Persona": {
+      "main": [
+        [
+          {
+            "node": "Parse Persona Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Persona Summary": {
+      "main": [
+        [
+          {
+            "node": "IF Parsed Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Parsed Persona": {
+      "main": [
+        [
+          {
+            "node": "Postgres Store Persona",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Empty Persona Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Store Persona": {
+      "main": [
+        [
+          {
+            "node": "Return Generated Persona",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Generated Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Empty Persona Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Return Default Persona",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Default Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

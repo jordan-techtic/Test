@@ -1,0 +1,959 @@
+{
+  "name": "Email Warmup - Schedule Warmup Actions",
+  "id": "jaw9946-schedule-warmup",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9946)\n- Cron `0 2 * * *` (02:00 UTC); `settings.timezone`: UTC.\n- Gmail via HTTP + **Outreach Gmail OAuth** (`gmailOAuth2`).\n- List query: `$env.GMAIL_WARMUP_QUERY`, user: `$env.GMAIL_WARMUP_USER_ID` (default `me`), max 1000.\n- Auto-reply body: `$env.GMAIL_WARMUP_REPLY_BODY` (no email content logged).\n- Logs: `warmup_action_logs` / `warmup_run_summaries` (message ids + action step only).\n- Archive: Gmail modify (remove INBOX) after logging warmup action.",
+        "height": 280,
+        "width": 540
+      },
+      "id": "9946aa11-bb22-4433-cc44-dd55ee667788",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "9946bb22-cc33-4544-dd55-ee6677889900",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages?maxResults=1000&q=' + encodeURIComponent($env.GMAIL_WARMUP_QUERY || 'label:inbox') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "9946cc33-dd44-4655-ee66-7788990011aa",
+      "name": "Gmail List Messages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hm1",
+              "leftValue": "={{ Array.isArray($json.messages) && $json.messages.length > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9946dd44-ee55-4766-ff77-8899001122bb",
+      "name": "IF Has Messages",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "warmup_run_summaries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "messages_processed": 0,
+            "status": "no_messages",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9946ee55-ff66-4877-a088-9900112233cc",
+      "name": "Postgres Log Empty Run",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        660,
+        120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "messages",
+        "options": {}
+      },
+      "id": "9946ff66-a077-4988-b199-001122334455",
+      "name": "Split Out Messages",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "99460011-b188-4999-c2aa-112233445566",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        880,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "messageId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "m2",
+              "name": "threadId",
+              "value": "={{ $json.threadId || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99461122-c299-4000-d3bb-223344556677",
+      "name": "Set Message Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/' + $json.messageId + '?format=minimal' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99462233-d3aa-4111-e4cc-334455667788",
+      "name": "Gmail Get Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "t1",
+              "name": "messageId",
+              "value": "={{ $('Set Message Context').item.json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "t2",
+              "name": "threadId",
+              "value": "={{ $json.threadId || $('Set Message Context').item.json.threadId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99463344-e4bb-4222-f5dd-445566778899",
+      "name": "Set Thread Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/' + $json.messageId + '/modify' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ removeLabelIds: ['SPAM'] }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99464455-f5cc-4333-a6ee-556677889900",
+      "name": "Gmail Mark Not Spam",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/' + $('Set Thread Context').item.json.messageId + '/modify' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ removeLabelIds: ['UNREAD'] }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99465566-a6dd-4444-b7ff-667788990011",
+      "name": "Gmail Mark Read",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/send' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ threadId: $('Set Thread Context').item.json.threadId, raw: $json.autoReplyRaw }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99466677-b7ee-4555-c8aa-778899001122",
+      "name": "Gmail Send Auto Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ar1",
+              "name": "messageId",
+              "value": "={{ $('Set Thread Context').item.json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "ar2",
+              "name": "threadId",
+              "value": "={{ $('Set Thread Context').item.json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "ar3",
+              "name": "autoReplyRaw",
+              "value": "={{ btoa(unescape(encodeURIComponent('Subject: Re: Warmup\\r\\n\\r\\n' + ($env.GMAIL_WARMUP_REPLY_BODY || 'Thanks for your message. This is an automated warmup reply.')))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99467788-c8ff-4666-d9bb-889900112233",
+      "name": "Build Auto Reply Raw",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/' + $('Set Thread Context').item.json.messageId + '/modify' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ addLabelIds: ['STARRED'] }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "99468899-d900-4777-eacc-990011223344",
+      "name": "Gmail Star Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "warmup_action_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message_id": "={{ $('Set Thread Context').item.json.messageId }}",
+            "action_step": "warmup_complete",
+            "status": "success",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "99469900-ea11-4888-fbdd-001122334455",
+      "name": "Postgres Log Warmup Action",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2860,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GMAIL_API_BASE_URL + '/gmail/v1/users/' + ($env.GMAIL_WARMUP_USER_ID || 'me') + '/messages/' + $('Set Thread Context').item.json.messageId + '/modify' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ removeLabelIds: ['INBOX'] }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "9946aa22-fb22-4999-acce-112233445566",
+      "name": "Gmail Archive Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3080,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "Outreach Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "warmup_run_summaries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "messages_processed": "={{ $('Split In Batches').context.noItemsLeft ? $('Split In Batches').context.itemsProcessed : 0 }}",
+            "status": "completed",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9946bb33-ac33-4000-bddf-223344556677",
+      "name": "Postgres Log Run Summary",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1100,
+        80
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Schedule Warmup Actions",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "messageId",
+              "value": "={{ $('Set Thread Context').isExecuted ? $('Set Thread Context').item.json.messageId : ($('Set Message Context').isExecuted ? $('Set Message Context').item.json.messageId : '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9946cc44-bd44-4111-ceed-334455667788",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Email Warmup - Schedule Warmup Actions",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ messageId: $json.messageId }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9946dd55-ce55-4222-dfee-445566778899",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ADMIN_ALERT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ workflow: 'Email Warmup - Schedule Warmup Actions', stage: $json.stage, message: $json.errorMessage, messageId: $json.messageId }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "9946ee66-df66-4333-efff-556677889900",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $('Set Pipeline Error Context').item.json.errorMessage || 'Schedule Warmup Actions failed' }}"
+      },
+      "id": "9946ff77-ea77-4444-faaa-667788990011",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        240
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gmail List Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail List Messages": {
+      "main": [
+        [
+          {
+            "node": "IF Has Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Messages": {
+      "main": [
+        [
+          {
+            "node": "Split Out Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres Log Empty Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Messages": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Message Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Message Context": {
+      "main": [
+        [
+          {
+            "node": "Gmail Get Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Get Message": {
+      "main": [
+        [
+          {
+            "node": "Set Thread Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Thread Context": {
+      "main": [
+        [
+          {
+            "node": "Gmail Mark Not Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Mark Not Spam": {
+      "main": [
+        [
+          {
+            "node": "Gmail Mark Read",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Mark Read": {
+      "main": [
+        [
+          {
+            "node": "Build Auto Reply Raw",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Auto Reply Raw": {
+      "main": [
+        [
+          {
+            "node": "Gmail Send Auto Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Send Auto Reply": {
+      "main": [
+        [
+          {
+            "node": "Gmail Star Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Star Message": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Warmup Action",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Warmup Action": {
+      "main": [
+        [
+          {
+            "node": "Gmail Archive Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Archive Message": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300,
+    "timezone": "UTC"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

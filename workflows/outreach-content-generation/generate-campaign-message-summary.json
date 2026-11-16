@@ -1,0 +1,929 @@
+{
+  "name": "Outreach Content - Generate Campaign Message Summary",
+  "id": "jaw9942-campaign-msg-summary",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9942)\n- `campaignId` resolved via Postgres `campaigns` (`campaign_id`, `company_name`).\n- HTTP POST `$env.N8N_WEBHOOK_BASE_URL/generate-company-overview` with `companyName`.\n- HTTP POST `$env.N8N_WEBHOOK_BASE_URL/generate-email-variants` with `campaignId`.\n- Summary stored in `campaign_message_summaries`.\n- Dedupe key: `campaignId`.",
+        "height": 260,
+        "width": 520
+      },
+      "id": "11223344-5566-4778-8990-aabbccddeeff",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-campaign-message-summary",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "22334455-6677-4889-9001-bbccddeeff00",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "gen-campaign-msg-summary",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "campaignId",
+              "value": "={{ String(($json.body && $json.body.campaignId) || $json.campaignId || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "33445566-7788-4990-a011-ccddeeff0011",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.campaignId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "44556677-8899-4001-b122-ddeeff001122",
+      "name": "IF Valid Campaign Id",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vf1",
+              "name": "stage",
+              "value": "Validate Input",
+              "type": "string"
+            },
+            {
+              "id": "vf2",
+              "name": "errorMessage",
+              "value": "Invalid or missing campaignId",
+              "type": "string"
+            },
+            {
+              "id": "vf3",
+              "name": "campaignId",
+              "value": "={{ $('Normalize Input').item.json.campaignId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "55667788-9900-4112-c233-eeff00112233",
+      "name": "Set Validation Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "campaignId",
+        "options": {}
+      },
+      "id": "66778899-a011-4223-d344-ff0011223344",
+      "name": "Remove Duplicate Campaigns",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT campaign_id, company_name FROM campaigns WHERE campaign_id = $1 LIMIT 1",
+        "options": {
+          "queryReplacement": "={{ $json.campaignId }}"
+        }
+      },
+      "id": "77889900-b122-4334-e455-001122334455",
+      "name": "Postgres Load Campaign",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        880,
+        -120
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1",
+              "name": "campaignId",
+              "value": "={{ $('Remove Duplicate Campaigns').item.json.campaignId }}",
+              "type": "string"
+            },
+            {
+              "id": "c2",
+              "name": "companyName",
+              "value": "={{ String($json.company_name || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "88990011-c233-4445-f566-112233445566",
+      "name": "Set Campaign Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cn1",
+              "leftValue": "={{ $json.companyName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99001122-d344-4556-a677-223344556677",
+      "name": "IF Campaign Has Company",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "mc1",
+              "name": "stage",
+              "value": "Load Campaign",
+              "type": "string"
+            },
+            {
+              "id": "mc2",
+              "name": "errorMessage",
+              "value": "No campaign or company_name found for campaignId",
+              "type": "string"
+            },
+            {
+              "id": "mc3",
+              "name": "campaignId",
+              "value": "={{ $('Set Campaign Context').item.json.campaignId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aabb1122-3344-4667-b788-334455667788",
+      "name": "Set Missing Campaign",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_WEBHOOK_BASE_URL + '/generate-company-overview' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ companyName: $json.companyName }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "bbcc2233-4455-4778-c899-445566778899",
+      "name": "HTTP Generate Company Overview",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "co1",
+              "name": "campaignId",
+              "value": "={{ $('Set Campaign Context').item.json.campaignId }}",
+              "type": "string"
+            },
+            {
+              "id": "co2",
+              "name": "companyName",
+              "value": "={{ $('Set Campaign Context').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "co3",
+              "name": "companyOverview",
+              "value": "={{ String(($json.overview) || ($json.body && $json.body.overview) || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ccdd3344-5566-4889-d900-556677889900",
+      "name": "Merge Company Overview",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_WEBHOOK_BASE_URL + '/generate-email-variants' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ campaignId: $json.campaignId }) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "ddeeff44-6677-4990-e011-667788990011",
+      "name": "HTTP Generate Email Variants",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bs1",
+              "name": "campaignId",
+              "value": "={{ $('Merge Company Overview').item.json.campaignId }}",
+              "type": "string"
+            },
+            {
+              "id": "bs2",
+              "name": "companyName",
+              "value": "={{ $('Merge Company Overview').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "bs3",
+              "name": "companyOverview",
+              "value": "={{ $('Merge Company Overview').item.json.companyOverview }}",
+              "type": "string"
+            },
+            {
+              "id": "bs4",
+              "name": "emailVariantsSummary",
+              "value": "={{ JSON.stringify($json) }}",
+              "type": "string"
+            },
+            {
+              "id": "bs5",
+              "name": "messageSummary",
+              "value": "={{ 'Campaign ' + $('Merge Company Overview').item.json.campaignId + ' — ' + $('Merge Company Overview').item.json.companyName + '. Company overview: ' + ($('Merge Company Overview').item.json.companyOverview || 'pending') + '. Email variant generation initiated for this campaign.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eeff0011-7788-4001-f122-889900112233",
+      "name": "Build Campaign Message Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "campaign_message_summaries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "campaign_id": "={{ $json.campaignId }}",
+            "company_name": "={{ $json.companyName }}",
+            "message_summary": "={{ $json.messageSummary }}",
+            "company_overview": "={{ $json.companyOverview }}",
+            "email_variants_result": "={{ $json.emailVariantsSummary }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "ff001122-8899-4112-a233-990011223344",
+      "name": "Postgres Store Summary",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2420,
+        -280
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, campaignId: $('Build Campaign Message Summary').item.json.campaignId, messageSummary: $('Build Campaign Message Summary').item.json.messageSummary }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "00112233-9900-4223-b344-aabbccddeeff",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Generate Campaign Message Summary",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "campaignId",
+              "value": "={{ $('Normalize Input').item.json.campaignId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11223344-aabb-4334-c455-bbccddeeff01",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Outreach Content - Generate Campaign Message Summary",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ campaignId: $json.campaignId }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "22334455-bbcc-4445-d566-ccddeeff0112",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ADMIN_ALERT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ workflow: 'Outreach Content - Generate Campaign Message Summary', stage: $json.stage, message: $json.errorMessage, campaignId: $json.campaignId }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "33445566-ccdd-4556-e677-ddeeff011223",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "stage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.stage : ($('Set Missing Campaign').isExecuted ? $('Set Missing Campaign').item.json.stage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.stage : 'Generate Campaign Message Summary')) }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "errorMessage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.errorMessage : ($('Set Missing Campaign').isExecuted ? $('Set Missing Campaign').item.json.errorMessage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : String($json.error ?? 'unknown error').slice(0, 200))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "44556677-ddee-4667-f788-eeff01122334",
+      "name": "Prepare Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.errorMessage, stage: $json.stage }) }}",
+        "options": {
+          "responseCode": "={{ $json.stage === 'Validate Input' ? 400 : 503 }}"
+        }
+      },
+      "id": "55667788-eeff-4778-a899-ff0011223344",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.errorMessage || 'Generate Campaign Message Summary failed' }}"
+      },
+      "id": "66778899-ff00-4889-b900-001122334455",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        160
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Campaign Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Campaign Id": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Validation Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Campaigns": {
+      "main": [
+        [
+          {
+            "node": "Postgres Load Campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Load Campaign": {
+      "main": [
+        [
+          {
+            "node": "Set Campaign Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Campaign Context": {
+      "main": [
+        [
+          {
+            "node": "IF Campaign Has Company",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Campaign Has Company": {
+      "main": [
+        [
+          {
+            "node": "HTTP Generate Company Overview",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Missing Campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Missing Campaign": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Generate Company Overview": {
+      "main": [
+        [
+          {
+            "node": "Merge Company Overview",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Company Overview": {
+      "main": [
+        [
+          {
+            "node": "HTTP Generate Email Variants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Generate Email Variants": {
+      "main": [
+        [
+          {
+            "node": "Build Campaign Message Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Campaign Message Summary": {
+      "main": [
+        [
+          {
+            "node": "Postgres Store Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Store Summary": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Error": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

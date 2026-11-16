@@ -1,0 +1,1190 @@
+{
+  "name": "Outreach Content - Generate Email for Remaining Contacts",
+  "id": "jaw9944-remaining-contact-email",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9944)\n- Webhook fields: `contactId`, `tone`; optional `winningVariantId`.\n- Winning variant from `email_winning_variants` by id or latest row per `contact_id`.\n- Dedupe composite key: `contactId|tone`.\n- Customer overview: **jaw9940-customer-overview** (`contactId`).\n- Store in `contact_personalized_emails`.\n- OpenAI returns JSON with `subject` and `body`.",
+        "height": 260,
+        "width": 520
+      },
+      "id": "9944aa11-bb22-4433-cc44-dd55ee667788",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-email-for-remaining-contacts",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "9944bb22-cc33-4544-dd55-ee6677889900",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "gen-email-remaining-contacts",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Outreach Webhook Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "contactId",
+              "value": "={{ String(($json.body && $json.body.contactId) || $json.contactId || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "n2",
+              "name": "tone",
+              "value": "={{ String(($json.body && $json.body.tone) || $json.tone || '').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "n3",
+              "name": "winningVariantId",
+              "value": "={{ String(($json.body && $json.body.winningVariantId) || $json.winningVariantId || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944cc33-dd44-4655-ee66-7788990011aa",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.contactId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "v2",
+              "leftValue": "={{ $json.tone }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9944dd44-ee55-4766-ff77-8899001122bb",
+      "name": "IF Valid Contact And Tone",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vf1",
+              "name": "stage",
+              "value": "Validate Input",
+              "type": "string"
+            },
+            {
+              "id": "vf2",
+              "name": "errorMessage",
+              "value": "Invalid or missing contactId or tone",
+              "type": "string"
+            },
+            {
+              "id": "vf3",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944ee55-ff66-4877-a088-9900112233cc",
+      "name": "Set Validation Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dk1",
+              "name": "contactId",
+              "value": "={{ $json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "dk2",
+              "name": "tone",
+              "value": "={{ $json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "dk3",
+              "name": "winningVariantId",
+              "value": "={{ $json.winningVariantId }}",
+              "type": "string"
+            },
+            {
+              "id": "dk4",
+              "name": "dedupeKey",
+              "value": "={{ $json.contactId + '|' + $json.tone }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944ff66-a077-4988-b199-001122334455",
+      "name": "Set Dedupe Key",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "dedupeKey",
+        "options": {}
+      },
+      "id": "99440011-b188-4999-c2aa-112233445566",
+      "name": "Remove Duplicate Contact Tone",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.winningVariantId ? \"SELECT winning_variant_id, contact_id, variant_subject, variant_body FROM email_winning_variants WHERE winning_variant_id = $1 LIMIT 1\" : \"SELECT winning_variant_id, contact_id, variant_subject, variant_body FROM email_winning_variants WHERE contact_id = $1 ORDER BY created_at DESC LIMIT 1\" }}",
+        "options": {
+          "queryReplacement": "={{ $json.winningVariantId || $json.contactId }}"
+        }
+      },
+      "id": "99441122-c299-4000-d3bb-223344556677",
+      "name": "Postgres Load Winning Variant",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1100,
+        -160
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "w1",
+              "name": "contactId",
+              "value": "={{ $('Remove Duplicate Contact Tone').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "w2",
+              "name": "tone",
+              "value": "={{ $('Remove Duplicate Contact Tone').item.json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "w3",
+              "name": "winningVariantId",
+              "value": "={{ String($json.winning_variant_id || $('Remove Duplicate Contact Tone').item.json.winningVariantId || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "w4",
+              "name": "winningSubject",
+              "value": "={{ String($json.variant_subject || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "w5",
+              "name": "winningBody",
+              "value": "={{ String($json.variant_body || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "w6",
+              "name": "dedupeKey",
+              "value": "={{ $('Remove Duplicate Contact Tone').item.json.dedupeKey }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99442233-d3aa-4111-e4cc-334455667788",
+      "name": "Set Winning Variant Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "wv1",
+              "leftValue": "={{ $json.winningSubject + $json.winningBody }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99443344-e4bb-4222-f5dd-445566778899",
+      "name": "IF Has Winning Variant",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "mv1",
+              "name": "stage",
+              "value": "Load Winning Variant",
+              "type": "string"
+            },
+            {
+              "id": "mv2",
+              "name": "errorMessage",
+              "value": "No winning variant found for contact",
+              "type": "string"
+            },
+            {
+              "id": "mv3",
+              "name": "contactId",
+              "value": "={{ $('Set Winning Variant Context').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99444455-f5cc-4333-a6ee-556677889900",
+      "name": "Set Missing Winning Variant",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "jaw9940-customer-overview",
+          "cachedResultName": "Outreach Content - Generate Customer Overview"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contactId": "={{ $json.contactId }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "99445566-a6dd-4444-b7ff-667788990011",
+      "name": "Execute Generate Customer Overview",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        -320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "contactId",
+              "value": "={{ $('Set Winning Variant Context').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "m2",
+              "name": "tone",
+              "value": "={{ $('Set Winning Variant Context').item.json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "m3",
+              "name": "winningVariantId",
+              "value": "={{ $('Set Winning Variant Context').item.json.winningVariantId }}",
+              "type": "string"
+            },
+            {
+              "id": "m4",
+              "name": "winningSubject",
+              "value": "={{ $('Set Winning Variant Context').item.json.winningSubject }}",
+              "type": "string"
+            },
+            {
+              "id": "m5",
+              "name": "winningBody",
+              "value": "={{ $('Set Winning Variant Context').item.json.winningBody }}",
+              "type": "string"
+            },
+            {
+              "id": "m6",
+              "name": "personaSummary",
+              "value": "={{ String($json.personaSummary || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99446677-b7ee-4555-c8aa-778899001122",
+      "name": "Merge Personalization Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENAI_API_BASE_URL + '/v1/chat/completions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: $env.OPENAI_MODEL || 'gpt-4o-mini', temperature: 0.5, response_format: { type: 'json_object' }, messages: [{ role: 'user', content: 'Personalize this winning outreach email for the contact. Tone: ' + $json.tone + '. Return JSON {\"subject\":\"...\",\"body\":\"...\"}. Persona: ' + $json.personaSummary + '. Winning subject: ' + $json.winningSubject + '. Winning body: ' + $json.winningBody }] }) }}",
+        "options": {
+          "timeout": 90000
+        }
+      },
+      "id": "99447788-c8ff-4666-d9bb-889900112233",
+      "name": "OpenAI Generate Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        -320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "2",
+          "name": "Outreach OpenAI OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p1",
+              "name": "contactId",
+              "value": "={{ $('Merge Personalization Context').item.json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "p2",
+              "name": "tone",
+              "value": "={{ $('Merge Personalization Context').item.json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "p3",
+              "name": "winningVariantId",
+              "value": "={{ $('Merge Personalization Context').item.json.winningVariantId }}",
+              "type": "string"
+            },
+            {
+              "id": "p4",
+              "name": "emailJson",
+              "value": "={{ ($json.choices && $json.choices[0] && $json.choices[0].message && $json.choices[0].message.content) ? String($json.choices[0].message.content).trim() : '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99448899-d900-4777-eacc-990011223344",
+      "name": "Parse Email Json",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2420,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "pe1",
+              "leftValue": "={{ (() => { try { const o = JSON.parse($json.emailJson || '{}'); return String(o.subject || '').length >= 5 && String(o.body || '').length >= 20; } catch { return false; } })() }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99449900-ea11-4888-fbdd-001122334455",
+      "name": "IF Parsed Email Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pef1",
+              "name": "stage",
+              "value": "Parse Email",
+              "type": "string"
+            },
+            {
+              "id": "pef2",
+              "name": "errorMessage",
+              "value": "OpenAI email response failed parse validation",
+              "type": "string"
+            },
+            {
+              "id": "pef3",
+              "name": "contactId",
+              "value": "={{ $('Parse Email Json').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944aa11-fb22-4999-acce-112233445566",
+      "name": "Set Parse Email Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2860,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "st1",
+              "name": "contactId",
+              "value": "={{ $json.contactId }}",
+              "type": "string"
+            },
+            {
+              "id": "st2",
+              "name": "tone",
+              "value": "={{ $json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "st3",
+              "name": "winningVariantId",
+              "value": "={{ $json.winningVariantId }}",
+              "type": "string"
+            },
+            {
+              "id": "st4",
+              "name": "subject",
+              "value": "={{ JSON.parse($json.emailJson).subject }}",
+              "type": "string"
+            },
+            {
+              "id": "st5",
+              "name": "body",
+              "value": "={{ JSON.parse($json.emailJson).body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944bb22-ac33-4000-bddf-223344556677",
+      "name": "Set Store Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2860,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "contact_personalized_emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contact_id": "={{ $json.contactId }}",
+            "tone": "={{ $json.tone }}",
+            "winning_variant_id": "={{ $json.winningVariantId }}",
+            "email_subject": "={{ $json.subject }}",
+            "email_body": "={{ $json.body }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9944cc33-bd44-4111-ceed-334455667788",
+      "name": "Postgres Store Email",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3080,
+        -480
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, contactId: $('Set Store Fields').item.json.contactId, tone: $('Set Store Fields').item.json.tone, subject: $('Set Store Fields').item.json.subject, body: $('Set Store Fields').item.json.body }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "9944dd44-ce55-4222-dfee-445566778899",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3300,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "stage",
+              "value": "Generate Email for Remaining Contacts",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "contactId",
+              "value": "={{ $('Normalize Input').item.json.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9944ee55-df66-4333-efff-556677889900",
+      "name": "Set Pipeline Error Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "workflow_error_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "Outreach Content - Generate Email for Remaining Contacts",
+            "stage": "={{ $json.stage }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "context_json": "={{ JSON.stringify({ contactId: $json.contactId, tone: $('Normalize Input').item.json.tone }) }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9944ff66-ea77-4444-faaa-667788990011",
+      "name": "Postgres Log Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1320,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "3",
+          "name": "Outreach Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ADMIN_ALERT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ workflow: 'Outreach Content - Generate Email for Remaining Contacts', stage: $json.stage, message: $json.errorMessage, contactId: $json.contactId }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "99440022-fb88-4555-abbb-778899001122",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "stage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.stage : ($('Set Missing Winning Variant').isExecuted ? $('Set Missing Winning Variant').item.json.stage : ($('Set Parse Email Failure').isExecuted ? $('Set Parse Email Failure').item.json.stage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.stage : 'Generate Email for Remaining Contacts'))) }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "errorMessage",
+              "value": "={{ $('Set Validation Failure').isExecuted ? $('Set Validation Failure').item.json.errorMessage : ($('Set Missing Winning Variant').isExecuted ? $('Set Missing Winning Variant').item.json.errorMessage : ($('Set Parse Email Failure').isExecuted ? $('Set Parse Email Failure').item.json.errorMessage : ($('Set Pipeline Error Context').isExecuted ? $('Set Pipeline Error Context').item.json.errorMessage : String($json.error ?? 'unknown error').slice(0, 200)))) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99441133-ac99-4666-bccc-889900112233",
+      "name": "Prepare Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.errorMessage, stage: $json.stage }) }}",
+        "options": {
+          "responseCode": "={{ $json.stage === 'Validate Input' ? 400 : 503 }}"
+        }
+      },
+      "id": "99442244-bd00-4777-cddd-990011223344",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.errorMessage || 'Generate Email for Remaining Contacts failed' }}"
+      },
+      "id": "99443355-ce11-4888-deee-001122334455",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "IF Valid Contact And Tone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Valid Contact And Tone": {
+      "main": [
+        [
+          {
+            "node": "Set Dedupe Key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Validation Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Dedupe Key": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Contact Tone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Contact Tone": {
+      "main": [
+        [
+          {
+            "node": "Postgres Load Winning Variant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Load Winning Variant": {
+      "main": [
+        [
+          {
+            "node": "Set Winning Variant Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Winning Variant Context": {
+      "main": [
+        [
+          {
+            "node": "IF Has Winning Variant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Winning Variant": {
+      "main": [
+        [
+          {
+            "node": "Execute Generate Customer Overview",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Missing Winning Variant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Missing Winning Variant": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Generate Customer Overview": {
+      "main": [
+        [
+          {
+            "node": "Merge Personalization Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Personalization Context": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Generate Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Generate Email": {
+      "main": [
+        [
+          {
+            "node": "Parse Email Json",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Email Json": {
+      "main": [
+        [
+          {
+            "node": "IF Parsed Email Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Parsed Email Valid": {
+      "main": [
+        [
+          {
+            "node": "Set Store Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Parse Email Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Parse Email Failure": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Store Fields": {
+      "main": [
+        [
+          {
+            "node": "Postgres Store Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Store Email": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pipeline Error Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pipeline Error Context": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Error": {
+      "main": [
+        [
+          {
+            "node": "Stop And Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300
+  },
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
