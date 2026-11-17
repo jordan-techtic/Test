@@ -1,0 +1,25 @@
+name: Validate n8n workflows
+
+on:
+  pull_request:
+    paths:
+      - "workflows/**"
+      - "scripts/**"
+      - "credentials.md"
+      - ".env.example"
+  push:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Production rules apply to workflows changed against the default branch (see scripts/validate-workflows.mjs).
+      - run: npm test
+      - run: npm run lint

@@ -1,0 +1,594 @@
+{
+  "name": "Telegram AI Chatbot Response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "f3a8c2d1-4b5e-4f6a-9c0d-1e2f3a4b5c6d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "telegram-ai-chatbot-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Telegram Webhook Secret"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ String($json.body.update_id ?? $execution.id) }}",
+        "options": {
+          "scope": "workflow",
+          "historySize": 10000
+        }
+      },
+      "id": "d1e2f3a4-b5c6-4789-a012-dedupe000001",
+      "name": "Remove Duplicates",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        120,
+        0
+      ],
+      "notes": "Skips a Telegram redelivery when body.update_id was already seen. If update_id is absent, the execution id is the key so that delivery still runs once.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+              "leftValue": "={{ $('Webhook').first().json.body?.message?.text ?? '' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+      "name": "Message Is Text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ANALYTICS_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ analyticsEvent: 'incoming_message', chatId: $('Webhook').first().json.body?.message?.chat?.id ?? '', messageId: $('Webhook').first().json.body?.message?.message_id ?? '', updateId: $('Webhook').first().json.body?.update_id ?? '', loggedAt: $now.toISO() }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "k5l6m7n8-o9p0-4q1r-2s3t-4u5v6w7x8y9z",
+      "name": "Log Incoming Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "notes": "Posts analytics for chatId, messageId, and updateId to $env.ANALYTICS_WEBHOOK_URL. Message text is not included. A failure continues to Start Command so the reply is still sent.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1b2c3d4-e5f6-4789-a012-startcmd00001",
+              "leftValue": "={{ $('Webhook').first().json.body?.message?.text ?? '' }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
+      "name": "Start Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nif (!staticData.chats || typeof staticData.chats !== 'object') {\n  staticData.chats = {};\n}\nconst body = $('Webhook').first().json.body || {};\nconst message = body.message || {};\nconst hasChat = !!(message.chat && message.chat.id != null && message.chat.id !== '');\nconst chatId = hasChat ? String(message.chat.id) : '';\nconst text = String(message.text != null ? message.text : '');\nconst system = 'You are a helpful assistant chatting with a user on Telegram.\\n- Answer clearly and briefly. Keep replies under 150 words unless asked for more.\\n- Reply in the same language the user writes in.\\n- Use plain text. Do not use Markdown tables or long headings.\\n- If you do not know something, say so. Do not invent facts.\\n- Do not give medical, legal or financial advice as certain fact.';\nlet history;\nif (!hasChat) {\n  history = [{ role: 'user', content: text }];\n} else {\n  const prior = Array.isArray(staticData.chats[chatId]) ? staticData.chats[chatId] : [];\n  history = prior.slice(-9);\n  history.push({ role: 'user', content: text });\n  staticData.chats[chatId] = history.slice(-10);\n  history = staticData.chats[chatId];\n}\nreturn [{ json: { messages: [{ role: 'system', content: system }].concat(history) } }];\n"
+      },
+      "id": "e2f3a4b5-c6d7-4890-b123-memoryload0001",
+      "name": "Load Chat Memory",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        -280
+      ],
+      "notes": "Builds the OpenAI messages array: the Telegram system prompt plus the last 10 user and assistant messages for this chat id. Does not run for /start or non-text.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 500, temperature: 0.7, messages: $json.messages }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "b8c9d0e1-2f3a-4b5c-9d0e-1f2a3b4c5d6e",
+      "name": "Send to OpenAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -120
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput",
+      "notes": "HTTP POST to the OpenAI chat completions API with the OpenAI API credential. Runs only for non-empty text that is not /start. Model gpt-4o-mini, max_tokens 500, system prompt plus the last 10 chat messages. Retries twice with a 3 second wait. The error output goes to Prepare Error Log.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const item = Object.assign({}, $input.first().json);\nconst choice = item.choices && item.choices[0] && item.choices[0].message;\nconst reply = String((choice && choice.content) || '');\nitem.output = reply;\nconst staticData = $getWorkflowStaticData('global');\nif (!staticData.chats || typeof staticData.chats !== 'object') {\n  staticData.chats = {};\n}\nconst body = $('Webhook').first().json.body || {};\nconst message = body.message || {};\nconst hasChat = !!(message.chat && message.chat.id != null && message.chat.id !== '');\nif (hasChat) {\n  const chatId = String(message.chat.id);\n  const prior = Array.isArray(staticData.chats[chatId]) ? staticData.chats[chatId] : [];\n  prior.push({ role: 'assistant', content: reply });\n  staticData.chats[chatId] = prior.slice(-10);\n}\nreturn [{ json: item }];\n"
+      },
+      "id": "f3a4b5c6-d7e8-4901-c234-memorysave0001",
+      "name": "Save Assistant Memory",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        -280
+      ],
+      "notes": "Stores the assistant reply on the same chat id and sets output to that reply text for Send Telegram Reply. Message text is not sent to analytics or the administrator.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Webhook').first().json.body?.message?.chat?.id }}",
+        "text": "={{ (String($('Webhook').first().json.body?.message?.text ?? '') === '' ? 'I can only read text messages for now.' : ($('Webhook').first().json.body?.message?.text === '/start' ? 'Hi! Send me a question and I will answer it.' : String($json.output ?? $json.choices?.[0]?.message?.content ?? $json.text ?? ''))).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "c9d0e1f2-3a4b-5c6d-0e1f-2a3b4c5d6e7f",
+      "name": "Send Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        -80
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "h2i3j4k5-0001-4001-8001-000000000001",
+              "name": "stage",
+              "value": "chatbot_reply_path",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0002-4002-8002-000000000002",
+              "name": "errorMessage",
+              "value": "={{ String($json.error ?? 'unknown error').slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0003-4003-8003-000000000003",
+              "name": "at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0004-4004-8004-000000000004",
+              "name": "workflowName",
+              "value": "Telegram AI Chatbot Response",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0005-4005-8005-000000000005",
+              "name": "executionId",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "h2i3j4k5-0008-4008-8008-000000000008",
+              "name": "userRetryText",
+              "value": "Sorry, something went wrong. Please try again in a moment.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "h2i3j4k5-l6m7-4n8o-9p0q-1r2s3t4u5v6w",
+      "name": "Prepare Error Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.TELEGRAM_ADMIN_CHAT_ID }}",
+        "text": "={{ ['Chatbot failed (', $('Prepare Error Log').first().json.workflowName, ' / ', $('Prepare Error Log').first().json.stage, '): ', $('Prepare Error Log').first().json.errorMessage, ' | execution=', $('Prepare Error Log').first().json.executionId, ' at ', $('Prepare Error Log').first().json.at].join('').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "i3j4k5l6-m7n8-4o9p-0q1r-2s3t4u5v6w7x",
+      "name": "Notify Administrator",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Webhook').first().json.body?.message?.chat?.id }}",
+        "text": "={{ String($json.userRetryText ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "l6m7n8o9-p0q1-4r2s-3t4u-5v6w7x8y9z0a",
+      "name": "Send Retry Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        280
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ 'Chatbot reply failed (' + String($('Prepare Error Log').first().json.stage ?? 'chatbot_reply_path') + '): ' + String($('Prepare Error Log').first().json.errorMessage ?? 'unknown error').slice(0, 200) }}"
+      },
+      "id": "j4k5l6m7-n8o9-0p1q-2r3s-4t5u6v7w8x9y",
+      "name": "Notification Delivery Failed",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e1f2a3b4-5c6d-7e8f-2a3b-4c5d6e7f8091",
+      "name": "Ignore Non-Text",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        480,
+        120
+      ],
+      "notes": "Non-text updates (photo, voice, sticker, file) pass through here to Send Telegram Reply, which sends the text-only reply. OpenAI is not called.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "content": "## Assumptions (JAW-9970)\n\n- Assumption: the trigger stays this Webhook on POST /telegram with header auth (Telegram Webhook Secret), not a Telegram Trigger. Telegram fields are read from the webhook body.\n- Assumption: the OpenAI model is gpt-4o-mini with max tokens 500. The call is an HTTP Request using the OpenAI API credential, 2 tries, 3 second wait, because the OpenAI node cannot retry while an error output is connected.\n- Assumption: group-chat /ask gating and a private user allowlist are not applied. No bot username or allowed user ids were provided. Every chat uses the text, /start, and AI paths.\n- Assumption: per-chat memory is the last 10 user and assistant messages in n8n workflow static data, keyed by chat id, and is sent on the OpenAI call. It is not an AI Agent window-buffer sub-node. Static memory survives a restart. Message text is not posted to the analytics webhook and is not included in the administrator alert.\n- Assumption: errors stay inside this workflow. There is no separate error workflow. The user retry message is sent, then the administrator is alerted at TELEGRAM_ADMIN_CHAT_ID, then Stop and Error marks the run failed.\n- Assumption: Telegram parse mode is HTML, ampersands and angle brackets are escaped, and attribution is off, so replies stay plain text.\n- Assumption: each OpenAI attempt times out at 10 seconds. The workflow execution timeout stays 300 seconds so the two retries can finish. A successful answer is still expected in under 10 seconds when OpenAI responds promptly.\n- Assumption: duplicate handling uses body.update_id. When update_id is missing, the execution id is the key so the sample payload is not dropped.\n- Non-text reply text is: I can only read text messages for now. The /start reply is: Hi! Send me a question and I will answer it. The OpenAI failure reply is: Sorry, something went wrong. Please try again in a moment.\n"
+      },
+      "id": "f2a3b4c5-6d7e-8f9a-3b4c-5d6e7f8091a2",
+      "name": "Assumptions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -240
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Message Is Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Is Text": {
+      "main": [
+        [
+          {
+            "node": "Log Incoming Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ignore Non-Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Incoming Message": {
+      "main": [
+        [
+          {
+            "node": "Start Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Start Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Command": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Load Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Chat Memory": {
+      "main": [
+        [
+          {
+            "node": "Send to OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Save Assistant Memory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Assistant Memory": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ignore Non-Text": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Reply": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Prepare Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log": {
+      "main": [
+        [
+          {
+            "node": "Send Retry Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Retry Message": {
+      "main": [
+        [
+          {
+            "node": "Notify Administrator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Administrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Administrator": {
+      "main": [
+        [
+          {
+            "node": "Notification Delivery Failed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notification Delivery Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 300
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-11-12T00:00:00.000Z",
+  "versionId": "1",
+  "id": "tg-ai-chatbot-response",
+  "meta": {
+    "instanceId": "repository-local"
+  },
+  "active": false
+}
